@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.purplelight.redstar.ProfileActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_line_height"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:background="@color/colorGray" />
+
+    <LinearLayout
+        android:id="@+id/lytHeadImg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ui_image_row_height"
+        android:background="@drawable/bg_clickable_row"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="@string/txt_head_img_title"
+            android:textSize="@dimen/common_font_middle"
+            android:layout_marginLeft="@dimen/common_spacing_large"
+            android:layout_marginStart="@dimen/common_spacing_large"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.0"
+            android:orientation="horizontal"
+            android:gravity="end|center_vertical">
+
+            <com.purplelight.redstar.component.view.CircleImageView
+                android:id="@+id/imgHeadImage"
+                android:layout_width="@dimen/ui_user_head_size"
+                android:layout_height="@dimen/ui_user_head_size"
+                android:layout_marginRight="@dimen/common_spacing_small"
+                android:layout_marginEnd="@dimen/common_spacing_small"
+                android:src="@drawable/default_head_image"
+                android:contentDescription="@string/common_image_description"
+                app:border_width="1dp"
+                app:border_color="@color/colorGray"/>
+
+            <ImageView
+                android:layout_width="@dimen/ui_row_arrow_size"
+                android:layout_height="@dimen/ui_row_arrow_size"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_marginEnd="@dimen/common_spacing_big"
+                android:src="@drawable/ic_arrow_right"
+                android:contentDescription="@string/common_image_description"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_line_height"
+        android:background="@color/colorGray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:id="@+id/lytUserCode"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ui_table_row_height"
+            android:background="@drawable/bg_clickable_row"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/txt_user_id_title"
+                android:textSize="@dimen/common_font_middle"
+                android:layout_marginLeft="@dimen/common_spacing_large"
+                android:layout_marginStart="@dimen/common_spacing_large"/>
+
+            <TextView
+                android:id="@+id/txtUserCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:gravity="end"
+                android:text="@string/txt_user_id_title"
+                android:textSize="@dimen/common_font_middle"
+                android:layout_marginRight="@dimen/common_spacing_xbig"
+                android:layout_marginEnd="@dimen/common_spacing_xbig"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:layout_marginLeft="@dimen/common_spacing_large"
+            android:layout_marginStart="@dimen/common_spacing_large"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:id="@+id/lytUserName"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ui_table_row_height"
+            android:background="@drawable/bg_clickable_row"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/txt_user_name_title"
+                android:textSize="@dimen/common_font_middle"
+                android:layout_marginLeft="@dimen/common_spacing_large"
+                android:layout_marginStart="@dimen/common_spacing_large"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.0"
+                android:orientation="horizontal"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:id="@+id/txtUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/txt_user_name_title"
+                    android:textSize="@dimen/common_font_middle"
+                    android:layout_marginRight="@dimen/common_spacing_small"
+                    android:layout_marginEnd="@dimen/common_spacing_small"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:layout_marginRight="@dimen/common_spacing_big"
+                    android:layout_marginEnd="@dimen/common_spacing_big"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:layout_marginLeft="@dimen/common_spacing_large"
+            android:layout_marginStart="@dimen/common_spacing_large"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:id="@+id/lytUserSex"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ui_table_row_height"
+            android:background="@drawable/bg_clickable_row"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/txt_user_sex_title"
+                android:textSize="@dimen/common_font_middle"
+                android:layout_marginLeft="@dimen/common_spacing_large"
+                android:layout_marginStart="@dimen/common_spacing_large"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.0"
+                android:orientation="horizontal"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:id="@+id/txtUserSex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/txt_user_sex_title"
+                    android:textSize="@dimen/common_font_middle"
+                    android:layout_marginRight="@dimen/common_spacing_small"
+                    android:layout_marginEnd="@dimen/common_spacing_small"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:layout_marginRight="@dimen/common_spacing_big"
+                    android:layout_marginEnd="@dimen/common_spacing_big"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:background="@color/colorGray" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:id="@+id/lytUserEmail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ui_table_row_height"
+            android:background="@drawable/bg_clickable_row"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/txt_user_email_title"
+                android:textSize="@dimen/common_font_middle"
+                android:layout_marginLeft="@dimen/common_spacing_large"
+                android:layout_marginStart="@dimen/common_spacing_large"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.0"
+                android:orientation="horizontal"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:id="@+id/txtUserEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/txt_user_email_title"
+                    android:textSize="@dimen/common_font_middle"
+                    android:layout_marginRight="@dimen/common_spacing_small"
+                    android:layout_marginEnd="@dimen/common_spacing_small"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:layout_marginRight="@dimen/common_spacing_big"
+                    android:layout_marginEnd="@dimen/common_spacing_big"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:layout_marginLeft="@dimen/common_spacing_large"
+            android:layout_marginStart="@dimen/common_spacing_large"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:id="@+id/lytUserPhone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ui_table_row_height"
+            android:background="@drawable/bg_clickable_row"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:text="@string/txt_user_phone_title"
+                android:textSize="@dimen/common_font_middle"
+                android:layout_marginLeft="@dimen/common_spacing_large"
+                android:layout_marginStart="@dimen/common_spacing_large"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.0"
+                android:orientation="horizontal"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:id="@+id/txtUserPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/txt_user_phone_title"
+                    android:textSize="@dimen/common_font_middle"
+                    android:layout_marginRight="@dimen/common_spacing_small"
+                    android:layout_marginEnd="@dimen/common_spacing_small"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:layout_marginRight="@dimen/common_spacing_big"
+                    android:layout_marginEnd="@dimen/common_spacing_big"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_line_height"
+            android:background="@color/colorGray" />
+
+    </LinearLayout>
+
+</LinearLayout>

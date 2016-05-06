@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_notifications"
+            android:icon="@drawable/ic_notifications"
+            android:title="@string/txt_row_message" />
+        <item
+            android:id="@+id/nav_password"
+            android:icon="@drawable/ic_lock_outline"
+            android:title="@string/txt_row_password" />
+        <item
+            android:id="@+id/nav_clear"
+            android:icon="@drawable/ic_delete_sweep"
+            android:title="@string/txt_row_buffer" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_send"
+            android:title="@string/txt_row_advice" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_group"
+            android:title="@string/txt_row_about" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_vertical_align"
+            android:title="@string/txt_logout" />
+    </group>
+
+</menu>

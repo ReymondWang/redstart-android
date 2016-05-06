@@ -1,0 +1,36 @@
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="common_spacing_xsmall">1dip</dimen>
+    <dimen name="common_spacing_small">2dip</dimen>
+    <dimen name="common_spacing_middle">5dip</dimen>
+    <dimen name="common_spacing_big">10dip</dimen>
+    <dimen name="common_spacing_xbig">15dip</dimen>
+    <dimen name="common_spacing_large">20dip</dimen>
+    <dimen name="common_spacing_xlarge">30dip</dimen>
+    <dimen name="common_spacing_xxlarge">40dip</dimen>
+    <dimen name="common_font_xxmall">8sp</dimen>
+    <dimen name="common_font_xmall">10sp</dimen>
+    <dimen name="common_font_small">12sp</dimen>
+    <dimen name="common_font_middle">15sp</dimen>
+    <dimen name="common_font_big">17sp</dimen>
+    <dimen name="common_font_xbig">21sp</dimen>
+    <dimen name="common_font_xxbig">24sp</dimen>
+    <dimen name="common_font_xxxbig">27sp</dimen>
+    <dimen name="common_little_point_size">10dip</dimen>
+    <dimen name="common_line_height">1dip</dimen>
+
+    <dimen name="ui_func_icon_size">35dip</dimen>
+    <dimen name="ui_user_head_size">50dip</dimen>
+    <dimen name="ui_row_arrow_size">30dip</dimen>
+    <dimen name="ui_image_row_height">80dip</dimen>
+    <dimen name="ui_table_row_height">45dip</dimen>
+    <dimen name="ui_webview_progress_height">10dip</dimen>
+
+    <dimen name="nav_header_vertical_spacing">25dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+</resources>

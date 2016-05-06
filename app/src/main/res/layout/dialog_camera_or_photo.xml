@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/bg_white_corner">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="80dp"
+        android:paddingRight="80dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="17sp"
+        android:text="@string/user_head_img_setting"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        android:background="@color/colorGray">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/txtCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_layout_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/icon_camera"
+            android:contentDescription="@string/app_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/user_head_img_camera"
+            android:textSize="17sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        android:background="@color/colorGray">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/txtPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@drawable/btn_layout_background"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/icon_select_picture"
+            android:contentDescription="@string/app_name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/user_head_img_photo"
+            android:textSize="17sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

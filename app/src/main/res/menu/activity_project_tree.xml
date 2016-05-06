@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/con1"
+        android:title="华东区"
+        android:menuCategory="container"
+        android:enabled="true">
+
+        <menu>
+            <item android:id="@+id/nav1"
+                android:menuCategory="secondary"
+                android:visible="true"
+                android:title="上海项目" >
+            </item>
+
+            <item android:id="@+id/nav2"
+                android:menuCategory="secondary"
+                android:visible="true"
+                android:title="南京项目" >
+            </item>
+
+        </menu>
+
+    </item>
+
+    <item android:id="@+id/con2"
+        android:title="华北区"
+        android:menuCategory="container"
+        android:visible="true">
+
+        <menu>
+
+            <item android:id="@+id/nav3"
+                android:menuCategory="secondary"
+                android:visible="true"
+                android:title="济南项目" />
+
+            <item android:id="@+id/nav4"
+                android:menuCategory="secondary"
+                android:visible="true"
+                android:title="北京项目" />
+
+        </menu>
+
+    </item>
+
+</menu>

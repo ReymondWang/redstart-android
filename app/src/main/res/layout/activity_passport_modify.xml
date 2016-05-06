@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.purplelight.redstar.PassportModifyActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 证照名称 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_name"/>
+
+                <EditText
+                    android:id="@+id/txtName"
+                    android:layout_width="0dip"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:layout_weight="2.0"
+                    android:gravity="end|center_vertical"
+                    android:layout_marginRight="@dimen/common_spacing_big"
+                    android:layout_marginEnd="@dimen/common_spacing_big"
+                    android:background="@null"
+                    android:hint="@string/title_passport_name_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!-- 证照类型 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:id="@+id/lytPassportType"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_type"/>
+
+                <TextView
+                    android:id="@+id/txtPassportType"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_big"
+                    android:text="@string/title_passport_type_hint"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/title_passport_resource_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!-- 证照资源 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:id="@+id/lytPassportResource"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_resource"/>
+
+                <TextView
+                    android:id="@+id/txtPassportResource"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_big"
+                    android:text="@string/title_passport_resource_hint"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/title_passport_resource_hint"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!-- 申办日期 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:id="@+id/lytApplyDate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_apply_date"/>
+
+                <TextView
+                    android:id="@+id/txtApplyDate"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_big"
+                    android:text="@string/title_passport_apply_date_hint"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!-- 发证日期 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:id="@+id/lytConfirmDate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_confirm_date"/>
+
+                <TextView
+                    android:id="@+id/txtConfirmDate"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_big"
+                    android:text="@string/title_passport_confirm_date_hint"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!-- 到期日期 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:id="@+id/lytExpireDate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_expire_date"/>
+
+                <TextView
+                    android:id="@+id/txtExpireDate"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_big"
+                    android:text="@string/title_passport_expire_date_hint"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!--提醒日期-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:id="@+id/lytWainingDate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:background="@drawable/bg_clickable_row"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_warning_date"/>
+
+                <TextView
+                    android:id="@+id/txtWarningDate"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_big"
+                    android:text="@string/title_passport_warning_date_hint"/>
+
+                <ImageView
+                    android:layout_width="@dimen/ui_row_arrow_size"
+                    android:layout_height="@dimen/ui_row_arrow_size"
+                    android:src="@drawable/ic_arrow_right"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <!-- 相关附件 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:background="@color/colorGray"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_spacing_big"
+                    android:layout_marginLeft="@dimen/common_spacing_big"
+                    android:layout_marginStart="@dimen/common_spacing_big"
+                    android:textSize="@dimen/common_font_big"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/title_passport_file"/>
+
+                <ImageView
+                    android:id="@+id/imgPassportFile"
+                    android:layout_width="70dip"
+                    android:layout_height="70dip"
+                    android:layout_margin="@dimen/common_spacing_big"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/add_image_pressed"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
