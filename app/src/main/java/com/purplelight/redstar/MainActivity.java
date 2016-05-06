@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
     private Gson mGson = new Gson();
 
-    private CircleImageView mImgUserHead;
+    private ImageView mImgUserHead;
     private TextView mTxtUserName;
     private TextView mTxtUserEmail;
 

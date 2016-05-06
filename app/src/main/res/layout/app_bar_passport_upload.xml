@@ -33,7 +33,7 @@
         android:layout_margin="@dimen/common_spacing_big"
         android:src="@drawable/ic_add_white"
         app:borderWidth="@dimen/common_spacing_small"
-        app:backgroundTint="@color/colorAccent"
-        app:rippleColor="@color/colorDarkRed"/>
+        app:backgroundTint="@color/colorPrimary"
+        app:rippleColor="@color/colorDarkPrimary"/>
 
 </android.support.design.widget.CoordinatorLayout>

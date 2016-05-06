@@ -5,54 +5,53 @@ package com.purplelight.redstar.business.entity;
  * Created by wangyn on 16/5/6.
  */
 public class User {
+    private String UserId;
 
-    private String userId;
+    private String Name;
 
-    private String name;
+    private String Email;
 
-    private String email;
+    private String Gender;
 
-    private String gender;
-
-    private String token;
+    private String Token;
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        Name = name;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        Email = email;
     }
 
     public String getGender() {
-        return gender;
+        return Gender;
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        Gender = gender;
     }
 
     public String getToken() {
-        return token;
+        return Token;
     }
 
     public void setToken(String token) {
-        this.token = token;
+        Token = token;
     }
 }

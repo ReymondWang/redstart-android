@@ -12,6 +12,8 @@ public class WebAPI {
 
     public static final String APP_FUNCTION = "api/func/show";
 
+    public static final String BIND_FUNCTION = "api/binduser/bind";
+
     /**
      * 取得WebAPI的全路径
      * @param method  方法参数

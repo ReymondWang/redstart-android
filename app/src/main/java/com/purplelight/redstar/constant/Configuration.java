@@ -7,7 +7,8 @@ package com.purplelight.redstar.constant;
 public class Configuration {
 
     public class Server{
-        public static final String WEB = "http://139.196.186.85:8080/";
+//        public static final String WEB = "http://139.196.186.85:8080/";
+        public static final String WEB = "http://192.168.0.100:8080/mcm/";
 
         public static final String BUSINESS = "http://qiuxisoft.com/HongXing/";
 

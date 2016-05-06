@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1E88E5</color>
-    <color name="colorPrimaryDark">#0D47A1</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorDarkRed">#BE0505</color>
+    <color name="colorPrimary">#3c8dbc</color>
+    <color name="colorDarkPrimary">#357ca5</color>
+    <color name="colorLightPrimary">#a53c8dbc</color>
+
+    <color name="colorInfo">#00c0ef</color>
+    <color name="colorDarkInfo">#00a7d0</color>
+    <color name="colorLightInfo">#a500c0ef</color>
+
+    <color name="colorSuccess">#00a65a</color>
+    <color name="colorDarkSuccess">#008d4c</color>
+    <color name="colorLightSuccess">#a500a65a</color>
+
+    <color name="colorWarning">#f39c12</color>
+    <color name="colorDarkWarning">#db8b0b</color>
+    <color name="colorLightWarning">#a5f39c12</color>
+
+    <color name="colorDanger">#dd4b39</color>
+    <color name="colorDarkDanger">#d33724</color>
+    <color name="colorLightDanger">#a5dd4b39</color>
+
+    <color name="colorGray">#d2d6de</color>
+    <color name="colorDarkGray">#b5bbc8</color>
+    <color name="colorLightGray">#a5d2d6de</color>
+
+    <color name="colorNavy">#001f3f</color>
+    <color name="colorDarkNavy">#001a35</color>
+    <color name="colorLightNavy">#a5001f3f</color>
+
+    <color name="colorTeal">#39cccc</color>
+    <color name="colorDarkTeal">#30bbbb</color>
+    <color name="colorLightTeal">#a539cccc</color>
+
+    <color name="colorPurple">#605ca8</color>
+    <color name="colorDarkPurple">#555299</color>
+    <color name="colorLightPurple">#a5605ca8</color>
+
+    <color name="colorOrange">#ff851b</color>
+    <color name="colorDarkOrange">#ff7701</color>
+    <color name="colorLightOrange">#a5ff851b</color>
+
+    <color name="colorMaroon">#d81b60</color>
+    <color name="colorDarkMaroon">#ca195a</color>
+    <color name="colorLightMaroon">#a5d81b60</color>
+
+    <color name="colorBlack">#111111</color>
+    <color name="colorDarkBlack">#000000</color>
+    <color name="colorLightBlack">#a5111111</color>
+
     <color name="black_overlay">#66000000</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorGray">#DFDFDF</color>
-    <color name="colorLightGray">#ECEFF1</color>
-    <color name="colorTealDark">#00796B</color>
-    <color name="colorTeal">#009688</color>
-    <color name="colorCyan">#00BCD4</color>
-    <color name="colorAmber">#FFC107</color>
-    <color name="colorDeepOrange">#FF5722</color>
-    <color name="colorBlueGray">#607D8B</color>
-    <color name="colorLime">#CDDC39</color>
-    <color name="colorBlack">#000000</color>
-    <color name="colorDarkGray">#424242</color>
+
+    <color name="colorWhite">#ffffff</color>
+
+    <color name="colorBackground">#ecf0f5</color>
 </resources>

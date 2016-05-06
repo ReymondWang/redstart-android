@@ -4,12 +4,10 @@
     android:layout_height="@dimen/nav_header_height"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_user_info"
-    android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:gravity="bottom"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <com.purplelight.redstar.component.view.CircleImageView
@@ -22,14 +20,20 @@
 
     <TextView
         android:id="@+id/txtUserName"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_marginTop="@dimen/common_spacing_middle"
+        android:layout_marginLeft="@dimen/common_spacing_small"
+        android:layout_marginStart="@dimen/common_spacing_small"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/txtUserEmail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_spacing_small"
+        android:layout_marginStart="@dimen/common_spacing_small"
+        android:layout_marginTop="@dimen/common_spacing_small"
+        android:layout_marginBottom="@dimen/common_spacing_big"/>
 
 </LinearLayout>

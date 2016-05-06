@@ -7,10 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Toast;
 
 import com.purplelight.redstar.application.RedStartApplication;
-import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.SystemUser;
@@ -82,12 +80,12 @@ public class WelcomeActivity extends AppCompatActivity {
         mVisible = true;
         mContentView = findViewById(R.id.imgWelCome);
 
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+//        mContentView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggle();
+//            }
+//        });
 
         mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
     }
@@ -96,7 +94,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        delayedHide(100);
+//        delayedHide(100);
     }
 
     private void toggle() {

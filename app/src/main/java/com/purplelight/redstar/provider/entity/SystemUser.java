@@ -23,6 +23,8 @@ public class SystemUser {
 
     private String headImgPath;
 
+    private String token;
+
     public String getId() {
         return id;
     }
@@ -93,5 +95,13 @@ public class SystemUser {
 
     public void setHeadImgPath(String headImgPath) {
         this.headImgPath = headImgPath;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

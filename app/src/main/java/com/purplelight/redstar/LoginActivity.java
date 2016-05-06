@@ -22,16 +22,21 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.business.entity.User;
+import com.purplelight.redstar.business.result.BindUserResult;
+import com.purplelight.redstar.constant.BusinessApi;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.SystemUser;
 import com.purplelight.redstar.util.HttpUtil;
+import com.purplelight.redstar.web.parameter.BindUserParameter;
 import com.purplelight.redstar.web.parameter.LoginParameter;
 import com.purplelight.redstar.web.result.LoginResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -185,17 +190,37 @@ public class LoginActivity extends AppCompatActivity {
             LoginResult result = new LoginResult();
             Gson gson = new Gson();
 
-            LoginParameter parameter = new LoginParameter();
-            parameter.setLoginId(mLoginId);
-            parameter.setPassword(mPassword);
+            // 从业务系统获得绑定用户的信息
+            HashMap<String, String> map = new HashMap<>();
+            map.put("name", mLoginId);
+            map.put("password", mPassword);
+            String bindJson = HttpUtil.GetDataFromNet(BusinessApi.getWebAPI(BusinessApi.LOGIN), map, HttpUtil.POST);
+            BindUserResult bindUserResult = gson.fromJson(bindJson, BindUserResult.class);
+            if (Result.SUCCESS.equals(bindUserResult.getSuccess())){
+                // 将业务系统的信息绑定到中台
+                User user = bindUserResult.getObj();
 
-            try{
-                String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.LOGIN), gson.toJson(parameter));
-                result = gson.fromJson(repStr, LoginResult.class);
-            }catch (IOException ex){
-                Log.e(TAG, ex.getMessage());
-                result.setSuccess(Result.ERROR);
-                result.setMessage(ex.getMessage());
+                SystemUser systemUser = new SystemUser();
+                systemUser.setId(user.getUserId());
+                systemUser.setUserName(user.getName());
+                systemUser.setEmail(user.getEmail());
+                systemUser.setSex("男".equals(user.getGender()) ? "1" : "2");
+                systemUser.setUserCode(user.getEmail());
+                systemUser.setToken(user.getToken());
+
+                BindUserParameter parameter = new BindUserParameter();
+                parameter.setUser(systemUser);
+                try{
+                    String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.BIND_FUNCTION), gson.toJson(parameter));
+                    result = gson.fromJson(repStr, LoginResult.class);
+                }catch (IOException ex){
+                    Log.e(TAG, ex.getMessage());
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(ex.getMessage());
+                }
+            } else {
+                result.setSuccess(bindUserResult.getSuccess());
+                result.setMessage(bindUserResult.getMessage());
             }
 
             return result;
@@ -227,4 +252,3 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
-
