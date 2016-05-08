@@ -11,6 +11,11 @@
     <string name="title_activity_passport_type">证照类型</string>
     <string name="title_activity_modify_password">修改密码</string>
 
+    <!-- 菜单 -->
+    <string name="action_bar_notification">消息</string>
+    <string name="action_bar_save">保存</string>
+    <string name="action_bar_select_project">选择项目</string>
+
     <!-- 正在加载 -->
     <string name="txt_loading">正在加载......</string>
 
@@ -51,6 +56,7 @@
     <string name="txt_row_buffer">清除缓存</string>
     <string name="txt_row_advice">意见反馈</string>
 
+    <string name="txt_row_sync">检查更新</string>
     <string name="txt_row_about">关于我们</string>
     <string name="txt_logout">退出登录</string>
 
@@ -74,8 +80,6 @@
     <string name="txt_user_phone_hint">请输入手机</string>
     <string name="txt_male">男</string>
     <string name="txt_female">女</string>
-    <string name="action_bar_save">保存</string>
-    <string name="action_bar_select_project">选择项目</string>
 
     <!-- 确认 -->
     <string name="title_logout_confirm">您是否确认退出？</string>

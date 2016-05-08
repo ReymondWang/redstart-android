@@ -90,7 +90,10 @@
             android:name=".provider.SystemUserProvider"
             android:authorities="com.purplelight.redstar.provider.RedStartProvider.SystemUser"
             android:exported="false" />
-
+        <provider
+            android:name=".provider.AppFuncProvider"
+            android:authorities="com.purplelight.redstar.provider.RedStartProvider.AppFunc"
+            android:exported="false" />
 
     </application>
 

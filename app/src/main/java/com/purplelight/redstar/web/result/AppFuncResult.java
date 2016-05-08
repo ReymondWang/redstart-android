@@ -1,6 +1,6 @@
 package com.purplelight.redstar.web.result;
 
-import com.purplelight.redstar.web.entity.WebBanner;
+import com.purplelight.redstar.provider.entity.AppFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,23 +10,23 @@ import java.util.List;
  * Created by wangyn on 16/5/4.
  */
 public class AppFuncResult extends Result {
-    private List<WebBanner> topList = new ArrayList<>();
+    private List<AppFunction> topList = new ArrayList<>();
 
-    private List<WebBanner> bodyList = new ArrayList<>();
+    private List<AppFunction> bodyList = new ArrayList<>();
 
-    public List<WebBanner> getTopList() {
+    public List<AppFunction> getTopList() {
         return topList;
     }
 
-    public void setTopList(List<WebBanner> topList) {
+    public void setTopList(List<AppFunction> topList) {
         this.topList = topList;
     }
 
-    public List<WebBanner> getBodyList() {
+    public List<AppFunction> getBodyList() {
         return bodyList;
     }
 
-    public void setBodyList(List<WebBanner> bodyList) {
+    public void setBodyList(List<AppFunction> bodyList) {
         this.bodyList = bodyList;
     }
 }

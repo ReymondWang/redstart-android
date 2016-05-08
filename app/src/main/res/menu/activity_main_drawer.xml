@@ -3,10 +3,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_notifications"
-            android:title="@string/txt_row_message" />
-        <item
             android:id="@+id/nav_password"
             android:icon="@drawable/ic_lock_outline"
             android:title="@string/txt_row_password" />
@@ -18,6 +14,10 @@
             android:id="@+id/nav_feedback"
             android:icon="@drawable/ic_send"
             android:title="@string/txt_row_advice" />
+        <item
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/ic_sync"
+            android:title="@string/txt_row_sync" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_group"

@@ -31,6 +31,12 @@ public class Configuration {
         public static final int PROFILE = 3;
     }
 
+    public class Part{
+        public static final int TOP = 1;
+        public static final int BODY = 2;
+        public static final int FOOT = 3;
+    }
+
     public class FunctionType{
         // 内部文章，只提供展示。
         public static final int INNER_ARTICAL = 1;

@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.purplelight.redstar.R;
 import com.purplelight.redstar.constant.WebAPI;
+import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.Validation;
-import com.purplelight.redstar.web.entity.WebBanner;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,7 +25,7 @@ import butterknife.InjectView;
  */
 public class FuncView extends LinearLayout implements View.OnClickListener {
 
-    private WebBanner mBanner;
+    private AppFunction mBanner;
     private OnFuncClickListener mClickListener;
 
     private int mIconSize;
@@ -55,7 +55,7 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
         mIconSize = iconSize;
     }
 
-    public void setBanner(WebBanner banner){
+    public void setBanner(AppFunction banner){
         mBanner = banner;
         initView();
     }
@@ -68,7 +68,7 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
     }
 
     public interface OnFuncClickListener{
-        void onFuncClick(WebBanner banner);
+        void onFuncClick(AppFunction banner);
     }
 
     private void initView(){
@@ -80,16 +80,16 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
         }
 
         if (mBanner != null){
-            if (!Validation.IsNullOrEmpty(mBanner.getImage())){
+            if (!Validation.IsNullOrEmpty(mBanner.getTitleImgPath())){
                 BitmapDownloaderTask task = new BitmapDownloaderTask(imgFunction);
                 DownloadedDrawable drawable = new DownloadedDrawable(task, getResources());
                 imgFunction.setImageDrawable(drawable);
-                task.execute(WebAPI.getFullImagePath(mBanner.getImage()));
+                task.execute(WebAPI.getFullImagePath(mBanner.getTitleImgPath()));
             }
 
-            if (!Validation.IsNullOrEmpty(mBanner.getLabel())){
+            if (!Validation.IsNullOrEmpty(mBanner.getTitle())){
                 txtFunction.setVisibility(View.VISIBLE);
-                txtFunction.setText(mBanner.getLabel());
+                txtFunction.setText(mBanner.getTitle());
             } else {
                 txtFunction.setVisibility(View.GONE);
             }

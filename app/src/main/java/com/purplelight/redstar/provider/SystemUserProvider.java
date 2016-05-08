@@ -36,6 +36,7 @@ public class SystemUserProvider extends ContentProvider {
         sUserMap.put(SystemUserMetaData.PHONE, SystemUserMetaData.PHONE);
         sUserMap.put(SystemUserMetaData.ADDRESS, SystemUserMetaData.ADDRESS);
         sUserMap.put(SystemUserMetaData.HEADIMGPATH, SystemUserMetaData.HEADIMGPATH);
+        sUserMap.put(SystemUserMetaData.TOKEN, SystemUserMetaData.TOKEN);
         sUserMap.put(SystemUserMetaData.CREATED_DATE, SystemUserMetaData.CREATED_DATE);
         sUserMap.put(SystemUserMetaData.MODIFIED_DATE, SystemUserMetaData.MODIFIED_DATE);
     }

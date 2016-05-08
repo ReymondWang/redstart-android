@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.purplelight.redstar.provider.RedStartProviderMeta.SystemUserMetaData;
+import com.purplelight.redstar.provider.RedStartProviderMeta.AppFuncMetaData;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private final static String TAG = "DatabaseHelper";
@@ -28,8 +29,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + SystemUserMetaData.PHONE + " TEXT,"
                 + SystemUserMetaData.ADDRESS + " TEXT,"
                 + SystemUserMetaData.HEADIMGPATH + " TEXT,"
+                + SystemUserMetaData.TOKEN + " TEXT,"
                 + SystemUserMetaData.CREATED_DATE + " INTEGER,"
                 + SystemUserMetaData.MODIFIED_DATE + " INTEGER"
+                + ");");
+
+        db.execSQL("CREATE TABLE " + AppFuncMetaData.TABLE_NAME + " ("
+                + AppFuncMetaData._ID + " INTEGER PRIMARY KEY,"
+                + AppFuncMetaData.FUNC_ID + " TEXT,"
+                + AppFuncMetaData.FRAGMENT + " TEXT,"
+                + AppFuncMetaData.PART + " TEXT,"
+                + AppFuncMetaData.FUNC_NAME + " TEXT,"
+                + AppFuncMetaData.FUNC_IMAGE + " TEXT,"
+                + AppFuncMetaData.FUNC_TITLE + " TEXT,"
+                + AppFuncMetaData.FUNC_TYPE + " TEXT,"
+                + AppFuncMetaData.OUTTER_SYSTEM + " TEXT,"
+                + AppFuncMetaData.CONTENT_URL + " TEXT,"
+                + AppFuncMetaData.STAT_URL + " TEXT,"
+                + AppFuncMetaData.CALL_METHOD + " TEXT,"
+                + AppFuncMetaData.CREATED_DATE + " INTEGER,"
+                + AppFuncMetaData.MODIFIED_DATE + " INTEGER"
                 + ");");
     }
 
@@ -39,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + oldVersion + " to "
                 + newVersion + ", which will destory all old data.");
         db.execSQL("DROP TABLE IF EXISTS " + SystemUserMetaData.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AppFuncMetaData.TABLE_NAME);
         onCreate(db);
     }
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.purplelight.redstar.R;
 import com.purplelight.redstar.constant.WebAPI;
-import com.purplelight.redstar.web.entity.WebBanner;
+import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.Validation;
@@ -28,7 +28,7 @@ public class WebBannerView extends LinearLayout implements View.OnClickListener 
     @InjectView(R.id.imgBanner) ImageView imgBanner;
     @InjectView(R.id.txtBanner) TextView txtBanner;
 
-    private WebBanner mBanner;
+    private AppFunction mBanner;
     private OnBannerClickListener mBannerClickListener;
 
     private int mImgHeight, mImgWidth;
@@ -46,7 +46,7 @@ public class WebBannerView extends LinearLayout implements View.OnClickListener 
         ButterKnife.inject(this);
     }
 
-    public void setBanner(WebBanner banner){
+    public void setBanner(AppFunction banner){
         mBanner = banner;
         initView();
     }
@@ -106,7 +106,7 @@ public class WebBannerView extends LinearLayout implements View.OnClickListener 
     }
 
     public interface OnBannerClickListener{
-        void onBannerClick(WebBanner banner);
+        void onBannerClick(AppFunction banner);
     }
 
     private void initView(){
@@ -116,16 +116,16 @@ public class WebBannerView extends LinearLayout implements View.OnClickListener 
         }
 
         if (mBanner != null){
-            if (!Validation.IsNullOrEmpty(mBanner.getImage())){
+            if (!Validation.IsNullOrEmpty(mBanner.getTitleImgPath())){
                 BitmapDownloaderTask task = new BitmapDownloaderTask(imgBanner);
                 DownloadedDrawable drawable = new DownloadedDrawable(task, getResources());
                 imgBanner.setImageDrawable(drawable);
-                task.execute(WebAPI.getFullImagePath(mBanner.getImage()));
+                task.execute(WebAPI.getFullImagePath(mBanner.getTitleImgPath()));
             }
 
-            if (!Validation.IsNullOrEmpty(mBanner.getLabel())){
+            if (!Validation.IsNullOrEmpty(mBanner.getTitle())){
                 txtBanner.setVisibility(View.VISIBLE);
-                txtBanner.setText(mBanner.getLabel());
+                txtBanner.setText(mBanner.getTitle());
             } else {
                 txtBanner.setVisibility(View.GONE);
             }

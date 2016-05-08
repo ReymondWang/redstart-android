@@ -48,6 +48,51 @@ public class RedStartProviderMeta {
 
         public static final String HEADIMGPATH = "headimagepath";
 
+        public static final String TOKEN = "token";
+
+        public static final String CREATED_DATE = "created";
+
+        public static final String MODIFIED_DATE = "modified";
+    }
+
+    public static final class AppFuncMetaData implements BaseColumns{
+        private AppFuncMetaData() {}
+        public static final String AUTHORITY = "com.purplelight.redstar.provider.RedStartProvider.AppFunc";
+        public static final String TABLE_NAME = "AppFunc";
+
+        public static final Uri CONTENT_URI =
+                Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.purplelight.redstar.appfunc";
+
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.purplelight.redstar.appfunc";
+
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
+        public static final String FUNC_ID = "funcid";
+
+        public static final String FRAGMENT = "fragment";
+
+        public static final String PART = "part";
+
+        public static final String FUNC_NAME = "funcname";
+
+        public static final String FUNC_IMAGE = "funcimage";
+
+        public static final String FUNC_TITLE = "functitle";
+
+        public static final String FUNC_TYPE = "functype";
+
+        public static final String OUTTER_SYSTEM = "outtersystem";
+
+        public static final String CONTENT_URL = "contenturl";
+
+        public static final String STAT_URL = "staturl";
+
+        public static final String CALL_METHOD = "callmethod";
+
         public static final String CREATED_DATE = "created";
 
         public static final String MODIFIED_DATE = "modified";

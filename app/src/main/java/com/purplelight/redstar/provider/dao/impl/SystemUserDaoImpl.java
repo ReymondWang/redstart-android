@@ -47,6 +47,7 @@ public class SystemUserDaoImpl extends BaseDaoImpl implements ISystemUserDao {
         cv.put(SystemUserMetaData.PHONE, user.getPhone());
         cv.put(SystemUserMetaData.ADDRESS, user.getAddress());
         cv.put(SystemUserMetaData.HEADIMGPATH, user.getHeadImgPath());
+        cv.put(SystemUserMetaData.TOKEN, user.getToken());
 
         Uri insertedUri = contentResolver.insert(uri, cv);
         Log.d(TAG, "inserted uri:" + insertedUri);
@@ -71,6 +72,7 @@ public class SystemUserDaoImpl extends BaseDaoImpl implements ISystemUserDao {
             int iPhone = c.getColumnIndex(SystemUserMetaData.PHONE);
             int iAddress = c.getColumnIndex(SystemUserMetaData.ADDRESS);
             int iHeadImgPath = c.getColumnIndex(SystemUserMetaData.HEADIMGPATH);
+            int iToken = c.getColumnIndex(SystemUserMetaData.TOKEN);
 
             c.moveToFirst();
             if (!c.isAfterLast()){
@@ -84,6 +86,7 @@ public class SystemUserDaoImpl extends BaseDaoImpl implements ISystemUserDao {
                 user.setPhone(c.getString(iPhone));
                 user.setAddress(c.getString(iAddress));
                 user.setHeadImgPath(c.getString(iHeadImgPath));
+                user.setToken(c.getString(iToken));
 
                 Log.d(TAG, "get userinfo:" + user.getUserName());
                 c.close();

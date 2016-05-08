@@ -1,13 +1,9 @@
 package com.purplelight.redstar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -26,8 +22,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,20 +29,23 @@ import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.CircleImageView;
 import com.purplelight.redstar.component.view.FuncView;
+import com.purplelight.redstar.component.view.HomeSwipeLayout;
+import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.component.view.WebBannerView;
 import com.purplelight.redstar.component.widget.AutoScrollViewPager;
 import com.purplelight.redstar.component.widget.CirclePageIndicator;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
+import com.purplelight.redstar.provider.dao.IAppFunctionDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
+import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.Validation;
-import com.purplelight.redstar.web.entity.WebBanner;
 import com.purplelight.redstar.web.parameter.AppFuncParameter;
 import com.purplelight.redstar.web.result.AppFuncResult;
 import com.purplelight.redstar.web.result.Result;
@@ -61,7 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "MainActivity";
 
     // 当用户在一定时间内连续点击菜单上的返回键时，才会真正退出，防止用户的误操作。
@@ -74,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     private final static int FUNC_NUM_EACH_ROW = 3;
 
     private List<WebBannerView> mBannerViews;
-    private List<WebBanner> mBanners, mFunctions;
+    private List<AppFunction> mBanners, mFunctions;
     private Point mScreenSize = new Point();
 
     private Gson mGson = new Gson();
@@ -86,8 +83,7 @@ public class MainActivity extends AppCompatActivity
     @InjectView(R.id.toolbar) Toolbar mToolBar;
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawer;
     @InjectView(R.id.nav_view) NavigationView mNavigationView;
-    @InjectView(R.id.loading_progress) ProgressBar mProgressBar;
-    @InjectView(R.id.form_home_page) ScrollView mFrom;
+    @InjectView(R.id.refresh_form) HomeSwipeLayout mRefreshFrom;
     @InjectView(R.id.vpHomeTop) AutoScrollViewPager mHomeTop;
     @InjectView(R.id.homeTopIndicator) CirclePageIndicator mTopIndicator;
     @InjectView(R.id.lytAppFuncs) GridLayout lytAppFuncs;
@@ -116,8 +112,27 @@ public class MainActivity extends AppCompatActivity
         mTxtUserName = (TextView)view.findViewById(R.id.txtUserName);
         mTxtUserEmail = (TextView)view.findViewById(R.id.txtUserEmail);
 
+        mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
+        mRefreshFrom.setHeight(mScreenSize.x / 2);
+
         initEvent();
-        attemptLoad();
+
+        mBanners = RedStartApplication.getTopList();
+        mFunctions = RedStartApplication.getBodyList();
+        if (mBanners != null && mBanners.size() > 0){
+            initTopAdvView();
+        }
+        if (mFunctions != null && mFunctions.size() > 0){
+            initFunctionView();
+        }
+
+        mRefreshFrom.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshFrom.setRefreshing(true);
+                attemptLoad();
+            }
+        });
     }
 
     @Override
@@ -154,15 +169,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // 暂时去掉右侧菜单
-//        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notification) {
             return true;
         }
 
@@ -174,7 +188,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_notifications) {
+        if (id == R.id.nav_sync) {
             Intent intent = new Intent(this, NotificationActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_password) {
@@ -191,6 +205,11 @@ public class MainActivity extends AppCompatActivity
             logout();
         }
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        attemptLoad();
     }
 
     private void initUserViews(){
@@ -214,7 +233,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
-
+        mRefreshFrom.setOnRefreshListener(this);
         mImgUserHead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,38 +243,13 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-            mFrom.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressBar.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-            mFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
     private void logout(){
         RedStartApplication.setUser(null);
         ISystemUserDao userDao = DomainFactory.createSystemUserDao(this);
         userDao.clear();
+
+        IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(this);
+        functionDao.clear();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -263,15 +257,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void attemptLoad(){
-        showProgress(true);
+        if (Validation.IsActivityNetWork(this)){
 
-        AppFuncParameter parameter = new AppFuncParameter();
-        parameter.setLoginId(RedStartApplication.getUser().getId());
-        parameter.setFragment(Configuration.Fragment.HOME);
+            AppFuncParameter parameter = new AppFuncParameter();
+            parameter.setLoginId(RedStartApplication.getUser().getId());
+            parameter.setFragment(Configuration.Fragment.HOME);
 
-        String reqJson = mGson.toJson(parameter);
-        LoadingTask task = new LoadingTask();
-        task.execute(reqJson);
+            String reqJson = mGson.toJson(parameter);
+            LoadingTask task = new LoadingTask();
+            task.execute(reqJson);
+        } else {
+            if (mRefreshFrom.isRefreshing()){
+                mRefreshFrom.setRefreshing(false);
+            }
+            Toast.makeText(this, getString(R.string.do_not_have_network), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -279,15 +279,15 @@ public class MainActivity extends AppCompatActivity
      */
     private void initTopAdvView(){
         mBannerViews = new ArrayList<>();
-        for(final WebBanner item : AutoScrollViewPager.GetCircleModePagerSource(mBanners)){
+        for(final AppFunction item : AutoScrollViewPager.GetCircleModePagerSource(mBanners)){
             WebBannerView bannerView = new WebBannerView(this);
             bannerView.setBanner(item);
             bannerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                    intent.putExtra("title", item.getLabel());
-                    intent.putExtra("url", item.getUrl());
+                    intent.putExtra("title", item.getTitle());
+                    intent.putExtra("url", item.getContentUrl());
                     startActivity(intent);
                 }
             });
@@ -314,14 +314,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 初始化首页通知功能部分
+     * 初始化首页功能部分
      */
     private void initFunctionView(){
+        // 清空所有子控件
+        lytAppFuncs.removeAllViews();
 
         lytAppFuncs.setColumnCount(FUNC_NUM_EACH_ROW);
         // 九宫格添加至整行
         while (mFunctions.size() % FUNC_NUM_EACH_ROW != 0){
-            mFunctions.add(new WebBanner());
+            mFunctions.add(new AppFunction());
         }
         int rowCnt = mFunctions.size() / FUNC_NUM_EACH_ROW;
         lytAppFuncs.setRowCount(rowCnt);
@@ -347,22 +349,22 @@ public class MainActivity extends AppCompatActivity
             view.setBanner(mFunctions.get(i));
             view.setClickListener(new FuncView.OnFuncClickListener() {
                 @Override
-                public void onFuncClick(WebBanner banner) {
-                    if (!Validation.IsNullOrEmpty(banner.getType())){
-                        int funcType = Integer.parseInt(banner.getType());
+                public void onFuncClick(AppFunction banner) {
+                    if (!Validation.IsNullOrEmpty(banner.getFunctionType())){
+                        int funcType = Integer.parseInt(banner.getFunctionType());
                         switch (funcType){
                             case Configuration.FunctionType.INNER_ARTICAL:
                             case Configuration.FunctionType.INNER_WAP_FUNCTION:
                             case Configuration.FunctionType.OUTTER_ARTICAL:
                             case Configuration.FunctionType.OUTTER_WAP_FUNCTION:
                                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                                intent.putExtra("title", banner.getLabel());
-                                intent.putExtra("url", banner.getUrl());
+                                intent.putExtra("title", banner.getTitle());
+                                intent.putExtra("url", banner.getContentUrl());
                                 startActivity(intent);
                                 break;
                             case Configuration.FunctionType.INNER_NATIVE_FUNCTION:
                                 try {
-                                    Class nxtView = Class.forName(banner.getUrl());
+                                    Class nxtView = Class.forName(banner.getContentUrl());
                                     Intent nxtInt = new Intent(MainActivity.this, nxtView);
                                     startActivity(nxtInt);
                                 } catch (ClassNotFoundException ex){
@@ -395,14 +397,27 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(AppFuncResult appFuncResult) {
-            showProgress(false);
+            mRefreshFrom.setRefreshing(false);
 
             if (Result.SUCCESS.equals(appFuncResult.getSuccess())){
                 mBanners = appFuncResult.getTopList();
                 mFunctions = appFuncResult.getBodyList();
 
-                initTopAdvView();
-                initFunctionView();
+                // 保存到数据库和内存
+                IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(MainActivity.this);
+                functionDao.clear();
+                functionDao.save(mBanners);
+                functionDao.save(mFunctions);
+
+                RedStartApplication.setTopList(mBanners);
+                RedStartApplication.setBodyList(mFunctions);
+
+                if (mBanners != null && mBanners.size() > 0){
+                    initTopAdvView();
+                }
+                if (mFunctions != null && mFunctions.size() > 0){
+                    initFunctionView();
+                }
             } else {
                 Toast.makeText(MainActivity.this, appFuncResult.getMessage(), Toast.LENGTH_SHORT).show();
             }
