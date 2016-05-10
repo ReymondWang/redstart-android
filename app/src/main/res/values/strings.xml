@@ -137,6 +137,7 @@
     <string name="no_server_info">没有设定服务器信息</string>
     <string name="do_not_have_network">没有可以使用的网络</string>
     <string name="no_response_json">没有取到数据</string>
+    <string name="no_image_to_show">没有图片可以显示</string>
     <string name="login_failed">登录失败</string>
     <string name="update_failed">更新失败</string>
     <string name="login_successed">登录成功</string>

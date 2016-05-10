@@ -3,14 +3,11 @@ package com.purplelight.redstar;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,6 +18,7 @@ import android.speech.tts.Voice;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,12 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,9 +61,8 @@ public class EstimateSubmitActivity extends AppCompatActivity {
     // 调用相机拍照时，临时存储文件。
     private Uri imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp"));
 
-    // 为了实现瀑布流方式的图片展示效果需要保留当前容器可以放置图片的点
-    private int mLeft = 0, mTop = 0;
-    private Point mScreenSize = new Point();
+    // 图片显示的列数
+    private int mImageColumnNum = 3;
 
     // 整改图片列表
     private List<ImageEntity> mImageEntities = new ArrayList<>();
@@ -87,10 +81,6 @@ public class EstimateSubmitActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         mToolbar = getSupportActionBar();
-
-        // 取得手机屏幕的宽度，并将顶部轮播广告位的比例设置为2:1
-        WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getSize(mScreenSize);
 
         initViews();
         initEvents();
@@ -130,8 +120,8 @@ public class EstimateSubmitActivity extends AppCompatActivity {
         if (mToolbar != null){
             mToolbar.setDisplayHomeAsUpEnabled(true);
         }
-
-        mContainer.setLayoutManager(new GridLayoutManager(this, 3));
+        mContainer.setLayoutManager(new GridLayoutManager(this, mImageColumnNum));
+        mContainer.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void initEvents(){
@@ -150,38 +140,6 @@ public class EstimateSubmitActivity extends AppCompatActivity {
             mImageEntities.add(entity);
             ImageAdapter adapter = new ImageAdapter();
             mContainer.setAdapter(adapter);
-
-//            RemovableImage image = new RemovableImage(this);
-//            int thumbSize = getResources().getDimensionPixelOffset(R.dimen.ui_thumb_size);
-//
-//            FrameLayout.LayoutParams params =
-//                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT
-//                            , FrameLayout.LayoutParams.WRAP_CONTENT);
-//            params.height = thumbSize;
-//            params.width = thumbSize;
-//
-//            int imageSpan = getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle);
-//
-//            if (mLeft + imageSpan + thumbSize > mScreenSize.x){
-//                mLeft = 0;
-//                mTop += imageSpan + thumbSize;
-//            } else {
-//                mLeft += imageSpan;
-//            }
-//            params.setMargins(mLeft, mTop, 0, 0);
-//            image.setLayoutParams(params);
-//
-//            mLeft += thumbSize;
-//
-//            image.setImageFile(ImageHelper.SUBMIT_CACHE_PATH + entity.thumbFileName);
-//            mContainer.addView(image);
-//
-//            image.setOnRemovableListener(new RemovableImage.OnRemovableListener() {
-//                @Override
-//                public void remove(RemovableImage me) {
-//                    confirmDelFromContainer(me);
-//                }
-//            });
         }
     }
 
@@ -198,7 +156,6 @@ public class EstimateSubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                mContainer.removeView(removableImage);
                 for(int i = 0; i < mImageEntities.size(); i++){
                     if (removableImage.getImageFileName().equals(
                             ImageHelper.SUBMIT_CACHE_PATH + mImageEntities.get(i).thumbFileName)){
@@ -206,6 +163,8 @@ public class EstimateSubmitActivity extends AppCompatActivity {
                         break;
                     }
                 }
+                ImageAdapter adapter = new ImageAdapter();
+                mContainer.setAdapter(adapter);
             }
         });
         dialog.show();
@@ -334,14 +293,37 @@ public class EstimateSubmitActivity extends AppCompatActivity {
 
         @Override
         public ImageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            ImageHolder holder = new ImageHolder(new RemovableImage(EstimateSubmitActivity.this));
-            return holder;
+            return new ImageHolder(new RemovableImage(EstimateSubmitActivity.this));
         }
 
         @Override
         public void onBindViewHolder(ImageHolder holder, int position) {
+            final ImageEntity entity = mImageEntities.get(position);
+
+            int containerWidth = mContainer.getWidth();
+            int mWidth = containerWidth / mImageColumnNum;
+            RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
+                    RecyclerView.LayoutParams.WRAP_CONTENT);
+            params.width = params.height = mWidth;
+
             RemovableImage image = (RemovableImage)holder.itemView;
-            image.setImageFile(ImageHelper.SUBMIT_CACHE_PATH + mImageEntities.get(position).thumbFileName);
+            image.setLayoutParams(params);
+            image.setImageFile(ImageHelper.SUBMIT_CACHE_PATH + entity.thumbFileName);
+            image.setOnRemovableListener(new RemovableImage.OnRemovableListener() {
+                @Override
+                public void remove(RemovableImage me) {
+                    confirmDelFromContainer(me);
+                }
+            });
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EstimateSubmitActivity.this, ZoomImageViewActivity.class);
+                    intent.putExtra("type", ZoomImageViewActivity.ZOOM_FILE_PATH);
+                    intent.putExtra("filename", ImageHelper.SUBMIT_CACHE_PATH + entity.fileName);
+                    startActivity(intent);
+                }
+            });
         }
 
         @Override

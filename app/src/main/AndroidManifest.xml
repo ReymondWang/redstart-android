@@ -67,7 +67,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate_detail"
             android:screenOrientation="portrait" />
-        <activity android:name=".EstimateSubmitActivity"
+        <activity
+            android:name=".EstimateSubmitActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate_submit"
             android:screenOrientation="portrait" />
@@ -98,6 +99,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_notification"
             android:screenOrientation="portrait" />
+        <activity android:name=".ZoomImageViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 数据库Provider -->
         <provider
