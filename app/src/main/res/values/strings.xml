@@ -6,6 +6,9 @@
     <string name="title_activity_profile">个人信息</string>
     <string name="title_activity_profile_modify">编辑个人信息</string>
     <string name="title_activity_measure">实测实量</string>
+    <string name="title_activity_third_estimate">第三方评估</string>
+    <string name="title_activity_third_estimate_detail">评估详细</string>
+    <string name="title_activity_third_estimate_submit">填报消项</string>
     <string name="title_activity_passport_upload">证照上传</string>
     <string name="title_activity_passport_upload_modify">编辑证照信息</string>
     <string name="title_activity_passport_type">证照类型</string>
@@ -15,6 +18,11 @@
     <string name="action_bar_notification">消息</string>
     <string name="action_bar_save">保存</string>
     <string name="action_bar_select_project">选择项目</string>
+    <string name="action_change_mode">切换显示模式</string>
+    <string name="action_search">查询</string>
+    <string name="action_download">下载</string>
+    <string name="action_create">填报</string>
+    <string name="action_task">查看下载任务</string>
 
     <!-- 正在加载 -->
     <string name="txt_loading">正在加载......</string>
@@ -84,7 +92,18 @@
     <!-- 确认 -->
     <string name="title_logout_confirm">您是否确认退出？</string>
     <string name="title_clear_buffer_confirm">您是否确认清空缓存？</string>
+    <string name="title_delete_image_confirm">您是否确认删除图片？</string>
     <string name="clear_buffer_success">清除缓存成功</string>
+
+    <!-- 第三方评估详细信息 -->
+    <string name="estimate_item_category">问题性质</string>
+    <string name="estimate_item_area">区域</string>
+    <string name="estimate_item_project">标段</string>
+    <string name="estimate_item_checker">验收责任人</string>
+    <string name="estimate_item_description">问题描述</string>
+    <string name="estimate_item_submit">整改措施</string>
+    <string name="estimate_item_submit_hint">请输入整改措施</string>
+    <string name="estimate_item_submit_img">整改图片</string>
 
     <!-- 证照信息 -->
     <string name="title_passport_name">证照名称</string>
@@ -117,6 +136,7 @@
     <string name="common_image_description">这是一张图片</string>
     <string name="no_server_info">没有设定服务器信息</string>
     <string name="do_not_have_network">没有可以使用的网络</string>
+    <string name="no_response_json">没有取到数据</string>
     <string name="login_failed">登录失败</string>
     <string name="update_failed">更新失败</string>
     <string name="login_successed">登录成功</string>

@@ -52,6 +52,18 @@ public class ConvertUtil {
         return year + "-" + month + "-" + day;
     }
 
+    public static String ToDateTimeStr(Calendar calendar){
+        String year = String.valueOf(calendar.get(Calendar.YEAR));
+        String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
+        String day = String.valueOf(calendar.get(Calendar.DATE));
+        String hour = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
+        String minute = String.valueOf(calendar.get(Calendar.MINUTE));
+        String second = String.valueOf(calendar.get(Calendar.SECOND));
+        String milliSecond = String.valueOf(calendar.get(Calendar.MILLISECOND));
+
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + " " + milliSecond;
+    }
+
     public static byte split_file_id(String file_id, String[] results, String splitor) {
         int pos = file_id.indexOf(splitor);
         if ((pos <= 0) || (pos == file_id.length() - 1)) {

@@ -2,6 +2,8 @@ package com.purplelight.redstar.util;
 
 import android.util.Log;
 
+import com.purplelight.redstar.constant.Configuration;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -50,6 +52,8 @@ public class HttpUtil {
         URL url = new URL(strUrl);
 
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+        urlConnection.setConnectTimeout(Configuration.Http.CONNECT_TIME_OUT);
+        urlConnection.setReadTimeout(Configuration.Http.READ_TIME_OUT);
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setRequestMethod("POST");
@@ -80,6 +84,8 @@ public class HttpUtil {
         URL url = new URL(strUrl);
 
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+        urlConnection.setConnectTimeout(Configuration.Http.CONNECT_TIME_OUT);
+        urlConnection.setReadTimeout(Configuration.Http.READ_TIME_OUT);
         urlConnection.setDoInput(true);
         urlConnection.setDoOutput(true);
         urlConnection.setRequestMethod("POST");
@@ -113,6 +119,8 @@ public class HttpUtil {
         URL url = new URL(generateGetUrl(strUrl, params));
 
         HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
+        urlConn.setConnectTimeout(Configuration.Http.CONNECT_TIME_OUT);
+        urlConn.setReadTimeout(Configuration.Http.READ_TIME_OUT);
         urlConn.connect();
 
         InputStreamReader in = new InputStreamReader(urlConn.getInputStream());

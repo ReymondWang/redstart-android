@@ -30,11 +30,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
 public class ImageHelper {
 	private static final String TAG = "ImageHelper";
 	private static final int DISK_MAX_SIZE = 32 * 1024 * 1024;// SD 32MB
 	public static final String CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/mcommunity/";
+	public static final String SUBMIT_CACHE_PATH = CACHE_PATH + "submit/";
 
 	private final static LruCache<String, Bitmap> mMemoryCache;
 	private final static SimpleDiskLruCache mDiskCache;
@@ -103,6 +105,23 @@ public class ImageHelper {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 生成随机文件名
+	 * @return 文件名
+     */
+	public static String generateRandomFileName(){
+		return UUID.randomUUID().toString().replace("-", "");
+	}
+
+	/**
+	 * 根据原始文件明生成缩略图的文件名
+	 * @param originalFileName 原始文件名
+	 * @return                 缩略图文件名
+     */
+	public static String generateThumbFileName(String originalFileName){
+		return originalFileName + "_thumb";
 	}
 
 	/**
@@ -224,21 +243,17 @@ public class ImageHelper {
 	public static Bitmap CompressImageToSize(Bitmap image, int height, int width) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-		if( baos.toByteArray().length / 1024 > 1024) {
-			baos.reset();
-			image.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-		}
 		ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
 		BitmapFactory.Options newOpts = new BitmapFactory.Options();
 		newOpts.inJustDecodeBounds = true;
 		newOpts.inJustDecodeBounds = false;
-		int w = newOpts.outWidth;
-		int h = newOpts.outHeight;
+		int w = image.getWidth();
+		int h = image.getHeight();
 		int be = 1;
 		if (w > h && w > width) {
-			be = newOpts.outWidth / width;
+			be = w / width;
 		} else if (w < h && h > height) {
-			be = newOpts.outHeight / height;
+			be = h / height;
 		}
 		if (be <= 0)
 			be = 1;

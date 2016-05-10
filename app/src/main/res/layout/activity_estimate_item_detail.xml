@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground"
+    tools:context="com.purplelight.redstar.EstimateItemDetailActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_spacing_big"
+            android:layout_marginBottom="@dimen/common_spacing_big"
+            android:background="@color/colorWhite"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_category"/>
+
+                <TextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_middle"
+                    android:text="重要"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_project"/>
+
+                <TextView
+                    android:id="@+id/txtArea"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_middle"
+                    android:text="东北区域"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_project"/>
+
+                <TextView
+                    android:id="@+id/txtProject"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_middle"
+                    android:text="长春一期"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_checker"/>
+
+                <TextView
+                    android:id="@+id/txtChecker"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_middle"
+                    android:text="王亚南"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_description"/>
+
+                <TextView
+                    android:id="@+id/txtDescription"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_middle"
+                    android:text="现场楼层内临边防护措施缺失，存在安全隐患"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:id="@+id/lytImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginLeft="@dimen/common_spacing_middle"
+                android:layout_marginRight="@dimen/common_spacing_middle"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

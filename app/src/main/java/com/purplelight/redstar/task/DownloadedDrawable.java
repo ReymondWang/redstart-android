@@ -12,7 +12,12 @@ import java.lang.ref.WeakReference;
 public class DownloadedDrawable extends BitmapDrawable {
 
 	private final WeakReference<BitmapDownloaderTask> bitmapDownloaderTaskReference;
-	
+
+	public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask, Resources resources, Bitmap placeHolder){
+		super(resources, placeHolder);
+		bitmapDownloaderTaskReference = new WeakReference<>(bitmapDownloaderTask);
+	}
+
 	public DownloadedDrawable(BitmapDownloaderTask bitmapDownloaderTask, Resources resources){
 		super(resources, BitmapFactory.decodeResource(resources, R.drawable.cc_bg_default_image));
 		bitmapDownloaderTaskReference = new WeakReference<>(bitmapDownloaderTask);

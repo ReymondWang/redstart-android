@@ -10,9 +10,9 @@ public class Validation {
 		return str == null || "".equals(str);
 	}
 	
-	public static boolean IsActivityNetWork(Activity activity){
+	public static boolean IsActivityNetWork(Context context){
 		ConnectivityManager connMgr =
-				(ConnectivityManager)activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+				(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
 		return networkInfo != null && networkInfo.isConnected();

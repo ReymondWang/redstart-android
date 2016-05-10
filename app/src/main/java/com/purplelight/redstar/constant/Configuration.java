@@ -8,7 +8,7 @@ public class Configuration {
 
     public class Server{
 //        public static final String WEB = "http://139.196.186.85:8080/";
-        public static final String WEB = "http://192.168.0.100:8080/mcm/";
+        public static final String WEB = "http://192.168.0.30:8080/mcm/";
 
         public static final String BUSINESS = "http://qiuxisoft.com/HongXing/";
 
@@ -23,6 +23,15 @@ public class Configuration {
         public static final boolean ANTI_STEAL_TOKEN = false;
         public static final String SECRET_KEY = "FastDFS1234567890";
         public static final String TRACKER_SERVER = "139.196.186.85:22122";
+    }
+
+    public class Http{
+        public static final int CONNECT_TIME_OUT = 3000;
+        public static final int READ_TIME_OUT = 3000;
+    }
+
+    public class Image{
+        public static final int THUMB_SIZE = 300;
     }
 
     public class Fragment{

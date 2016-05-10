@@ -30,6 +30,7 @@ import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.SystemUser;
 import com.purplelight.redstar.util.HttpUtil;
+import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.parameter.BindUserParameter;
 import com.purplelight.redstar.web.parameter.LoginParameter;
 import com.purplelight.redstar.web.result.LoginResult;
@@ -195,32 +196,42 @@ public class LoginActivity extends AppCompatActivity {
             map.put("name", mLoginId);
             map.put("password", mPassword);
             String bindJson = HttpUtil.GetDataFromNet(BusinessApi.getWebAPI(BusinessApi.LOGIN), map, HttpUtil.POST);
-            BindUserResult bindUserResult = gson.fromJson(bindJson, BindUserResult.class);
-            if (Result.SUCCESS.equals(bindUserResult.getSuccess())){
-                // 将业务系统的信息绑定到中台
-                User user = bindUserResult.getObj();
+            if (!Validation.IsNullOrEmpty(bindJson)){
+                BindUserResult bindUserResult = gson.fromJson(bindJson, BindUserResult.class);
+                if (Result.SUCCESS.equals(bindUserResult.getSuccess())){
+                    // 将业务系统的信息绑定到中台
+                    User user = bindUserResult.getObj();
 
-                SystemUser systemUser = new SystemUser();
-                systemUser.setId(user.getUserId());
-                systemUser.setUserName(user.getName());
-                systemUser.setEmail(user.getEmail());
-                systemUser.setSex("男".equals(user.getGender()) ? "1" : "2");
-                systemUser.setUserCode(user.getEmail());
-                systemUser.setToken(user.getToken());
+                    SystemUser systemUser = new SystemUser();
+                    systemUser.setId(user.getUserId());
+                    systemUser.setUserName(user.getName());
+                    systemUser.setEmail(user.getEmail());
+                    systemUser.setSex("男".equals(user.getGender()) ? "1" : "2");
+                    systemUser.setUserCode(user.getEmail());
+                    systemUser.setToken(user.getToken());
 
-                BindUserParameter parameter = new BindUserParameter();
-                parameter.setUser(systemUser);
-                try{
-                    String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.BIND_FUNCTION), gson.toJson(parameter));
-                    result = gson.fromJson(repStr, LoginResult.class);
-                }catch (IOException ex){
-                    Log.e(TAG, ex.getMessage());
-                    result.setSuccess(Result.ERROR);
-                    result.setMessage(ex.getMessage());
+                    BindUserParameter parameter = new BindUserParameter();
+                    parameter.setUser(systemUser);
+                    try{
+                        String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.BIND_FUNCTION), gson.toJson(parameter));
+                        if (!Validation.IsNullOrEmpty(repStr)){
+                            result = gson.fromJson(repStr, LoginResult.class);
+                        } else {
+                            result.setSuccess(Result.ERROR);
+                            result.setMessage(getString(R.string.no_response_json));
+                        }
+                    }catch (IOException ex){
+                        Log.e(TAG, ex.getMessage());
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(ex.getMessage());
+                    }
+                } else {
+                    result.setSuccess(bindUserResult.getSuccess());
+                    result.setMessage(bindUserResult.getMessage());
                 }
             } else {
-                result.setSuccess(bindUserResult.getSuccess());
-                result.setMessage(bindUserResult.getMessage());
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.no_response_json));
             }
 
             return result;

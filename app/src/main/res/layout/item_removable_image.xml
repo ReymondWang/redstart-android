@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/common_spacing_big"
+        android:background="@drawable/bg_removable_image">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/cc_bg_default_topic_grid"
+            android:contentDescription="@string/common_image_description"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btnDelete"
+        android:layout_width="25dip"
+        android:layout_height="25dip"
+        android:layout_gravity="top|end|bottom"
+        android:src="@drawable/ic_delete_forever"
+        android:contentDescription="@string/common_image_description"/>
+    
+</FrameLayout>

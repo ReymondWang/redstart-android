@@ -58,6 +58,20 @@
             android:label="@string/title_activity_measure"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ThirdEstimateActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_third_estimate"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EstimateItemDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_third_estimate_detail"
+            android:screenOrientation="portrait" />
+        <activity android:name=".EstimateSubmitActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_third_estimate_submit"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".PassportUploadActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_passport_upload"
@@ -81,8 +95,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NotificationActivity"
-            android:label="@string/title_activity_notification"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_notification"
             android:screenOrientation="portrait" />
 
         <!-- 数据库Provider -->

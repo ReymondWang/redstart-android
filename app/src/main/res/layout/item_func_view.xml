@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_clickable_row"
-    android:gravity="center">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/bg_clickable_row">
 
-    <ImageView
-        android:id="@+id/imgFunction"
+    <FrameLayout
+        android:id="@+id/icon_form"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/common_image_description"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgFunction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/common_image_description"/>
+
+        <TextView
+            android:textSize="9.0sp"
+            android:textColor="#ffffffff"
+            android:gravity="center"
+            android:layout_gravity="center|end|top"
+            android:id="@+id/notification_count"
+            android:background="@drawable/red_circle"
+            android:visibility="gone"
+            android:layout_width="18dip"
+            android:layout_height="18dip" />
+
+    </FrameLayout>
+
     <TextView
         android:id="@+id/txtFunction"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_spacing_middle"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
