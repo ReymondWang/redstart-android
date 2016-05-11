@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorInfo"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:padding="@dimen/common_spacing_xbig"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtProject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/common_font_big"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/txtSupplier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_spacing_middle"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_spacing_middle"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:layout_marginRight="@dimen/common_spacing_xbig"
+                android:layout_marginEnd="@dimen/common_spacing_xbig">
+
+                <TextView
+                    android:id="@+id/txtTotalScore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/common_spacing_xbig"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="top|end"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/common_font_xxxxbig"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:id="@+id/btnDownload"
+                    android:layout_width="25dip"
+                    android:layout_height="25dip"
+                    android:layout_marginBottom="@dimen/common_spacing_xbig"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_cloud_download_white"
+                    android:contentDescription="@string/common_image_description"/>
+
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_spacing_big"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"
+                        android:textColor="@color/colorInfo"
+                        android:text="@string/title_measure_score"/>
+
+                    <TextView
+                        android:id="@+id/txtMeasureScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/common_spacing_middle"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"
+                        android:textColor="@color/colorInfo"
+                        android:text="@string/title_deducting_score"/>
+
+                    <TextView
+                        android:id="@+id/txtDeductingScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/common_spacing_middle"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"
+                        android:textColor="@color/colorInfo"
+                        android:text="@string/title_manage_score"/>
+
+                    <TextView
+                        android:id="@+id/txtManageScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/common_spacing_middle"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"
+                        android:textColor="@color/colorInfo"
+                        android:text="@string/title_safe_score"/>
+
+                    <TextView
+                        android:id="@+id/txtSafeScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/common_spacing_middle"
+                        android:gravity="center"
+                        android:textSize="@dimen/common_font_middle"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

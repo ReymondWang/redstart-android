@@ -17,6 +17,7 @@
     <dimen name="common_font_xbig">21sp</dimen>
     <dimen name="common_font_xxbig">24sp</dimen>
     <dimen name="common_font_xxxbig">27sp</dimen>
+    <dimen name="common_font_xxxxbig">30sp</dimen>
     <dimen name="common_little_point_size">10dip</dimen>
     <dimen name="common_line_height">1dip</dimen>
 

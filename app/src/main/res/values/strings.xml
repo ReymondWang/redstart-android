@@ -26,6 +26,7 @@
 
     <!-- 正在加载 -->
     <string name="txt_loading">正在加载......</string>
+    <string name="txt_downloading">已加入下载任务</string>
 
     <!-- 底部导航 -->
     <string name="tab_community">首页</string>
@@ -104,6 +105,13 @@
     <string name="estimate_item_submit">整改措施</string>
     <string name="estimate_item_submit_hint">请输入整改措施</string>
     <string name="estimate_item_submit_img">整改图片</string>
+
+    <!-- 第三方评估报告 -->
+    <string name="title_measure_score">实测得分</string>
+    <string name="title_deducting_score">质量关键扣分</string>
+    <string name="title_manage_score">管理行为</string>
+    <string name="title_safe_score">文明安全</string>
+    <string name="title_total_score">标段综合得分</string>
 
     <!-- 证照信息 -->
     <string name="title_passport_name">证照名称</string>

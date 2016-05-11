@@ -62,6 +62,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate"
             android:screenOrientation="portrait" />
+        <activity android:name=".EstimateReportActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_third_estimate"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EstimateItemDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -99,7 +103,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_notification"
             android:screenOrientation="portrait" />
-        <activity android:name=".ZoomImageViewActivity"
+        <activity
+            android:name=".ZoomImageViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -113,6 +118,7 @@
             android:name=".provider.AppFuncProvider"
             android:authorities="com.purplelight.redstar.provider.RedStartProvider.AppFunc"
             android:exported="false" />
+
 
     </application>
 

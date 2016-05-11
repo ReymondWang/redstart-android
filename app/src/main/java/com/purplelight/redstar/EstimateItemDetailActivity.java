@@ -10,10 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.purplelight.redstar.constant.Configuration;
+import com.purplelight.redstar.provider.entity.EstimateItem;
+import com.purplelight.redstar.task.BitmapDownloadedListener;
+import com.purplelight.redstar.task.BitmapDownloaderTask;
+import com.purplelight.redstar.task.DownloadedDrawable;
+import com.purplelight.redstar.util.ImageHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,6 +30,8 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
 
     private ActionBar mToolbar;
     private Point mScreenSize = new Point();
+
+    private EstimateItem mItem;
 
     @InjectView(R.id.txtCategory) TextView mCategory;
     @InjectView(R.id.txtArea) TextView mArea;
@@ -40,6 +50,8 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
 
         WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getSize(mScreenSize);
+
+        mItem = getIntent().getParcelableExtra("item");
 
         initViews();
         initEvents();
@@ -70,23 +82,74 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
             mToolbar.setDisplayHomeAsUpEnabled(true);
         }
 
-        for (int i = 0; i < 8; i++){
-            ImageView imageView = new ImageView(this);
+        if (mItem != null){
+            mCategory.setText(mItem.getCategory());
+            mArea.setText(mItem.getArea());
+            mProject.setText(mItem.getProject());
+            mChecker.setText(mItem.getChecker());
+            mDescription.setText(mItem.getDescription());
 
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pg_passport_sample);
-            int bmpWidth = bitmap.getWidth();
-            int bmpHeight = bitmap.getHeight();
+            String[] imageUrlArr = mItem.getImageUrls().split("\\,");
+            for (String imageUrl : imageUrlArr){
+                final String url = Configuration.Server.WEB + imageUrl;
+                Bitmap bitmap = ImageHelper.getBitmapFromCache(url);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.width = mScreenSize.x;
-            params.height = params.width * bmpHeight / bmpWidth;
-            params.setMargins(0, getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle), 0, 0);
-            imageView.setLayoutParams(params);
+                final ImageView imageView = new ImageView(this);
+                if (bitmap != null){
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(
+                            getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                            0,
+                            getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                            getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle)
+                    );
+                    params.width = mScreenSize.x - getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle) * 2;
+                    params.height = params.width * bitmap.getHeight() / bitmap.getWidth();
+                    imageView.setLayoutParams(params);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    imageView.setImageBitmap(bitmap);
+                } else {
+                    BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
+                    task.setOnBitmapDownloaded(new BitmapDownloadedListener() {
+                        @Override
+                        public void onBitmapDownloaded(Bitmap bitmap) {
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params.setMargins(
+                                    getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                                    getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                                    getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                                    0
+                            );
+                            params.width = mScreenSize.x - getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle) * 2;
+                            params.height = params.width * bitmap.getHeight() / bitmap.getWidth();
+                            imageView.setLayoutParams(params);
+                            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        }
+                    });
+                    DownloadedDrawable drawable = new DownloadedDrawable(task, getResources(), R.drawable.cc_bg_default_topic_grid);
+                    imageView.setImageDrawable(drawable);
+                    task.execute(url);
+                }
 
-            imageView.setImageBitmap(bitmap);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(EstimateItemDetailActivity.this, ZoomImageViewActivity.class);
+                        intent.putExtra("type", ZoomImageViewActivity.ZOOM_URL);
+                        intent.putExtra("url", url);
+                        startActivity(intent);
+                    }
+                });
 
-            mImageContainer.addView(imageView);
+                mImageContainer.addView(imageView);
+            }
+
         }
     }
 

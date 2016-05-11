@@ -36,7 +36,6 @@ public class PassportUploadActivity extends AppCompatActivity
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawer;
     @InjectView(R.id.nav_view) NavigationView mNavigationView;
     @InjectView(R.id.listView) ListView mList;
-    @InjectView(R.id.fabAdd) FloatingActionButton mFabAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,13 +98,6 @@ public class PassportUploadActivity extends AppCompatActivity
 
     private void initEvents(){
         mNavigationView.setNavigationItemSelectedListener(this);
-        mFabAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PassportUploadActivity.this, PassportModifyActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private class ListAdapter extends BaseAdapter{
@@ -148,6 +140,15 @@ public class PassportUploadActivity extends AppCompatActivity
             holder.txtName.setText(item.getName());
             holder.txtCategory.setText(item.getCategory());
             holder.imgPassport.setImageResource(item.getImageSrc());
+            holder.imgPassport.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PassportUploadActivity.this, ZoomImageViewActivity.class);
+                    intent.putExtra("type", ZoomImageViewActivity.ZOOM_RESOURCE);
+                    intent.putExtra("resource", R.drawable.pg_passport_sample);
+                    startActivity(intent);
+                }
+            });
 
             return convertView;
         }

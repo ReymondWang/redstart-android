@@ -25,15 +25,4 @@
 
     <include layout="@layout/content_passport_upload" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/common_spacing_big"
-        android:src="@drawable/ic_add_white"
-        app:borderWidth="@dimen/common_spacing_small"
-        app:backgroundTint="@color/colorPrimary"
-        app:rippleColor="@color/colorDarkPrimary"/>
-
 </android.support.design.widget.CoordinatorLayout>

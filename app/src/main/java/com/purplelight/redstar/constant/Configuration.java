@@ -8,7 +8,7 @@ public class Configuration {
 
     public class Server{
 //        public static final String WEB = "http://139.196.186.85:8080/";
-        public static final String WEB = "http://192.168.0.100:8080/mcm/";
+        public static final String WEB = "http://192.168.1.164:8080/mcm/";
 
         public static final String BUSINESS = "http://qiuxisoft.com/HongXing/";
 
@@ -59,6 +59,12 @@ public class Configuration {
         public static final int OUTTER_WAP_FUNCTION = 5;
         // 外部原生应用。
         public static final int OUTTER_NATIVE_FUNCTION = 6;
+    }
+
+    public class DownloadStatus{
+        public static final String NOT_DOWNLOADED = "1";
+        public static final String DOWNLOADING = "2";
+        public static final String DOWNLOADED = "3";
     }
 
 }

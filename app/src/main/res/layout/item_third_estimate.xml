@@ -23,24 +23,21 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:textColor="@color/colorDanger"
-                android:text="重要"/>
+                android:textColor="@color/colorDanger"/>
 
             <TextView
                 android:id="@+id/txtChecker"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:gravity="end"
-                android:text="验收责任人：王亚南"/>
+                android:gravity="end"/>
 
         </LinearLayout>
         <TextView
             android:id="@+id/txtAreaAndProject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_spacing_middle"
-            android:text="东北区域 长春一期"/>
+            android:layout_marginTop="@dimen/common_spacing_middle"/>
 
         <TextView
             android:id="@+id/txtDescription"
@@ -48,8 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_spacing_middle"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/common_font_middle"
-            android:text="现场楼层内临边防护措施缺失，存在安全隐患。"/>
+            android:textSize="@dimen/common_font_middle"/>
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
@@ -61,60 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/ui_image_row_height"
-                    android:layout_height="@dimen/ui_image_row_height"
-                    android:layout_marginEnd="@dimen/common_spacing_middle"
-                    android:layout_marginRight="@dimen/common_spacing_middle"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/pg_passport_sample"
-                    android:contentDescription="@string/common_image_description"/>
-
-                <ImageView
-                    android:layout_width="@dimen/ui_image_row_height"
-                    android:layout_height="@dimen/ui_image_row_height"
-                    android:layout_marginEnd="@dimen/common_spacing_middle"
-                    android:layout_marginRight="@dimen/common_spacing_middle"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/pg_passport_sample"
-                    android:contentDescription="@string/common_image_description"/>
-
-                <ImageView
-                    android:layout_width="@dimen/ui_image_row_height"
-                    android:layout_height="@dimen/ui_image_row_height"
-                    android:layout_marginEnd="@dimen/common_spacing_middle"
-                    android:layout_marginRight="@dimen/common_spacing_middle"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/pg_passport_sample"
-                    android:contentDescription="@string/common_image_description"/>
-
-                <ImageView
-                    android:layout_width="@dimen/ui_image_row_height"
-                    android:layout_height="@dimen/ui_image_row_height"
-                    android:layout_marginEnd="@dimen/common_spacing_middle"
-                    android:layout_marginRight="@dimen/common_spacing_middle"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/pg_passport_sample"
-                    android:contentDescription="@string/common_image_description"/>
-
-                <ImageView
-                    android:layout_width="@dimen/ui_image_row_height"
-                    android:layout_height="@dimen/ui_image_row_height"
-                    android:layout_marginEnd="@dimen/common_spacing_middle"
-                    android:layout_marginRight="@dimen/common_spacing_middle"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/pg_passport_sample"
-                    android:contentDescription="@string/common_image_description"/>
-
-                <ImageView
-                    android:layout_width="@dimen/ui_image_row_height"
-                    android:layout_height="@dimen/ui_image_row_height"
-                    android:layout_marginEnd="@dimen/common_spacing_middle"
-                    android:layout_marginRight="@dimen/common_spacing_middle"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/pg_passport_sample"
-                    android:contentDescription="@string/common_image_description"/>
 
             </LinearLayout>
 
