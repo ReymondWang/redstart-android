@@ -56,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     @InjectView(R.id.login_progress) View mProgressView;
     @InjectView(R.id.email_login_form) View mLoginFormView;
     @InjectView(R.id.email_sign_in_button) Button mEmailSignInButton;
+    @InjectView(R.id.txtRegister) TextView mRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +100,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 attemptLogin();
+            }
+        });
+        mRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }

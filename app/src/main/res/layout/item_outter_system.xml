@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/ui_table_row_height"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/txtSystemName"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:textSize="@dimen/common_font_big"/>
+
+    <TextView
+        android:id="@+id/txtBind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_bind_outter_system"
+        android:textSize="@dimen/common_font_big"
+        android:textColor="@color/colorPrimary"/>
+
+</LinearLayout>

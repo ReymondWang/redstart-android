@@ -66,8 +66,21 @@
             android:background="@drawable/bg_button_corner"
             android:layout_marginTop="16dp"
             android:text="@string/btn_login"
+            android:textSize="@dimen/common_font_big"
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_spacing_xbig"
+            android:layout_marginRight="@dimen/common_spacing_big"
+            android:layout_marginEnd="@dimen/common_spacing_big"
+            android:layout_gravity="end"
+            android:text="@string/txt_register"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/common_font_middle"/>
 
     </LinearLayout>
 </LinearLayout>

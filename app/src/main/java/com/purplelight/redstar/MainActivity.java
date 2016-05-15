@@ -198,7 +198,8 @@ public class MainActivity extends AppCompatActivity
             ImageHelper.clear();
             Toast.makeText(this, getString(R.string.clear_buffer_success), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_feedback) {
-
+            Intent intent = new Intent(this, FeedbackActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_about) {
 
         } else if (id == R.id.nav_logout) {

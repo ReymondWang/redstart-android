@@ -6,6 +6,12 @@ package com.purplelight.redstar.constant;
  */
 public class WebAPI {
 
+    public static final String QUICK_REGISTER = "api/quickregister/check";
+
+    public static final String REGISTER = "api/register/add";
+
+    public static final String OUTTER_SYSTEM = "api/outtersystem/list";
+
     public static final String LOGIN = "api/login";
 
     public static final String UPDATE_USER = "api/userinfo/update";
@@ -13,6 +19,8 @@ public class WebAPI {
     public static final String APP_FUNCTION = "api/func/show";
 
     public static final String BIND_FUNCTION = "api/binduser/bind";
+
+    public static final String FEEDBACK = "api/feedback/add";
 
     /**
      * 取得WebAPI的全路径

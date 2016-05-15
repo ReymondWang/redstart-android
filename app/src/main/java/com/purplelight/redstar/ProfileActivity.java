@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.CircleImageView;
 import com.purplelight.redstar.component.view.ImageModeDialog;
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
@@ -42,15 +43,6 @@ import butterknife.InjectView;
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
-
-    /**
-     * 头像图片类型
-     */
-    private final class HeadImgType{
-        public static final int CAMERA = 1;
-        public static final int PHOTO = 2;
-        public static final int CROP = 3;
-    }
 
     // 截取图片的大小
     private int mHeadImageSize = 100;
@@ -95,11 +87,11 @@ public class ProfileActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK){
             Bitmap bitmap;
             switch(requestCode){
-                case HeadImgType.CAMERA: {
+                case Configuration.ImageType.CAMERA: {
                     sendImageToCrop(imageUri);
                     break;
                 }
-                case HeadImgType.PHOTO: {
+                case Configuration.ImageType.PHOTO: {
                     // 由于从系统图库中取图片时，如果图片大小小于设定值，则从data中直接返回。
                     // 否则使用外部输出文件来返回，因为不能判断用户选择的文件大小。
                     // 因此首先从data中取数据，如果取不到则从外部存储文件中取，用来保证获得用户选择的内容。
@@ -115,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                     break;
                 }
-                case HeadImgType.CROP: {
+                case Configuration.ImageType.CROP: {
                     bitmap = decodeUriAsBitmap(imageUri);
                     if(bitmap != null){
                         bitmap = ImageHelper.CompressImageToSize(bitmap, mHeadImageSize, mHeadImageSize);
@@ -215,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity {
                 dialog.cancel();
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, HeadImgType.CAMERA);
+                startActivityForResult(intent, Configuration.ImageType.CAMERA);
             }
         });
         dialog.setPhotoListener(new View.OnClickListener() {
@@ -235,7 +227,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
                 intent.putExtra("noFaceDetection", true);
-                startActivityForResult(intent, HeadImgType.PHOTO);
+                startActivityForResult(intent, Configuration.ImageType.PHOTO);
             }
         });
         dialog.show();
@@ -275,7 +267,7 @@ public class ProfileActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
 
-        startActivityForResult(intent, HeadImgType.CROP);
+        startActivityForResult(intent, Configuration.ImageType.CROP);
     }
 
     private class UpdateImageTask extends AsyncTask<Bitmap, Void, Result> {

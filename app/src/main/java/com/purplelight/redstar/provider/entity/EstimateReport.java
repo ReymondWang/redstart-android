@@ -35,6 +35,9 @@ public class EstimateReport {
     // 综合得分
     private String totalScore;
 
+    // 下载状态
+    private String downloadStatus;
+
     public String getReportId() {
         return reportId;
     }
@@ -129,5 +132,13 @@ public class EstimateReport {
 
     public void setTotalScore(String totalScore) {
         this.totalScore = totalScore;
+    }
+
+    public String getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(String downloadStatus) {
+        this.downloadStatus = downloadStatus;
     }
 }

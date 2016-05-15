@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.EstimateReport;
 
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class EstimateReportActivity extends AppCompatActivity {
             report.setKeyDeductingScore("2.5");
             report.setManageScore("82.00");
             report.setSafeScore("75.14");
+            report.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
 
             mDataSource.add(report);
         }
@@ -140,7 +142,7 @@ public class EstimateReportActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ReportHolder holder, int position) {
-            EstimateReport report = mDataSource.get(position);
+            final EstimateReport report = mDataSource.get(position);
             holder.txtProject.setText(report.getProjectName());
             holder.txtSupplier.setText(report.getSupplierName());
             holder.txtDate.setText(report.getEstimateDate());
@@ -149,6 +151,52 @@ public class EstimateReportActivity extends AppCompatActivity {
             holder.txtDeductingScore.setText(report.getKeyDeductingScore());
             holder.txtManageScore.setText(report.getManageScore());
             holder.txtSafeScore.setText(report.getSafeScore());
+
+            if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(report.getDownloadStatus())){
+                final ImageView iconDownload = holder.btnDownload;
+
+                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_white);
+                holder.btnDownload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 二次检查
+                        if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(report.getDownloadStatus())){
+                            report.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
+                            iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                            mDownloadView.setVisibility(View.VISIBLE);
+
+                            AnimationSet animationSet = new AnimationSet(true);
+
+                            AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
+                            showAnimation.setDuration(1000);
+                            animationSet.addAnimation(showAnimation);
+                            AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
+                            hideAnimation.setDuration(1000);
+                            hideAnimation.setStartOffset(1200);
+                            animationSet.addAnimation(hideAnimation);
+
+                            animationSet.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    mDownloadView.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+                                }
+                            });
+
+                            mDownloadView.startAnimation(animationSet);
+                        }
+                    }
+                });
+            } else {
+                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+            }
         }
 
         @Override
@@ -184,41 +232,6 @@ public class EstimateReportActivity extends AppCompatActivity {
 
                 mClickListener = clickListener;
                 itemView.setOnClickListener(this);
-                btnDownload.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        EstimateReport report = mDataSource.get(getLayoutPosition());
-
-                        mDownloadView.setVisibility(View.VISIBLE);
-
-                        AnimationSet animationSet = new AnimationSet(true);
-
-                        AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
-                        showAnimation.setDuration(1000);
-                        animationSet.addAnimation(showAnimation);
-                        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
-                        hideAnimation.setDuration(1000);
-                        hideAnimation.setStartOffset(1200);
-                        animationSet.addAnimation(hideAnimation);
-
-                        animationSet.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                mDownloadView.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-                            }
-                        });
-
-                        mDownloadView.startAnimation(animationSet);
-                    }
-                });
             }
 
             @Override

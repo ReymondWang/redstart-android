@@ -1,11 +1,24 @@
 package com.purplelight.redstar;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.Voice;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,10 +27,13 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +44,12 @@ import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.ImageHelper;
-import com.purplelight.redstar.web.result.Result;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,16 +59,27 @@ import butterknife.InjectView;
  * Created by wangyn on 16/5/9.
  */
 public class ThirdEstimateActivity extends AppCompatActivity
-        implements SwipeRefreshLayout.OnRefreshListener, SwipeRefreshLayout.OnLoadListener {
+        implements SwipeRefreshLayout.OnRefreshListener, SwipeRefreshLayout.OnLoadListener, View.OnClickListener {
     private static final String TAG = "ThirdEstimateActivity";
 
-    private ActionBar mToolbar;
-
     private List<EstimateItem> mDataSource = new ArrayList<>();
+    private Set<Integer> mSelectedPosition = new HashSet<>();
 
+    private AppCompatCheckBox mGeneral;
+    private AppCompatCheckBox mImportant;
+    private AutoCompleteTextView mArea;
+    private AutoCompleteTextView mProject;
+    private AutoCompleteTextView mDescription;
+    private AppCompatButton mSearch;
+
+    @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshFrom;
     @InjectView(R.id.listView) ListView mList;
     @InjectView(R.id.lytDownload) LinearLayout mDownloadView;
+    @InjectView(R.id.nav_view) NavigationView mNavigationView;
+    @InjectView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @InjectView(R.id.loading_progress) ProgressBar mProgress;
+    @InjectView(R.id.btnDownloadAll) FloatingActionButton mDownloadAll;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,7 +87,15 @@ public class ThirdEstimateActivity extends AppCompatActivity
         setContentView(R.layout.activity_third_estimate);
         ButterKnife.inject(this);
 
-        mToolbar = getSupportActionBar();
+        View drawView = mNavigationView.getHeaderView(0);
+        mGeneral = (AppCompatCheckBox)drawView.findViewById(R.id.chkGeneral);
+        mImportant = (AppCompatCheckBox)drawView.findViewById(R.id.chkImportant);
+        mArea = (AutoCompleteTextView)drawView.findViewById(R.id.txtArea);
+        mProject = (AutoCompleteTextView)drawView.findViewById(R.id.txtProject);
+        mDescription = (AutoCompleteTextView)drawView.findViewById(R.id.txtDescription);
+        mSearch = (AppCompatButton)drawView.findViewById(R.id.btnSearch);
+
+        setSupportActionBar(mToolbar);
         mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
 
         test();
@@ -85,6 +121,9 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 finish();
                 overridePendingTransition(R.anim.frontscale, R.anim.backscale);
                 break;
+            case R.id.action_search:
+                mDrawer.openDrawer(GravityCompat.END);
+                break;
             default:
         }
 
@@ -99,6 +138,15 @@ public class ThirdEstimateActivity extends AppCompatActivity
     @Override
     public void onRefresh() {
         mRefreshFrom.setRefreshing(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+        mDrawer.closeDrawer(GravityCompat.END);
+
+        showProgress(true);
+        LoadingTask task = new LoadingTask();
+        task.execute();
     }
 
     // 写入静态测试数据
@@ -138,24 +186,135 @@ public class ThirdEstimateActivity extends AppCompatActivity
     }
 
     private void initViews(){
+        showProgress(true);
+        mDownloadAll.setVisibility(View.GONE);
 
-        ListAdapter adapter = new ListAdapter(mDataSource);
-        mList.setAdapter(adapter);
+        LoadingTask task = new LoadingTask();
+        task.execute();
     }
 
     private void initEvents(){
-        if (mToolbar != null){
-            mToolbar.setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         mRefreshFrom.setOnRefreshListener(this);
         mRefreshFrom.setOnLoadListener(this);
+        mSearch.setOnClickListener(this);
+
+        mDownloadAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(Integer position : mSelectedPosition){
+                    mDataSource.get(position).setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
+                }
+
+                showSelectedAll(false);
+                showDownloading();
+            }
+        });
+    }
+
+    /**
+     * 重新绑定列表，并确定是否显示全选框
+     * @param show 是否显示全选
+     */
+    private void showSelectedAll(boolean show){
+        mDownloadAll.setVisibility(show ? View.VISIBLE : View.GONE);
+
+        ListAdapter adapter = new ListAdapter(mDataSource, show);
+        mList.setAdapter(adapter);
+    }
+
+    /**
+     * 显示登录进度
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRefreshFrom.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private void showDownloading(){
+        mDownloadView.setVisibility(View.VISIBLE);
+
+        AnimationSet animationSet = new AnimationSet(true);
+
+        AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
+        showAnimation.setDuration(1000);
+        animationSet.addAnimation(showAnimation);
+        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
+        hideAnimation.setDuration(1000);
+        hideAnimation.setStartOffset(1200);
+        animationSet.addAnimation(hideAnimation);
+
+        animationSet.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mDownloadView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        mDownloadView.startAnimation(animationSet);
+    }
+
+    private class LoadingTask extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... params) {
+            test();
+
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException ex){
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            showProgress(false);
+            ListAdapter adapter = new ListAdapter(mDataSource, false);
+            mList.setAdapter(adapter);
+        }
     }
 
     private class ListAdapter extends BaseAdapter{
+        private boolean mShowSelect = false;
         private List<EstimateItem> mDataSource = new ArrayList<>();
 
-        public ListAdapter(List<EstimateItem> dataSource){
+        public ListAdapter(List<EstimateItem> dataSource, boolean showSelect){
             mDataSource = dataSource;
+            mShowSelect = showSelect;
         }
 
         @Override
@@ -174,7 +333,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null){
                 convertView = LayoutInflater.from(ThirdEstimateActivity.this).inflate(R.layout.item_third_estimate, parent, false);
@@ -183,8 +342,9 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 holder.txtAreaAndProject = (TextView)convertView.findViewById(R.id.txtAreaAndProject);
                 holder.txtDescription = (TextView)convertView.findViewById(R.id.txtDescription);
                 holder.lytImage = (LinearLayout)convertView.findViewById(R.id.lytImage);
-                holder.btnDownload = (LinearLayout)convertView.findViewById(R.id.btnDownload);
-                holder.btnCreate = (LinearLayout)convertView.findViewById(R.id.btnCreate);
+                holder.btnDownload = (ImageView) convertView.findViewById(R.id.btnDownload);
+                holder.btnCreate = (ImageView)convertView.findViewById(R.id.btnCreate);
+                holder.chkSelect = (AppCompatCheckBox)convertView.findViewById(R.id.chkSelect);
 
                 convertView.setTag(holder);
             } else {
@@ -247,50 +407,51 @@ public class ThirdEstimateActivity extends AppCompatActivity
             convertView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(ThirdEstimateActivity.this, "长按", Toast.LENGTH_SHORT).show();
+                    showSelectedAll(true);
                     return true;
                 }
             });
 
-            holder.btnDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mDownloadView.setVisibility(View.VISIBLE);
-
-                    AnimationSet animationSet = new AnimationSet(true);
-
-                    AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
-                    showAnimation.setDuration(1000);
-                    animationSet.addAnimation(showAnimation);
-                    AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
-                    hideAnimation.setDuration(1000);
-                    hideAnimation.setStartOffset(1200);
-                    animationSet.addAnimation(hideAnimation);
-
-                    animationSet.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
+            if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(item.getDownloadStatus())){
+                holder.chkSelect.setVisibility(mShowSelect ? View.VISIBLE : View.GONE);
+                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download);
+                final ImageView iconDownload = holder.btnDownload;
+                holder.btnDownload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 二次检查，因为Image的final类型，在点击一次后事件并未消失
+                        if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(item.getDownloadStatus())){
+                            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
+                            iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                            showDownloading();
                         }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            mDownloadView.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-                        }
-                    });
-
-                    mDownloadView.startAnimation(animationSet);
-                }
-            });
+                    }
+                });
+            } else {
+                holder.chkSelect.setVisibility(View.GONE);
+                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+            }
 
             holder.btnCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ThirdEstimateActivity.this, EstimateSubmitActivity.class);
                     startActivity(intent);
+                }
+            });
+
+            holder.chkSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked){
+                        if (!mSelectedPosition.contains(position)) {
+                            mSelectedPosition.add(position);
+                        }
+                    } else {
+                        if (mSelectedPosition.contains(position)) {
+                            mSelectedPosition.remove(position);
+                        }
+                    }
                 }
             });
 
@@ -317,9 +478,9 @@ public class ThirdEstimateActivity extends AppCompatActivity
             TextView txtAreaAndProject;
             TextView txtDescription;
             LinearLayout lytImage;
-            LinearLayout btnDownload;
-            LinearLayout btnCreate;
+            ImageView btnDownload;
+            ImageView btnCreate;
+            AppCompatCheckBox chkSelect;
         }
     }
-
 }

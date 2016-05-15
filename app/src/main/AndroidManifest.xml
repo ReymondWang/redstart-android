@@ -33,6 +33,15 @@
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".RegisterActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait" />
+        <activity android:name=".OutterSystemActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_outter_system"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"
@@ -61,8 +70,10 @@
             android:name=".ThirdEstimateActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate"
-            android:screenOrientation="portrait" />
-        <activity android:name=".EstimateReportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EstimateReportActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate"
             android:screenOrientation="portrait" />
@@ -108,6 +119,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FeedbackActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_feedback"
+            android:screenOrientation="portrait" />
 
         <!-- 数据库Provider -->
         <provider

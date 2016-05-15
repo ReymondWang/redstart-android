@@ -13,6 +13,8 @@
     <string name="title_activity_passport_upload_modify">编辑证照信息</string>
     <string name="title_activity_passport_type">证照类型</string>
     <string name="title_activity_modify_password">修改密码</string>
+    <string name="title_activity_notification">消息设定</string>
+    <string name="title_activity_feedback">意见反馈</string>
 
     <!-- 菜单 -->
     <string name="action_bar_notification">消息</string>
@@ -27,6 +29,8 @@
     <!-- 正在加载 -->
     <string name="txt_loading">正在加载......</string>
     <string name="txt_downloading">已加入下载任务</string>
+    <string name="txt_downloading_hint">下载中</string>
+    <string name="txt_downloaded_hint">已下载</string>
 
     <!-- 底部导航 -->
     <string name="tab_community">首页</string>
@@ -34,10 +38,22 @@
     <string name="tab_contact">联系</string>
     <string name="tab_profile">我的</string>
 
+    <!-- 搜索框 -->
+    <string name="search_title">查询条件</string>
+
     <!-- 登录 -->
     <string name="btn_login">登    录</string>
     <string name="txt_login_id">编号/邮箱/手机</string>
     <string name="txt_password">密码</string>
+    <string name="txt_register"><u>用户注册</u></string>
+
+    <!-- 用户注册 -->
+    <string name="register_login_id">登录名</string>
+    <string name="register_username">姓名</string>
+    <string name="register_email">邮箱</string>
+    <string name="register_phone">手机</string>
+    <string name="register_password">密码</string>
+    <string name="register_button">注    册</string>
 
     <!-- 修改密码 -->
     <string name="txt_original_password">原始密码</string>
@@ -48,6 +64,9 @@
     <string name="new_password_empty">请输入新密码</string>
     <string name="confirm_password_empty">请输入确认密码</string>
     <string name="new_not_equal_confirm">新密码和确认密码不同</string>
+
+    <!-- 外部系统列表 -->
+    <string name="btn_bind_outter_system">绑定</string>
 
     <!-- 首页 -->
     <string name="title_community_name">首页</string>
@@ -97,6 +116,8 @@
     <string name="clear_buffer_success">清除缓存成功</string>
 
     <!-- 第三方评估详细信息 -->
+    <string name="estimate_item_category_important">重要</string>
+    <string name="estimate_item_category_general">一般</string>
     <string name="estimate_item_category">问题性质</string>
     <string name="estimate_item_area">区域</string>
     <string name="estimate_item_project">标段</string>
@@ -130,6 +151,10 @@
     <string name="title_passport_warning_date_hint">请选择提醒日期</string>
     <string name="title_passport_file">相关附件</string>
 
+    <!-- 意见反馈 -->
+    <string name="welcome_to_message">欢迎你提出宝贵的意见和建议</string>
+    <string name="feed_back_content">反馈内容</string>
+
     <!-- 确认对话框 -->
     <string name="switch_on">是</string>
     <string name="switch_off">否</string>
@@ -150,16 +175,18 @@
     <string name="update_failed">更新失败</string>
     <string name="login_successed">登录成功</string>
     <string name="sex_selected_sex">请选择性别</string>
+    <string name="login_id_must_input">请输入登录名</string>
     <string name="user_name_must_input">请输入用户名</string>
     <string name="user_email_must_input">请输入邮箱</string>
     <string name="user_phone_must_input">请输入电话</string>
     <string name="press_back_noce_more">再次按下返回键退出</string>
     <string name="title_activity_login">登录</string>
+    <string name="title_activity_register">用户注册</string>
+    <string name="title_activity_outter_system">外部系统</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">设定</string>
-    <string name="title_activity_notification">消息设定</string>
 
     <!-- Strings related to Settings -->
 

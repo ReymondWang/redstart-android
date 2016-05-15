@@ -13,6 +13,8 @@ import java.util.List;
  * Created by wangyn on 16/5/3.
  */
 public class RedStartApplication extends Application {
+    private static boolean mQuickRegister;
+
     private static SystemUser mUser;
 
     private static List<AppFunction> mTopList = new ArrayList<>();
@@ -41,5 +43,13 @@ public class RedStartApplication extends Application {
 
     public static void setBodyList(List<AppFunction> bodyList) {
         mBodyList = bodyList;
+    }
+
+    public static void setQuickRegister(boolean quickRegister){
+        mQuickRegister = quickRegister;
+    }
+
+    public static boolean isQuickRegister(){
+        return mQuickRegister;
     }
 }

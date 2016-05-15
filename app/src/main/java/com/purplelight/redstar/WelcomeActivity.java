@@ -5,15 +5,23 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.constant.Configuration;
+import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IAppFunctionDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
+import com.purplelight.redstar.util.HttpUtil;
+import com.purplelight.redstar.util.Validation;
+import com.purplelight.redstar.web.result.QuickRegisterResult;
+import com.purplelight.redstar.web.result.Result;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +35,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private final Runnable mCheckLoginRunnable = new Runnable() {
         @Override
         public void run() {
-            LoadingTask task = new LoadingTask();
+            QuickRegisterTask task = new QuickRegisterTask();
             task.execute();
         }
     };
@@ -39,6 +47,43 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
+    }
+
+    private class QuickRegisterTask extends AsyncTask<String, Void, QuickRegisterResult>{
+        @Override
+        protected QuickRegisterResult doInBackground(String... params) {
+            QuickRegisterResult result = new QuickRegisterResult();
+            if (Validation.IsActivityNetWork(WelcomeActivity.this)){
+                try{
+                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.QUICK_REGISTER), "");
+                    if (!Validation.IsNullOrEmpty(responseJson)){
+                        result = new Gson().fromJson(responseJson, QuickRegisterResult.class);
+                    } else {
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(getString(R.string.no_response_json));
+                    }
+                } catch (IOException ex){
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(ex.getMessage());
+                }
+            } else {
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.do_not_have_network));
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(QuickRegisterResult result) {
+            if (Result.SUCCESS.equals(result.getSuccess())){
+                RedStartApplication.setQuickRegister(result.isQuickRegister());
+
+                LoadingTask task = new LoadingTask();
+                task.execute();
+            } else {
+                Toast.makeText(WelcomeActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class LoadingTask extends AsyncTask<String, Void, SystemUser>{
@@ -69,7 +114,6 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void loadHomePage(){
         IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(this);
