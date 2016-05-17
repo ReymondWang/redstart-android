@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -19,10 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.component.view.ConfirmDialog;
+import com.purplelight.redstar.component.view.UserBindDialog;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.entity.OutterSystemBindInfo;
+import com.purplelight.redstar.web.parameter.BindUserParameter;
 import com.purplelight.redstar.web.parameter.Parameter;
 import com.purplelight.redstar.web.result.OutterSystemResult;
 import com.purplelight.redstar.web.result.Result;
@@ -38,6 +43,10 @@ public class OutterSystemActivity extends AppCompatActivity {
 
     private ActionBar mToolbar;
 
+    private List<OutterSystemBindInfo> mDataSource = new ArrayList<>();
+
+    private OutterSystemBindInfo mCurrentBindInfo;
+
     @InjectView(R.id.loading_progress) ProgressBar mProgress;
     @InjectView(R.id.listView) ListView mList;
 
@@ -50,6 +59,7 @@ public class OutterSystemActivity extends AppCompatActivity {
         mToolbar = getSupportActionBar();
 
         initViews();
+        initEvents();
     }
 
     @Override
@@ -70,6 +80,56 @@ public class OutterSystemActivity extends AppCompatActivity {
 
         LoadTask task = new LoadTask();
         task.execute();
+    }
+
+    private void initEvents(){
+        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCurrentBindInfo = mDataSource.get(position);
+                if (mCurrentBindInfo.isBinded()){
+                    showUnBindDialog();
+                } else {
+                    showBindDialog();
+                }
+            }
+        });
+    }
+
+    private void showBindDialog(){
+        final UserBindDialog dialog = new UserBindDialog(this);
+        dialog.setOnBindConfirmListener(new UserBindDialog.OnBindConfirmListener() {
+            @Override
+            public void BindConfirmListener(String loginId, String password) {
+                dialog.dismiss();
+                if (Validation.IsNullOrEmpty(loginId)){
+                    Toast.makeText(OutterSystemActivity.this, getString(R.string.login_id_must_input), Toast.LENGTH_SHORT).show();
+                } else {
+                    showProgress(true);
+
+                    BindUserTask bindUserTask = new BindUserTask();
+                    bindUserTask.execute(loginId, password, String.valueOf(mCurrentBindInfo.getSystemId()));
+                }
+            }
+        });
+        dialog.show();
+    }
+
+    private void showUnBindDialog(){
+        final ConfirmDialog dialog = new ConfirmDialog(this);
+        dialog.setTitle(getString(R.string.dialog_confirm_unbind));
+        dialog.setConfirmListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                showProgress(true);
+
+                UnBindTask task = new UnBindTask();
+                task.execute(mCurrentBindInfo.getSystemId());
+            }
+        });
+        dialog.show();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
@@ -100,6 +160,9 @@ public class OutterSystemActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 加载任务
+     */
     private class LoadTask extends AsyncTask<String, Void, OutterSystemResult>{
         @Override
         protected OutterSystemResult doInBackground(String... params) {
@@ -108,6 +171,7 @@ public class OutterSystemActivity extends AppCompatActivity {
 
             if (Validation.IsActivityNetWork(OutterSystemActivity.this)){
                 Parameter parameter = new Parameter();
+                parameter.setLoginId(RedStartApplication.getUser().getId());
                 try{
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.OUTTER_SYSTEM), gson.toJson(parameter));
                     result = gson.fromJson(responseJson, OutterSystemResult.class);
@@ -125,8 +189,10 @@ public class OutterSystemActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(OutterSystemResult outterSystemResult) {
+            showProgress(false);
             if (Result.SUCCESS.equals(outterSystemResult.getSuccess())){
-                ListAdapter adapter = new ListAdapter(outterSystemResult.getSystemList());
+                mDataSource = outterSystemResult.getSystemList();
+                ListAdapter adapter = new ListAdapter();
                 mList.setAdapter(adapter);
             } else {
                 Toast.makeText(OutterSystemActivity.this, outterSystemResult.getMessage(), Toast.LENGTH_SHORT).show();
@@ -134,12 +200,101 @@ public class OutterSystemActivity extends AppCompatActivity {
         }
     }
 
-    private class ListAdapter extends BaseAdapter{
-        private List<OutterSystemBindInfo> mDataSource = new ArrayList<>();
+    /**
+     * 绑定用户任务
+     */
+    private class BindUserTask extends AsyncTask<String, Void, Result>{
 
-        public ListAdapter(List<OutterSystemBindInfo> dataSource){
-            mDataSource = dataSource;
+        @Override
+        protected Result doInBackground(String... params) {
+            Result result = new Result();
+            Gson gson = new Gson();
+            if (Validation.IsActivityNetWork(OutterSystemActivity.this)){
+                BindUserParameter parameter = new BindUserParameter();
+                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setUserCode(params[0]);
+                parameter.setPassword(params[1]);
+                parameter.setSystemId(Integer.parseInt(params[2]));
+                try{
+                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.BIND_FUNCTION), gson.toJson(parameter));
+                    if (!Validation.IsNullOrEmpty(responseJson)){
+                        result = gson.fromJson(responseJson, Result.class);
+                    } else {
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(getString(R.string.no_response_json));
+                    }
+                } catch (Exception ex){
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(ex.getMessage());
+                }
+            } else {
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.do_not_have_network));
+            }
+
+            return result;
         }
+
+        @Override
+        protected void onPostExecute(Result bindUserResult) {
+            showProgress(false);
+            Toast.makeText(OutterSystemActivity.this, bindUserResult.getMessage(), Toast.LENGTH_SHORT).show();
+
+            if (Result.SUCCESS.equals(bindUserResult.getSuccess())){
+                mCurrentBindInfo.setBinded(true);
+
+                ListAdapter adapter = new ListAdapter();
+                mList.setAdapter(adapter);
+            }
+        }
+    }
+
+    /**
+     * 接触用户绑定
+     */
+    private class UnBindTask extends AsyncTask<Integer, Void, Result>{
+        @Override
+        protected Result doInBackground(Integer... params) {
+            Result result = new Result();
+            Gson gson = new Gson();
+            if (Validation.IsActivityNetWork(OutterSystemActivity.this)){
+                BindUserParameter parameter = new BindUserParameter();
+                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setSystemId(params[0]);
+                try{
+                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.UNBIND_FUNCTION), gson.toJson(parameter));
+                    if (!Validation.IsNullOrEmpty(responseJson)){
+                        result = gson.fromJson(responseJson, Result.class);
+                    } else {
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(getString(R.string.no_response_json));
+                    }
+                } catch (Exception ex){
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(ex.getMessage());
+                }
+            } else {
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.do_not_have_network));
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Result result) {
+            showProgress(false);
+            Toast.makeText(OutterSystemActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            if (Result.SUCCESS.equals(result.getSuccess())){
+                mCurrentBindInfo.setBinded(false);
+
+                ListAdapter adapter = new ListAdapter();
+                mList.setAdapter(adapter);
+            }
+        }
+    }
+
+    private class ListAdapter extends BaseAdapter{
 
         @Override
         public int getCount() {
@@ -169,16 +324,15 @@ public class OutterSystemActivity extends AppCompatActivity {
                 holder = (ViewHolder)convertView.getTag();
             }
 
-            final OutterSystemBindInfo entity = mDataSource.get(position);
+            OutterSystemBindInfo entity = mDataSource.get(position);
             holder.txtSystemName.setText(entity.getSystemName());
-            holder.txtBind.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            if (entity.isBinded()){
+                holder.txtBind.setText(getString(R.string.ic_system_binded));
+            } else {
+                holder.txtBind.setText(getString(R.string.ic_system_not_binded));
+            }
 
-                }
-            });
-
-            return null;
+            return convertView;
         }
 
         private class ViewHolder{

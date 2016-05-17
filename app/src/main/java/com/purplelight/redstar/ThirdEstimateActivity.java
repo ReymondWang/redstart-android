@@ -8,17 +8,16 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.Voice;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,18 +36,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
+import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
+import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.ImageHelper;
+import com.purplelight.redstar.util.Validation;
+import com.purplelight.redstar.web.parameter.EstimateItemParameter;
+import com.purplelight.redstar.web.result.EstimateItemResult;
+import com.purplelight.redstar.web.result.Result;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import butterknife.ButterKnife;
@@ -65,12 +70,19 @@ public class ThirdEstimateActivity extends AppCompatActivity
     private List<EstimateItem> mDataSource = new ArrayList<>();
     private Set<Integer> mSelectedPosition = new HashSet<>();
 
+    // 查询条件
     private AppCompatCheckBox mGeneral;
     private AppCompatCheckBox mImportant;
     private AutoCompleteTextView mArea;
     private AutoCompleteTextView mProject;
     private AutoCompleteTextView mDescription;
     private AppCompatButton mSearch;
+
+    // 外部系统编号
+    private int outterSystemId;
+
+    // 系统分页信息
+    private int currentPageNo = 0;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshFrom;
@@ -87,6 +99,8 @@ public class ThirdEstimateActivity extends AppCompatActivity
         setContentView(R.layout.activity_third_estimate);
         ButterKnife.inject(this);
 
+        outterSystemId = getIntent().getIntExtra("outtersystem", 0);
+
         View drawView = mNavigationView.getHeaderView(0);
         mGeneral = (AppCompatCheckBox)drawView.findViewById(R.id.chkGeneral);
         mImportant = (AppCompatCheckBox)drawView.findViewById(R.id.chkImportant);
@@ -98,7 +112,6 @@ public class ThirdEstimateActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
 
-        test();
         initViews();
         initEvents();
     }
@@ -147,42 +160,6 @@ public class ThirdEstimateActivity extends AppCompatActivity
         showProgress(true);
         LoadingTask task = new LoadingTask();
         task.execute();
-    }
-
-    // 写入静态测试数据
-    private void test(){
-        mDataSource = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            EstimateItem item = new EstimateItem();
-            item.setItemId(String.valueOf(i + 1));
-            item.setArea("东北区域");
-            item.setProject("鞍山一期");
-            item.setCategory("普遍");
-            item.setChecker("王亚南");
-            item.setDescription("现场外窗、檐口等部位滴水线槽不明显，与墙面基本齐平，局部已结冰锥，存在较大安全风险。");
-
-            // 生成随机个数的图片数量
-            String urls = getRandomImageUrl();
-            item.setImageUrls(urls);
-            item.setThumbUrls(urls);
-            item.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
-            item.setOperatorId(RedStartApplication.getUser().getId());
-            mDataSource.add(item);
-        }
-    }
-
-    private String getRandomImageUrl(){
-        Random random = new Random();
-        int len = random.nextInt(5) + 1;
-        StringBuilder strb = new StringBuilder();
-        for (int i = 0; i < len; i++){
-            strb.append("testimage/111.jpg");
-            if (i < len - 1){
-                strb.append(",");
-            }
-        }
-
-        return strb.toString();
     }
 
     private void initViews(){
@@ -287,24 +264,53 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mDownloadView.startAnimation(animationSet);
     }
 
-    private class LoadingTask extends AsyncTask<String, Void, String>{
+    private class LoadingTask extends AsyncTask<String, Void, EstimateItemResult>{
         @Override
-        protected String doInBackground(String... params) {
-            test();
+        protected EstimateItemResult doInBackground(String... params) {
+            EstimateItemResult result = new EstimateItemResult();
 
-            try{
-                Thread.sleep(1000);
-            } catch (InterruptedException ex){
+            if (Validation.IsActivityNetWork(ThirdEstimateActivity.this)){
+                Gson gson = new Gson();
+
+                EstimateItemParameter parameter = new EstimateItemParameter();
+                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
+                parameter.setSystemId(outterSystemId);
+                parameter.setPageNo(currentPageNo);
+                parameter.setPageSize(Configuration.Page.COMMON_PAGE_SIZE);
+
+                String requestJson = gson.toJson(parameter);
+                try{
+                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM), requestJson);
+                    if (!Validation.IsNullOrEmpty(responseJson)){
+                        result = gson.fromJson(responseJson, EstimateItemResult.class);
+                    } else {
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(getString(R.string.no_response_json));
+                    }
+                } catch (Exception ex){
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(getString(R.string.fetch_response_data_error));
+                }
+
+            } else {
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.do_not_have_network));
             }
 
-            return null;
+            return result;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(EstimateItemResult result) {
             showProgress(false);
-            ListAdapter adapter = new ListAdapter(mDataSource, false);
-            mList.setAdapter(adapter);
+            if (Result.SUCCESS.equals(result.getSuccess())){
+                mDataSource = result.getItems();
+                ListAdapter adapter = new ListAdapter(mDataSource, false);
+                mList.setAdapter(adapter);
+            } else {
+                Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -329,7 +335,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
         @Override
         public long getItemId(int position) {
-            return Long.parseLong(mDataSource.get(position).getItemId());
+            return Long.parseLong(mDataSource.get(position).getId());
         }
 
         @Override
@@ -338,7 +344,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
             if (convertView == null){
                 convertView = LayoutInflater.from(ThirdEstimateActivity.this).inflate(R.layout.item_third_estimate, parent, false);
                 holder.txtCategory = (TextView)convertView.findViewById(R.id.txtCategory);
-                holder.txtChecker = (TextView)convertView.findViewById(R.id.txtChecker);
+                holder.txtCharacter = (TextView)convertView.findViewById(R.id.txtCharacter);
                 holder.txtAreaAndProject = (TextView)convertView.findViewById(R.id.txtAreaAndProject);
                 holder.txtDescription = (TextView)convertView.findViewById(R.id.txtDescription);
                 holder.lytImage = (LinearLayout)convertView.findViewById(R.id.lytImage);
@@ -353,15 +359,15 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
             final EstimateItem item = mDataSource.get(position);
             holder.txtCategory.setText(item.getCategory());
-            holder.txtChecker.setText("验收责任人：" + item.getChecker());
-            holder.txtAreaAndProject.setText(item.getArea() + " " + item.getProject());
+            holder.txtCharacter.setText(item.getCharacter());
+            holder.txtAreaAndProject.setText(item.getProjectName() + "  " + item.getAreaName());
             holder.txtDescription.setText(item.getDescription());
 
-            String[] imageUrlArr = item.getImageUrls().split("\\,");
-            String[] thumbUrlArr = item.getThumbUrls().split("\\,");
-            for (int i = 0; i < imageUrlArr.length; i++){
-                final String imageUrl = Configuration.Server.WEB + imageUrlArr[i];
-                final String thumbUrl = Configuration.Server.WEB + thumbUrlArr[i];
+            List<String> imageUrlList = item.getImages();
+            List<String> thumbUrlList = item.getThumbs();
+            for (int i = 0; i < imageUrlList.size(); i++){
+                final String imageUrl = imageUrlList.get(i);
+                final String thumbUrl = thumbUrlList.get(i);
                 Bitmap bitmap = ImageHelper.getBitmapFromCache(thumbUrl);
 
                 // 尽可能的复用已经创建的ImageView，提高效率
@@ -391,7 +397,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 });
             }
             // 删除多余的ImageView
-            for (int i = imageUrlArr.length; i < holder.lytImage.getChildCount(); i++){
+            for (int i = imageUrlList.size(); i < holder.lytImage.getChildCount(); i++){
                 holder.lytImage.removeViewAt(i);
             }
 
@@ -412,7 +418,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 }
             });
 
-            if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(item.getDownloadStatus())){
+            if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                 holder.chkSelect.setVisibility(mShowSelect ? View.VISIBLE : View.GONE);
                 holder.btnDownload.setImageResource(R.drawable.ic_cloud_download);
                 final ImageView iconDownload = holder.btnDownload;
@@ -420,7 +426,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         // 二次检查，因为Image的final类型，在点击一次后事件并未消失
-                        if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(item.getDownloadStatus())){
+                        if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                             item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
                             iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
                             showDownloading();
@@ -474,7 +480,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
         private class ViewHolder{
             TextView txtCategory;
-            TextView txtChecker;
+            TextView txtCharacter;
             TextView txtAreaAndProject;
             TextView txtDescription;
             LinearLayout lytImage;

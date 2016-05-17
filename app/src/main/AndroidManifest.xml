@@ -37,7 +37,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
-        <activity android:name=".OutterSystemActivity"
+        <activity
+            android:name=".OutterSystemActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_outter_system"
             android:screenOrientation="portrait" />
@@ -110,11 +111,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NotificationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_notification"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ZoomImageViewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
@@ -123,6 +119,10 @@
             android:name=".FeedbackActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_feedback"
+            android:screenOrientation="portrait" />
+        <activity android:name=".NotificationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_setting"
             android:screenOrientation="portrait" />
 
         <!-- 数据库Provider -->
@@ -134,7 +134,6 @@
             android:name=".provider.AppFuncProvider"
             android:authorities="com.purplelight.redstar.provider.RedStartProvider.AppFunc"
             android:exported="false" />
-
 
     </application>
 

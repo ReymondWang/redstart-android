@@ -36,7 +36,7 @@ public class EstimateReport {
     private String totalScore;
 
     // 下载状态
-    private String downloadStatus;
+    private int downloadStatus;
 
     public String getReportId() {
         return reportId;
@@ -134,11 +134,11 @@ public class EstimateReport {
         this.totalScore = totalScore;
     }
 
-    public String getDownloadStatus() {
+    public int getDownloadStatus() {
         return downloadStatus;
     }
 
-    public void setDownloadStatus(String downloadStatus) {
+    public void setDownloadStatus(int downloadStatus) {
         this.downloadStatus = downloadStatus;
     }
 }

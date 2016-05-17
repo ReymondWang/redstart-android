@@ -36,11 +36,10 @@ public class AppFunctionDaoImpl extends BaseDaoImpl implements IAppFunctionDao {
         cv.put(AppFuncMetaData.FUNC_ID, function.getId());
         cv.put(AppFuncMetaData.FRAGMENT, function.getFragment());
         cv.put(AppFuncMetaData.PART, function.getPart());
-        cv.put(AppFuncMetaData.FUNC_NAME, function.getAppFuncName());
         cv.put(AppFuncMetaData.FUNC_IMAGE, function.getTitleImgPath());
         cv.put(AppFuncMetaData.FUNC_TITLE, function.getTitle());
         cv.put(AppFuncMetaData.FUNC_TYPE, function.getFunctionType());
-        cv.put(AppFuncMetaData.OUTTER_SYSTEM, function.getOutterSystem());
+        cv.put(AppFuncMetaData.OUTTER_SYSTEM, function.getOutterSystemId());
         cv.put(AppFuncMetaData.CONTENT_URL, function.getContentUrl());
         cv.put(AppFuncMetaData.STAT_URL, function.getStatUrl());
         cv.put(AppFuncMetaData.CALL_METHOD, function.getCallMethod());
@@ -64,7 +63,6 @@ public class AppFunctionDaoImpl extends BaseDaoImpl implements IAppFunctionDao {
             int iFuncId = c.getColumnIndex(AppFuncMetaData.FUNC_ID);
             int iFragment = c.getColumnIndex(AppFuncMetaData.FRAGMENT);
             int iPart = c.getColumnIndex(AppFuncMetaData.PART);
-            int iFuncName = c.getColumnIndex(AppFuncMetaData.FUNC_NAME);
             int iFuncImage = c.getColumnIndex(AppFuncMetaData.FUNC_IMAGE);
             int iFuncTitle = c.getColumnIndex(AppFuncMetaData.FUNC_TITLE);
             int iFuncType = c.getColumnIndex(AppFuncMetaData.FUNC_TYPE);
@@ -79,15 +77,14 @@ public class AppFunctionDaoImpl extends BaseDaoImpl implements IAppFunctionDao {
             while (!c.isAfterLast()){
                 AppFunction function = new AppFunction();
 
-                Log.d(TAG, "get func:" + function.getAppFuncName());
+                Log.d(TAG, "get func:" + function.getTitle());
                 function.setId(c.getString(iFuncId));
                 function.setFragment(c.getString(iFragment));
                 function.setPart(c.getString(iPart));
-                function.setAppFuncName(c.getString(iFuncName));
                 function.setTitleImgPath(c.getString(iFuncImage));
                 function.setTitle(c.getString(iFuncTitle));
                 function.setFunctionType(c.getString(iFuncType));
-                function.setOutterSystem(c.getString(iOutterSystem));
+                function.setOutterSystemId(c.getInt(iOutterSystem));
                 function.setContentUrl(c.getString(iContentUrl));
                 function.setStatUrl(c.getString(iStatUrl));
                 function.setCallMethod(c.getString(iCallMethod));

@@ -10,12 +10,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/common_spacing_big"
+        android:padding="@dimen/common_spacing_xbig"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -23,20 +24,22 @@
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:textColor="@color/colorDanger"/>
+                android:textColor="@color/colorPrimary"/>
 
             <TextView
-                android:id="@+id/txtChecker"
+                android:id="@+id/txtCharacter"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:gravity="end"/>
+                android:gravity="end"
+                android:textColor="@color/colorDanger"/>
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/txtAreaAndProject"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="@dimen/common_spacing_middle"/>
 
         <TextView

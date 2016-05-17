@@ -77,8 +77,6 @@ public class RedStartProviderMeta {
 
         public static final String PART = "part";
 
-        public static final String FUNC_NAME = "funcname";
-
         public static final String FUNC_IMAGE = "funcimage";
 
         public static final String FUNC_TITLE = "functitle";

@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
-import com.purplelight.redstar.business.result.NotificationCntResult;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
@@ -23,6 +21,7 @@ import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.Validation;
+import com.purplelight.redstar.web.result.NotificationCntResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.util.HashMap;
@@ -141,7 +140,6 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
         protected NotificationCntResult doInBackground(String... params) {
             NotificationCntResult result = new NotificationCntResult();
             try{
-//                String repJson = HttpUtil.GetDataFromNet(mFetchUrl, new HashMap<String, String>(), HttpUtil.POST);
                 String repJson = HttpUtil.PostJosn(mFetchUrl, "");
                 result = new Gson().fromJson(repJson, NotificationCntResult.class);
             } catch (Exception ex){

@@ -15,6 +15,7 @@
     <string name="title_activity_modify_password">修改密码</string>
     <string name="title_activity_notification">消息设定</string>
     <string name="title_activity_feedback">意见反馈</string>
+    <string name="title_activity_setting">系统设置</string>
 
     <!-- 菜单 -->
     <string name="action_bar_notification">消息</string>
@@ -80,6 +81,7 @@
     <!-- 我的 -->
     <string name="txt_user_code_title">编号：</string>
     <string name="txt_row_message">消息通知</string>
+    <string name="txt_row_setting">系统设置</string>
     <string name="txt_row_password">修改密码</string>
     <string name="txt_row_buffer">清除缓存</string>
     <string name="txt_row_advice">意见反馈</string>
@@ -158,6 +160,8 @@
     <!-- 确认对话框 -->
     <string name="switch_on">是</string>
     <string name="switch_off">否</string>
+    <string name="switch_confirm">确定</string>
+    <string name="switch_cancel">取消</string>
 
     <!-- 选择图片方式 -->
     <string name="user_head_img_setting">请设置头像</string>
@@ -165,12 +169,23 @@
     <string name="user_head_img_photo">从相册选取</string>
     <string name="upload_image_success">上传图片成功</string>
 
+    <!-- 系统设置 -->
+    <string name="ic_message_setting">消息</string>
+    <string name="ic_system_setting">外部系统绑定</string>
+    <string name="ic_system_binded">已绑定</string>
+    <string name="ic_system_not_binded">未绑定</string>
+    <string name="dialog_bind_system">绑定用户</string>
+    <string name="dialog_confirm_unbind">是否确认解决绑定，这会影响到部分功能？</string>
+
+    <!-- 通用字符 -->
+
     <!-- 通用的消息 -->
     <string name="common_image_description">这是一张图片</string>
     <string name="no_server_info">没有设定服务器信息</string>
     <string name="do_not_have_network">没有可以使用的网络</string>
     <string name="no_response_json">没有取到数据</string>
     <string name="no_image_to_show">没有图片可以显示</string>
+    <string name="fetch_response_data_error">获取数据失败，请联系系统管理员。</string>
     <string name="login_failed">登录失败</string>
     <string name="update_failed">更新失败</string>
     <string name="login_successed">登录成功</string>
@@ -187,63 +202,5 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">设定</string>
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
 
 </resources>

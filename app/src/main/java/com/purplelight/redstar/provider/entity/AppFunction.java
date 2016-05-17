@@ -17,13 +17,11 @@ public class AppFunction {
 
     private String title;
 
-    private String appFuncName;
-
     private String contentUrl;
 
     private String statUrl;
 
-    private String outterSystem;
+    private int outterSystemId;
 
     private String callMethod;
 
@@ -75,14 +73,6 @@ public class AppFunction {
         this.title = title;
     }
 
-    public String getAppFuncName() {
-        return appFuncName;
-    }
-
-    public void setAppFuncName(String appFuncName) {
-        this.appFuncName = appFuncName;
-    }
-
     public String getContentUrl() {
         return contentUrl;
     }
@@ -99,12 +89,12 @@ public class AppFunction {
         this.statUrl = statUrl;
     }
 
-    public String getOutterSystem() {
-        return outterSystem;
+    public int getOutterSystemId() {
+        return outterSystemId;
     }
 
-    public void setOutterSystem(String outterSystem) {
-        this.outterSystem = outterSystem;
+    public void setOutterSystemId(int outterSystemId) {
+        this.outterSystemId = outterSystemId;
     }
 
     public String getCallMethod() {

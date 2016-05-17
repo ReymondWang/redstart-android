@@ -22,22 +22,17 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
-import com.purplelight.redstar.business.entity.User;
-import com.purplelight.redstar.business.result.BindUserResult;
-import com.purplelight.redstar.constant.BusinessApi;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.SystemUser;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
-import com.purplelight.redstar.web.parameter.BindUserParameter;
 import com.purplelight.redstar.web.parameter.LoginParameter;
 import com.purplelight.redstar.web.result.LoginResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -74,6 +69,12 @@ public class LoginActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
+        }
+
+        if (RedStartApplication.isQuickRegister()){
+            mRegister.setVisibility(View.GONE);
+        } else {
+            mRegister.setVisibility(View.VISIBLE);
         }
     }
 
@@ -180,9 +181,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * 用户登录的过程分为两步：
-     * 第一步：从业务系统去的用户的信息
-     * 第二步：根据ID和中台服务器进行一次绑定校验，如果存在则更新信息，如果不存在怎创建新的信息。
+     * 用户登录
      */
     private class UserLoginTask extends AsyncTask<Void, Void, LoginResult> {
 
@@ -199,47 +198,20 @@ public class LoginActivity extends AppCompatActivity {
             LoginResult result = new LoginResult();
             Gson gson = new Gson();
 
-            // 从业务系统获得绑定用户的信息
-            HashMap<String, String> map = new HashMap<>();
-            map.put("name", mLoginId);
-            map.put("password", mPassword);
-            String bindJson = HttpUtil.GetDataFromNet(BusinessApi.getWebAPI(BusinessApi.LOGIN), map, HttpUtil.POST);
-            if (!Validation.IsNullOrEmpty(bindJson)){
-                BindUserResult bindUserResult = gson.fromJson(bindJson, BindUserResult.class);
-                if (Result.SUCCESS.equals(bindUserResult.getSuccess())){
-                    // 将业务系统的信息绑定到中台
-                    User user = bindUserResult.getObj();
-
-                    SystemUser systemUser = new SystemUser();
-                    systemUser.setId(user.getUserId());
-                    systemUser.setUserName(user.getName());
-                    systemUser.setEmail(user.getEmail());
-                    systemUser.setSex("男".equals(user.getGender()) ? "1" : "2");
-                    systemUser.setUserCode(user.getEmail());
-                    systemUser.setToken(user.getToken());
-
-                    BindUserParameter parameter = new BindUserParameter();
-                    parameter.setUser(systemUser);
-                    try{
-                        String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.BIND_FUNCTION), gson.toJson(parameter));
-                        if (!Validation.IsNullOrEmpty(repStr)){
-                            result = gson.fromJson(repStr, LoginResult.class);
-                        } else {
-                            result.setSuccess(Result.ERROR);
-                            result.setMessage(getString(R.string.no_response_json));
-                        }
-                    }catch (IOException ex){
-                        Log.e(TAG, ex.getMessage());
-                        result.setSuccess(Result.ERROR);
-                        result.setMessage(ex.getMessage());
-                    }
+            LoginParameter parameter = new LoginParameter();
+            parameter.setLoginId(mLoginId);
+            parameter.setPassword(mPassword);
+            try{
+                String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.LOGIN), gson.toJson(parameter));
+                if (!Validation.IsNullOrEmpty(repStr)){
+                    result = gson.fromJson(repStr, LoginResult.class);
                 } else {
-                    result.setSuccess(bindUserResult.getSuccess());
-                    result.setMessage(bindUserResult.getMessage());
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(getString(R.string.no_response_json));
                 }
-            } else {
+            }catch (IOException ex){
                 result.setSuccess(Result.ERROR);
-                result.setMessage(getString(R.string.no_response_json));
+                result.setMessage(getString(R.string.fetch_response_data_error));
             }
 
             return result;

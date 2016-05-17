@@ -14,7 +14,6 @@ import com.purplelight.redstar.fastdfs.StorageClient;
 import com.purplelight.redstar.fastdfs.StorageServer;
 import com.purplelight.redstar.fastdfs.TrackerClient;
 import com.purplelight.redstar.fastdfs.TrackerServer;
-import com.purplelight.redstar.fastdfs.UploadStream;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 
@@ -28,7 +27,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -201,7 +200,10 @@ public class ImageHelper {
 				InputStream inputStream = null;
 				try {
 					inputStream = entity.getContent();
-					return BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+					byte[] bytes = getBytes(inputStream);
+					return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+				} catch (Exception ex){
+					Log.e(TAG, ex.getMessage());
 				} finally {
 					if (inputStream != null) {
 						inputStream.close();
@@ -214,6 +216,18 @@ public class ImageHelper {
 			Log.w(TAG, "Error while retrieving bitmap from " + imageUrlStr + "; " + e.toString());
 		}
 		return null;
+	}
+
+	public static byte[] getBytes(InputStream is) throws IOException {
+		ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024]; // 用数据装
+		int len = -1;
+		while ((len = is.read(buffer)) != -1) {
+			outstream.write(buffer, 0, len);
+		}
+		outstream.close();
+		// 关闭流一定要记得。
+		return outstream.toByteArray();
 	}
 
 	public static BitmapDownloaderTask getBitmapDownloaderTask(ImageView imageView){

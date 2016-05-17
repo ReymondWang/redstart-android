@@ -3,7 +3,6 @@ package com.purplelight.redstar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +21,8 @@ import com.purplelight.redstar.task.BitmapDownloadedListener;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.ImageHelper;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -84,13 +85,13 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
 
         if (mItem != null){
             mCategory.setText(mItem.getCategory());
-            mArea.setText(mItem.getArea());
-            mProject.setText(mItem.getProject());
-            mChecker.setText(mItem.getChecker());
+            mArea.setText(mItem.getAreaName());
+            mProject.setText(mItem.getProjectName());
+            mChecker.setText(mItem.getCheckPersonName());
             mDescription.setText(mItem.getDescription());
 
-            String[] imageUrlArr = mItem.getImageUrls().split("\\,");
-            for (String imageUrl : imageUrlArr){
+            List<String> imageUrlList = mItem.getImages();
+            for (String imageUrl : imageUrlList){
                 final String url = Configuration.Server.WEB + imageUrl;
                 Bitmap bitmap = ImageHelper.getBitmapFromCache(url);
 

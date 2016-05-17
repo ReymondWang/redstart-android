@@ -20,7 +20,11 @@ public class WebAPI {
 
     public static final String BIND_FUNCTION = "api/binduser/bind";
 
+    public static final String UNBIND_FUNCTION = "api/binduser/unBind";
+
     public static final String FEEDBACK = "api/feedback/add";
+
+    public static final String ESTIMATE_ITEM = "/api/estimate/items";
 
     /**
      * 取得WebAPI的全路径

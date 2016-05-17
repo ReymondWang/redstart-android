@@ -187,10 +187,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.nav_sync) {
+        if (id == R.id.nav_setting){
             Intent intent = new Intent(this, NotificationActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_sync) {
         } else if (id == R.id.nav_password) {
             Intent intent = new Intent(this, ModifyPasswordActivity.class);
             startActivity(intent);
@@ -221,6 +221,8 @@ public class MainActivity extends AppCompatActivity
                 DownloadedDrawable drawable = new DownloadedDrawable(task, getResources(), R.drawable.default_head_image);
                 mImgUserHead.setImageDrawable(drawable);
                 task.execute(WebAPI.getFullImagePath(user.getHeadImgPath()));
+            } else {
+                mImgUserHead.setImageResource(R.drawable.default_head_image);
             }
             mTxtUserName.setText(user.getUserName());
             mTxtUserEmail.setText(user.getEmail());
@@ -367,6 +369,7 @@ public class MainActivity extends AppCompatActivity
                                 try {
                                     Class nxtView = Class.forName(banner.getContentUrl());
                                     Intent nxtInt = new Intent(MainActivity.this, nxtView);
+                                    nxtInt.putExtra("outtersystem", banner.getOutterSystemId());
                                     startActivity(nxtInt);
                                 } catch (ClassNotFoundException ex){
                                     Log.e(TAG, ex.getMessage());
@@ -391,7 +394,7 @@ public class MainActivity extends AppCompatActivity
                 result = mGson.fromJson(repJson, AppFuncResult.class);
             } catch (IOException ex){
                 result.setSuccess(Result.ERROR);
-                result.setMessage(ex.getMessage());
+                result.setMessage(getString(R.string.fetch_response_data_error));
             }
             return result;
         }

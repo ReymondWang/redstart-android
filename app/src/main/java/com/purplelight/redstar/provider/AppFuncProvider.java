@@ -30,7 +30,6 @@ public class AppFuncProvider extends ContentProvider {
         sFuncMap.put(AppFuncMetaData.FUNC_ID, AppFuncMetaData.FUNC_ID);
         sFuncMap.put(AppFuncMetaData.FRAGMENT, AppFuncMetaData.FRAGMENT);
         sFuncMap.put(AppFuncMetaData.PART, AppFuncMetaData.PART);
-        sFuncMap.put(AppFuncMetaData.FUNC_NAME, AppFuncMetaData.FUNC_NAME);
         sFuncMap.put(AppFuncMetaData.FUNC_IMAGE, AppFuncMetaData.FUNC_IMAGE);
         sFuncMap.put(AppFuncMetaData.FUNC_TITLE, AppFuncMetaData.FUNC_TITLE);
         sFuncMap.put(AppFuncMetaData.FUNC_TYPE, AppFuncMetaData.FUNC_TYPE);

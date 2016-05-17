@@ -10,14 +10,21 @@
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginStart="@dimen/common_spacing_big"
         android:textSize="@dimen/common_font_big"/>
 
     <TextView
         android:id="@+id/txtBind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_bind_outter_system"
-        android:textSize="@dimen/common_font_big"
-        android:textColor="@color/colorPrimary"/>
+        android:textSize="@dimen/common_font_middle"
+        android:textColor="@color/colorGray"/>
+    
+    <ImageView
+        android:layout_width="@dimen/ui_row_arrow_size"
+        android:layout_height="@dimen/ui_row_arrow_size"
+        android:src="@drawable/ic_arrow_right"
+        android:contentDescription="@string/common_image_description"/>
 
 </LinearLayout>

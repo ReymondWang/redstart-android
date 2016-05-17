@@ -24,6 +24,8 @@
     <dimen name="ui_func_icon_size">40dip</dimen>
     <dimen name="ui_user_head_size">60dip</dimen>
     <dimen name="ui_row_arrow_size">30dip</dimen>
+    <dimen name="ui_row_small_icon_size">20dip</dimen>
+    <dimen name="ui_row_icon_size">30dip</dimen>
     <dimen name="ui_image_row_height">80dip</dimen>
     <dimen name="ui_table_row_height">45dip</dimen>
     <dimen name="ui_webview_progress_height">10dip</dimen>

@@ -3,81 +3,118 @@ package com.purplelight.redstar.provider.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * 第三方评估详细
  * Created by wangyn on 16/5/9.
  */
 public class EstimateItem implements Parcelable {
 
-    private String itemId;
+    // 主键
+    private String id;
 
-    private String parentId;
+    // 所属报告编号
+    private String reportId;
 
-    private String area;
+    // 项目编号
+    private String projectId;
 
-    private String project;
+    // 项目名称
+    private String projectName;
 
+    // 区域名称
+    private String areaName;
+
+    // 问题分类
     private String category;
 
-    private String operatorId;
+    // 问题性质
+    private String character;
 
-    private String checkerId;
-
-    private String checker;
-
+    // 问题描述
     private String description;
 
-    // 图片大图信息
-    private String imageUrls;
+    // 缩略图
+    private List<String> thumbs;
 
-    // 图片缩略图信息
-    private String thumbUrls;
+    // 原始图片
+    private List<String> images;
 
-    // 整改信息
-    private String submitInfo;
+    // 整改责任人编号
+    private String inChargePersonId;
 
-    // 整改图片大图信息
-    private String submitImageUrls;
+    // 整改责任人姓名
+    private String inChargePersonName;
 
-    // 整改图片缩略图信息
-    private String submitThumbUrls;
+    // 验收责任人编号
+    private String checkPersonId;
+
+    // 验收责任人姓名
+    private String checkPersonName;
+
+    // 计划完成日期
+    private String planDate;
+
+    // 开始日期
+    private String beginDate;
+
+    // 实际完成日期
+    private String endDate;
+
+    // 整改措施
+    private String improvmentAction;
+
+    // 整改缩略图
+    private List<String> fixedThumbs;
+
+    // 整改原始图片
+    private List<String> fixedImages;
+
+    // 业务状态
+    private int status;
 
     // 下载状态
-    private String downloadStatus;
+    private int downloadStatus;
 
-    // 业务单据状态
-    private String status;
-
-    public String getItemId() {
-        return itemId;
+    public String getId() {
+        return id;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getParentId() {
-        return parentId;
+    public String getReportId() {
+        return reportId;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setReportId(String reportId) {
+        this.reportId = reportId;
     }
 
-    public String getArea() {
-        return area;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
     public String getCategory() {
@@ -88,28 +125,12 @@ public class EstimateItem implements Parcelable {
         this.category = category;
     }
 
-    public String getOperatorId() {
-        return operatorId;
+    public String getCharacter() {
+        return character;
     }
 
-    public void setOperatorId(String operatorId) {
-        this.operatorId = operatorId;
-    }
-
-    public String getCheckerId() {
-        return checkerId;
-    }
-
-    public void setCheckerId(String checkerId) {
-        this.checkerId = checkerId;
-    }
-
-    public String getChecker() {
-        return checker;
-    }
-
-    public void setChecker(String checker) {
-        this.checker = checker;
+    public void setCharacter(String character) {
+        this.character = character;
     }
 
     public String getDescription() {
@@ -120,81 +141,143 @@ public class EstimateItem implements Parcelable {
         this.description = description;
     }
 
-    public String getImageUrls() {
-        return imageUrls;
+    public List<String> getThumbs() {
+        return thumbs;
     }
 
-    public void setImageUrls(String imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setThumbs(List<String> thumbs) {
+        this.thumbs = thumbs;
     }
 
-    public String getThumbUrls() {
-        return thumbUrls;
+    public List<String> getImages() {
+        return images;
     }
 
-    public void setThumbUrls(String thumbUrls) {
-        this.thumbUrls = thumbUrls;
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
-    public String getSubmitInfo() {
-        return submitInfo;
+    public String getInChargePersonId() {
+        return inChargePersonId;
     }
 
-    public void setSubmitInfo(String submitInfo) {
-        this.submitInfo = submitInfo;
+    public void setInChargePersonId(String inChargePersonId) {
+        this.inChargePersonId = inChargePersonId;
     }
 
-    public String getDownloadStatus() {
-        return downloadStatus;
+    public String getInChargePersonName() {
+        return inChargePersonName;
     }
 
-    public void setDownloadStatus(String downloadStatus) {
-        this.downloadStatus = downloadStatus;
+    public void setInChargePersonName(String inChargePersonName) {
+        this.inChargePersonName = inChargePersonName;
     }
 
-    public String getSubmitImageUrls() {
-        return submitImageUrls;
+    public String getCheckPersonId() {
+        return checkPersonId;
     }
 
-    public void setSubmitImageUrls(String submitImageUrls) {
-        this.submitImageUrls = submitImageUrls;
+    public void setCheckPersonId(String checkPersonId) {
+        this.checkPersonId = checkPersonId;
     }
 
-    public String getSubmitThumbUrls() {
-        return submitThumbUrls;
+    public String getCheckPersonName() {
+        return checkPersonName;
     }
 
-    public void setSubmitThumbUrls(String submitThumbUrls) {
-        this.submitThumbUrls = submitThumbUrls;
+    public void setCheckPersonName(String checkPersonName) {
+        this.checkPersonName = checkPersonName;
     }
 
-    public String getStatus() {
+    public String getPlanDate() {
+        return planDate;
+    }
+
+    public void setPlanDate(String planDate) {
+        this.planDate = planDate;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getImprovmentAction() {
+        return improvmentAction;
+    }
+
+    public void setImprovmentAction(String improvmentAction) {
+        this.improvmentAction = improvmentAction;
+    }
+
+    public List<String> getFixedThumbs() {
+        return fixedThumbs;
+    }
+
+    public void setFixedThumbs(List<String> fixedThumbs) {
+        this.fixedThumbs = fixedThumbs;
+    }
+
+    public List<String> getFixedImages() {
+        return fixedImages;
+    }
+
+    public void setFixedImages(List<String> fixedImages) {
+        this.fixedImages = fixedImages;
+    }
+
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(int downloadStatus) {
+        this.downloadStatus = downloadStatus;
     }
 
     public EstimateItem(){}
 
     public EstimateItem(Parcel src){
-        itemId = src.readString();
-        parentId = src.readString();
-        area = src.readString();
-        project = src.readString();
+        id = src.readString();
+        reportId = src.readString();
+        projectId = src.readString();
+        projectName = src.readString();
+        areaName = src.readString();
         category = src.readString();
-        operatorId = src.readString();
-        checkerId = src.readString();
-        checker = src.readString();
+        character = src.readString();
         description = src.readString();
-        imageUrls = src.readString();
-        thumbUrls = src.readString();
-        submitInfo = src.readString();
-        submitImageUrls = src.readString();
-        submitThumbUrls = src.readString();
-        downloadStatus = src.readString();
-        status = src.readString();
+        src.readList(thumbs, String.class.getClassLoader());
+        src.readList(images, String.class.getClassLoader());
+        inChargePersonId = src.readString();
+        inChargePersonName = src.readString();
+        checkPersonId = src.readString();
+        checkPersonName = src.readString();
+        planDate = src.readString();
+        beginDate = src.readString();
+        endDate = src.readString();
+        improvmentAction = src.readString();
+        src.readList(fixedThumbs, String.class.getClassLoader());
+        src.readList(fixedImages, String.class.getClassLoader());
+        status = src.readInt();
+        downloadStatus = src.readInt();
     }
 
     @Override
@@ -204,22 +287,28 @@ public class EstimateItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(itemId);
-        dest.writeString(parentId);
-        dest.writeString(area);
-        dest.writeString(project);
+        dest.writeString(id);
+        dest.writeString(reportId);
+        dest.writeString(projectId);
+        dest.writeString(projectName);
+        dest.writeString(areaName);
         dest.writeString(category);
-        dest.writeString(operatorId);
-        dest.writeString(checkerId);
-        dest.writeString(checker);
+        dest.writeString(character);
         dest.writeString(description);
-        dest.writeString(imageUrls);
-        dest.writeString(thumbUrls);
-        dest.writeString(submitInfo);
-        dest.writeString(submitImageUrls);
-        dest.writeString(submitThumbUrls);
-        dest.writeString(downloadStatus);
-        dest.writeString(status);
+        dest.writeStringList(thumbs);
+        dest.writeStringList(images);
+        dest.writeString(inChargePersonId);
+        dest.writeString(inChargePersonName);
+        dest.writeString(checkPersonId);
+        dest.writeString(checkPersonName);
+        dest.writeString(planDate);
+        dest.writeString(beginDate);
+        dest.writeString(endDate);
+        dest.writeString(improvmentAction);
+        dest.writeStringList(fixedThumbs);
+        dest.writeStringList(fixedImages);
+        dest.writeInt(status);
+        dest.writeInt(downloadStatus);
     }
 
     public static final Parcelable.Creator<EstimateItem> CREATOR = new Parcelable.Creator<EstimateItem>(){

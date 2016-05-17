@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.EstimateReport;
@@ -152,7 +150,7 @@ public class EstimateReportActivity extends AppCompatActivity {
             holder.txtManageScore.setText(report.getManageScore());
             holder.txtSafeScore.setText(report.getSafeScore());
 
-            if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(report.getDownloadStatus())){
+            if (Configuration.DownloadStatus.NOT_DOWNLOADED == report.getDownloadStatus()){
                 final ImageView iconDownload = holder.btnDownload;
 
                 holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_white);
@@ -160,7 +158,7 @@ public class EstimateReportActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         // 二次检查
-                        if (Configuration.DownloadStatus.NOT_DOWNLOADED.equals(report.getDownloadStatus())){
+                        if (Configuration.DownloadStatus.NOT_DOWNLOADED == report.getDownloadStatus()){
                             report.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
                             iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
                             mDownloadView.setVisibility(View.VISIBLE);

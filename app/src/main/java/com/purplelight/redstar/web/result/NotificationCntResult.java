@@ -1,13 +1,10 @@
-package com.purplelight.redstar.business.result;
-
-import com.purplelight.redstar.web.result.Result;
+package com.purplelight.redstar.web.result;
 
 /**
- * 提醒数量返回结果
- * Created by wangyn on 16/5/9.
+ * 提醒返回Result
+ * Created by wangyn on 16/5/17.
  */
 public class NotificationCntResult extends Result {
-
     private int count = 0;
 
     public int getCount() {

@@ -10,8 +10,6 @@ public class Configuration {
 //        public static final String WEB = "http://139.196.186.85:8080/";
         public static final String WEB = "http://192.168.0.100:8080/mcm/";
 
-        public static final String BUSINESS = "http://qiuxisoft.com/HongXing/";
-
         public static final String IMAGE = "http://139.196.186.85:8888/";
     }
 
@@ -23,6 +21,10 @@ public class Configuration {
         public static final boolean ANTI_STEAL_TOKEN = false;
         public static final String SECRET_KEY = "FastDFS1234567890";
         public static final String TRACKER_SERVER = "139.196.186.85:22122";
+    }
+
+    public class Page{
+        public static final int COMMON_PAGE_SIZE = 10;
     }
 
     public class Http{
@@ -62,9 +64,9 @@ public class Configuration {
     }
 
     public class DownloadStatus{
-        public static final String NOT_DOWNLOADED = "1";
-        public static final String DOWNLOADING = "2";
-        public static final String DOWNLOADED = "3";
+        public static final int NOT_DOWNLOADED = 1;
+        public static final int DOWNLOADING = 2;
+        public static final int DOWNLOADED = 3;
     }
 
     /**
@@ -76,4 +78,13 @@ public class Configuration {
         public static final int CROP = 3;
     }
 
+    /**
+     * 第三方评估明细的查询类型
+     */
+    public class EstimateItemSearchType{
+        // 以整改责任人的角度进行查询
+        public static final int INCHARGER = 1;
+        // 以验收责任人的角度进行查询
+        public static final int CHECHER = 1;
+    }
 }

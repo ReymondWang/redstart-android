@@ -15,8 +15,7 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="@dimen/ui_progress_bar_size"
         android:layout_height="@dimen/ui_progress_bar_size"
-        android:layout_gravity="center"
-        android:layout_marginTop="80dip"/>
+        android:layout_gravity="center"/>
 
     <ListView
         android:id="@+id/listView"
