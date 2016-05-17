@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.task.BitmapDownloadedListener;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
@@ -35,11 +34,17 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
     private EstimateItem mItem;
 
     @InjectView(R.id.txtCategory) TextView mCategory;
-    @InjectView(R.id.txtArea) TextView mArea;
+    @InjectView(R.id.txtCharacter) TextView mCharacter;
     @InjectView(R.id.txtProject) TextView mProject;
+    @InjectView(R.id.txtArea) TextView mArea;
+    @InjectView(R.id.txtInCharger) TextView mInCharger;
     @InjectView(R.id.txtChecker) TextView mChecker;
+    @InjectView(R.id.txtStartDate) TextView mStartDate;
+    @InjectView(R.id.txtEndDate) TextView mEndDate;
     @InjectView(R.id.txtDescription) TextView mDescription;
     @InjectView(R.id.lytImage) LinearLayout mImageContainer;
+    @InjectView(R.id.txtImprovementAction) TextView mImprovement;
+    @InjectView(R.id.lytFixedImage) LinearLayout mFixedImageContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,78 +87,84 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
         if (mToolbar != null){
             mToolbar.setDisplayHomeAsUpEnabled(true);
         }
-
         if (mItem != null){
             mCategory.setText(mItem.getCategory());
-            mArea.setText(mItem.getAreaName());
+            mCharacter.setText(mItem.getCharacter());
             mProject.setText(mItem.getProjectName());
+            mArea.setText(mItem.getAreaName());
+            mInCharger.setText(mItem.getInChargePersonName());
             mChecker.setText(mItem.getCheckPersonName());
+            mStartDate.setText(mItem.getBeginDate());
+            mEndDate.setText(mItem.getEndDate());
             mDescription.setText(mItem.getDescription());
-
-            List<String> imageUrlList = mItem.getImages();
-            for (String imageUrl : imageUrlList){
-                final String url = Configuration.Server.WEB + imageUrl;
-                Bitmap bitmap = ImageHelper.getBitmapFromCache(url);
-
-                final ImageView imageView = new ImageView(this);
-                if (bitmap != null){
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(
-                            getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
-                            0,
-                            getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
-                            getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle)
-                    );
-                    params.width = mScreenSize.x - getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle) * 2;
-                    params.height = params.width * bitmap.getHeight() / bitmap.getWidth();
-                    imageView.setLayoutParams(params);
-                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
-                    task.setOnBitmapDownloaded(new BitmapDownloadedListener() {
-                        @Override
-                        public void onBitmapDownloaded(Bitmap bitmap) {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            params.setMargins(
-                                    getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
-                                    getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
-                                    getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
-                                    0
-                            );
-                            params.width = mScreenSize.x - getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle) * 2;
-                            params.height = params.width * bitmap.getHeight() / bitmap.getWidth();
-                            imageView.setLayoutParams(params);
-                            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        }
-                    });
-                    DownloadedDrawable drawable = new DownloadedDrawable(task, getResources(), R.drawable.cc_bg_default_topic_grid);
-                    imageView.setImageDrawable(drawable);
-                    task.execute(url);
-                }
-
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(EstimateItemDetailActivity.this, ZoomImageViewActivity.class);
-                        intent.putExtra("type", ZoomImageViewActivity.ZOOM_URL);
-                        intent.putExtra("url", url);
-                        startActivity(intent);
-                    }
-                });
-
-                mImageContainer.addView(imageView);
-            }
-
+            bindImageView(mImageContainer, mItem.getImages());
+            mImprovement.setText(mItem.getImprovmentAction());
+            bindImageView(mFixedImageContainer, mItem.getFixedImages());
         }
     }
 
     private void initEvents(){}
+
+    private void bindImageView(LinearLayout container, List<String> urls){
+        for (final String imageUrl : urls){
+            Bitmap bitmap = ImageHelper.getBitmapFromCache(imageUrl);
+
+            final ImageView imageView = new ImageView(this);
+            if (bitmap != null){
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(
+                        getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                        0,
+                        getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                        getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle)
+                );
+                params.width = mScreenSize.x - getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle) * 2;
+                params.height = params.width * bitmap.getHeight() / bitmap.getWidth();
+                imageView.setLayoutParams(params);
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imageView.setImageBitmap(bitmap);
+            } else {
+                BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
+                task.setOnBitmapDownloaded(new BitmapDownloadedListener() {
+                    @Override
+                    public void onBitmapDownloaded(Bitmap bitmap) {
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        params.setMargins(
+                                getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                                getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                                getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle),
+                                0
+                        );
+                        params.width = mScreenSize.x - getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle) * 2;
+                        params.height = params.width * bitmap.getHeight() / bitmap.getWidth();
+                        imageView.setLayoutParams(params);
+                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
+                DownloadedDrawable drawable = new DownloadedDrawable(task, getResources(), R.drawable.cc_bg_default_topic_grid);
+                imageView.setImageDrawable(drawable);
+                task.execute(imageUrl);
+            }
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EstimateItemDetailActivity.this, ZoomImageViewActivity.class);
+                    intent.putExtra("type", ZoomImageViewActivity.ZOOM_URL);
+                    intent.putExtra("url", imageUrl);
+                    startActivity(intent);
+                }
+            });
+
+            container.addView(imageView);
+        }
+    }
 
 }

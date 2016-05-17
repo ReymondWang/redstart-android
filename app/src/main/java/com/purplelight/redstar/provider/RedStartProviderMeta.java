@@ -96,4 +96,67 @@ public class RedStartProviderMeta {
         public static final String MODIFIED_DATE = "modified";
     }
 
+    public static final class EstimateItemMetaData implements BaseColumns{
+        private EstimateItemMetaData(){}
+        public static final String AUTHORITY = "com.purplelight.redstar.provider.RedStartProvider.EstimateItem";
+        public static final String TABLE_NAME = "EstimateItem";
+
+        public static final Uri CONTENT_URI =
+                Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.purplelight.redstar.estimateitem";
+
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.purplelight.redstar.estimateitem";
+
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
+        public static final String ESTIMATE_ITEM_ID = "estimateitemid";
+
+        public static final String REPORT_ID =  "reportid";
+
+        public static final String PROJECT_ID = "projectid";
+
+        public static final String PROJECT_NAME = "projectname";
+
+        public static final String AREA_NAME = "areaname";
+
+        public static final String CATEGORY = "category";
+
+        public static final String CHARACTER = "character";
+
+        public static final String DESCRIPTION = "description";
+
+        public static final String THUMBS = "thumbs";
+
+        public static final String IMAGES = "images";
+
+        public static final String IN_CHARGE_PERSON_ID = "inchargepersonid";
+
+        public static final String IN_CHARGE_PERSON_NAME = "inchargepersonname";
+
+        public static final String CHECK_PERSON_ID = "checkpersonid";
+
+        public static final String CHECK_PERSON_NAME = "checkpersonname";
+
+        public static final String PLAN_DATE = "plandate";
+
+        public static final String BEGIN_DATE = "beginDate";
+
+        public static final String END_DATE = "enddate";
+
+        public static final String IMPROVMENT_ACTION = "improvmentaction";
+
+        public static final String FIXED_THUMBS = "fixedthumbs";
+
+        public static final String FIXED_IMAGES = "fixedimages";
+
+        public static final String STATUS = "status";
+
+        public static final String CREATED_DATE = "created";
+
+        public static final String MODIFIED_DATE = "modified";
+    }
+
 }

@@ -3,6 +3,7 @@ package com.purplelight.redstar.provider.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,10 +37,10 @@ public class EstimateItem implements Parcelable {
     private String description;
 
     // 缩略图
-    private List<String> thumbs;
+    private List<String> thumbs = new ArrayList<>();
 
     // 原始图片
-    private List<String> images;
+    private List<String> images = new ArrayList<>();
 
     // 整改责任人编号
     private String inChargePersonId;
@@ -66,10 +67,10 @@ public class EstimateItem implements Parcelable {
     private String improvmentAction;
 
     // 整改缩略图
-    private List<String> fixedThumbs;
+    private List<String> fixedThumbs = new ArrayList<>();
 
     // 整改原始图片
-    private List<String> fixedImages;
+    private List<String> fixedImages = new ArrayList<>();
 
     // 业务状态
     private int status;
@@ -264,8 +265,8 @@ public class EstimateItem implements Parcelable {
         category = src.readString();
         character = src.readString();
         description = src.readString();
-        src.readList(thumbs, String.class.getClassLoader());
-        src.readList(images, String.class.getClassLoader());
+        src.readStringList(thumbs);
+        src.readStringList(images);
         inChargePersonId = src.readString();
         inChargePersonName = src.readString();
         checkPersonId = src.readString();
@@ -274,8 +275,8 @@ public class EstimateItem implements Parcelable {
         beginDate = src.readString();
         endDate = src.readString();
         improvmentAction = src.readString();
-        src.readList(fixedThumbs, String.class.getClassLoader());
-        src.readList(fixedImages, String.class.getClassLoader());
+        src.readStringList(fixedThumbs);
+        src.readStringList(fixedImages);
         status = src.readInt();
         downloadStatus = src.readInt();
     }

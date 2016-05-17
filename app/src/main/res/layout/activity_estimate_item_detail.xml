@@ -14,15 +14,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/common_spacing_big"
             android:layout_marginBottom="@dimen/common_spacing_big"
             android:background="@color/colorWhite"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/common_spacing_xsmall"
-                android:background="@color/colorGray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,9 +27,8 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
                     android:text="@string/estimate_item_category"/>
@@ -44,48 +37,35 @@
                     android:id="@+id/txtCategory"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:textSize="@dimen/common_font_middle"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/common_spacing_xsmall"
-                android:layout_marginStart="@dimen/common_spacing_xbig"
-                android:layout_marginLeft="@dimen/common_spacing_xbig"
-                android:background="@color/colorGray" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/ui_table_row_height"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/common_spacing_xbig"
-                android:paddingRight="@dimen/common_spacing_xbig"
-                android:orientation="horizontal">
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="@dimen/common_spacing_middle"
+                    android:layout_marginStart="@dimen/common_spacing_middle"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorPrimary"/>
 
                 <TextView
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
-                    android:text="@string/estimate_item_area"/>
+                    android:text="@string/estimate_item_character"/>
 
                 <TextView
-                    android:id="@+id/txtArea"
-                    android:layout_width="0dip"
+                    android:id="@+id/txtCharacter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
-                    android:textSize="@dimen/common_font_middle"/>
+                    android:layout_marginLeft="@dimen/common_spacing_middle"
+                    android:layout_marginStart="@dimen/common_spacing_middle"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorDanger"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_spacing_xsmall"
-                android:layout_marginStart="@dimen/common_spacing_xbig"
-                android:layout_marginLeft="@dimen/common_spacing_xbig"
                 android:background="@color/colorGray" />
 
             <LinearLayout
@@ -97,9 +77,8 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
                     android:text="@string/estimate_item_project"/>
@@ -108,7 +87,7 @@
                     android:id="@+id/txtProject"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
+                    android:layout_weight="1.0"
                     android:textSize="@dimen/common_font_middle"/>
 
             </LinearLayout>
@@ -116,8 +95,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_spacing_xsmall"
-                android:layout_marginStart="@dimen/common_spacing_xbig"
-                android:layout_marginLeft="@dimen/common_spacing_xbig"
                 android:background="@color/colorGray" />
 
             <LinearLayout
@@ -129,18 +106,61 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_area"/>
+
+                <TextView
+                    android:id="@+id/txtArea"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_incharger"/>
+
+                <TextView
+                    android:id="@+id/txtInCharger"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"/>
+
+                <TextView
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
                     android:text="@string/estimate_item_checker"/>
 
                 <TextView
                     android:id="@+id/txtChecker"
-                    android:layout_width="0dip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
                     android:textSize="@dimen/common_font_middle"/>
 
             </LinearLayout>
@@ -148,34 +168,85 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_spacing_xsmall"
-                android:layout_marginStart="@dimen/common_spacing_xbig"
-                android:layout_marginLeft="@dimen/common_spacing_xbig"
                 android:background="@color/colorGray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/ui_table_row_height"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/common_spacing_xbig"
                 android:paddingRight="@dimen/common_spacing_xbig"
-                android:paddingTop="@dimen/common_spacing_big"
-                android:paddingBottom="@dimen/common_spacing_big"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_start_date"/>
+
+                <TextView
+                    android:id="@+id/txtStartDate"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textSize="@dimen/common_font_middle"/>
 
                 <TextView
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_end_date"/>
+
+                <TextView
+                    android:id="@+id/txtEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:paddingTop="@dimen/common_spacing_big"
+                android:paddingBottom="@dimen/common_spacing_big"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
                     android:text="@string/estimate_item_description"/>
 
                 <TextView
                     android:id="@+id/txtDescription"
-                    android:layout_width="0dip"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2.5"
                     android:textSize="@dimen/common_font_middle"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lytImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginBottom="@dimen/common_spacing_big"
+                android:orientation="vertical">
 
             </LinearLayout>
 
@@ -185,7 +256,33 @@
                 android:background="@color/colorGray" />
 
             <LinearLayout
-                android:id="@+id/lytImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:paddingTop="@dimen/common_spacing_big"
+                android:paddingBottom="@dimen/common_spacing_big"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_submit"/>
+
+                <TextView
+                    android:id="@+id/txtImprovementAction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lytFixedImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/common_spacing_middle"
