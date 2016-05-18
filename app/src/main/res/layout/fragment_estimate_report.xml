@@ -1,0 +1,437 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context="com.purplelight.redstar.fragment.EstimateReportFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_spacing_big"
+            app:cardCornerRadius="0dip">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:background="@color/colorInfo"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/common_font_big"
+                        android:textStyle="bold"
+                        android:text="@string/title_report_project"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/txtProject"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/common_font_big"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorWhite" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_area"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtArea"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_incharger"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtInCharger"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_date"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtReportDate"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_reporter"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtReporter"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_constraction"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtConstraction"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_supevision"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtSupervision"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="@dimen/ui_form_title_width"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"
+                        android:text="@string/title_report_remark"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtRemark"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:paddingTop="@dimen/common_spacing_middle"
+                        android:paddingBottom="@dimen/common_spacing_middle"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/common_spacing_big"
+            android:layout_marginLeft="@dimen/common_spacing_big"
+            android:layout_marginRight="@dimen/common_spacing_big"
+            app:cardCornerRadius="0dip">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/ui_table_row_height"
+                    android:background="@color/colorSuccess"
+                    android:paddingLeft="@dimen/common_spacing_big"
+                    android:paddingRight="@dimen/common_spacing_big"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/common_font_big"
+                        android:textStyle="bold"
+                        android:text="@string/title_total_score"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/txtTotalScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/common_spacing_big"
+                        android:paddingRight="@dimen/common_spacing_big"
+                        android:gravity="center_vertical"
+                        android:textSize="@dimen/common_font_big"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorWhite" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/ui_table_row_height"
+                            android:gravity="center"
+                            android:text="@string/title_measure_score"
+                            android:textColor="@color/colorBlack"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtMeasureScore"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dip"
+                            android:gravity="center_horizontal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/ui_table_row_height"
+                            android:gravity="center"
+                            android:text="@string/title_deducting_score"
+                            android:textColor="@color/colorBlack"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtDeductingScore"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dip"
+                            android:gravity="center_horizontal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/ui_table_row_height"
+                            android:gravity="center"
+                            android:text="@string/title_manage_score"
+                            android:textColor="@color/colorBlack"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtManageScore"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dip"
+                            android:gravity="center_horizontal" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/ui_table_row_height"
+                            android:gravity="center"
+                            android:text="@string/title_safe_score"
+                            android:textColor="@color/colorBlack"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtSafeScore"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dip"
+                            android:gravity="center_horizontal" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

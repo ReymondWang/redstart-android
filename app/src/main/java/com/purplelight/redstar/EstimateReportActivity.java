@@ -1,9 +1,14 @@
 package com.purplelight.redstar;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,25 +25,43 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
+import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.entity.EstimateReport;
+import com.purplelight.redstar.util.HttpUtil;
+import com.purplelight.redstar.util.Validation;
+import com.purplelight.redstar.web.parameter.EstimateReportParameter;
+import com.purplelight.redstar.web.result.EstimateReportResult;
+import com.purplelight.redstar.web.result.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class EstimateReportActivity extends AppCompatActivity {
+public class EstimateReportActivity extends AppCompatActivity
+        implements SwipeRefreshLayout.OnRefreshListener, SwipeRefreshLayout.OnLoadListener{
 
     private ActionBar mToolbar;
     private List<EstimateReport> mDataSource;
     private Point mScreenSize = new Point();
 
+    private int outterSystemId;
+
+    // 系统分页信息
+    private int currentPageNo = 0;
+
     @InjectView(R.id.listView) RecyclerView mContainer;
     @InjectView(R.id.lytDownload) LinearLayout mDownloadView;
+    @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshForm;
+    @InjectView(R.id.loading_progress) ProgressBar mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +69,14 @@ public class EstimateReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_estimate_report);
         ButterKnife.inject(this);
 
+        outterSystemId = getIntent().getIntExtra("outtersystem", 0);
+
         mToolbar = getSupportActionBar();
 
         // 取得手机屏幕的宽度，并将顶部轮播广告位的比例设置为2:1
         WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getSize(mScreenSize);
 
-        test();
         initViews();
         initEvents();
     }
@@ -71,6 +95,7 @@ public class EstimateReportActivity extends AppCompatActivity {
                 break;
             case R.id.action_change_mode:
                 Intent intent = new Intent(this, ThirdEstimateActivity.class);
+                intent.putExtra("outtersystem", outterSystemId);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.frontscale, R.anim.backscale);
@@ -80,40 +105,113 @@ public class EstimateReportActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // 测试数据
-    private void test(){
-        mDataSource = new ArrayList<>();
+    @Override
+    public void onLoad() {
+        mRefreshForm.setLoading(false);
+    }
 
-        for (int i = 0; i < 10; i++){
-            EstimateReport report = new EstimateReport();
-            report.setReportId(String.valueOf(i + 1));
-            report.setProjectName("无锡柴岗一期");
-            report.setSupplierName("南通宏华");
-            report.setEstimateDate("2015-10-10");
-            report.setTotalScore("79.98");
-            report.setMeasureScore("84.65");
-            report.setKeyDeductingScore("2.5");
-            report.setManageScore("82.00");
-            report.setSafeScore("75.14");
-            report.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
-
-            mDataSource.add(report);
-        }
+    @Override
+    public void onRefresh() {
+        mRefreshForm.setRefreshing(false);
     }
 
     private void initViews(){
         if (mToolbar != null){
             mToolbar.setDisplayHomeAsUpEnabled(true);
         }
+        mRefreshForm.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
         mContainer.setLayoutManager(new LinearLayoutManager(this));
         mContainer.addItemDecoration(new SpaceItemDecoration());
         mContainer.setHasFixedSize(true);
-        ReportAdapter adapter = new ReportAdapter();
-        mContainer.setAdapter(adapter);
+
+        showProgress(true);
+        LoadingTask task = new LoadingTask();
+        task.execute();
     }
 
     private void initEvents(){
+        mRefreshForm.setOnLoadListener(this);
+        mRefreshForm.setOnRefreshListener(this);
+    }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRefreshForm.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgress.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    /**
+     * 下载任务
+     */
+    private class LoadingTask extends AsyncTask<String, Void, EstimateReportResult>{
+        @Override
+        protected EstimateReportResult doInBackground(String... params) {
+            EstimateReportResult result = new EstimateReportResult();
+
+            if (Validation.IsActivityNetWork(EstimateReportActivity.this)){
+                Gson gson = new Gson();
+
+                EstimateReportParameter parameter = new EstimateReportParameter();
+                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setSystemId(outterSystemId);
+                parameter.setPageNo(currentPageNo);
+                parameter.setPageSize(Configuration.Page.COMMON_PAGE_SIZE);
+
+                String requestJson = gson.toJson(parameter);
+                try{
+                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_REPORT), requestJson);
+                    if (!Validation.IsNullOrEmpty(responseJson)){
+                        result = gson.fromJson(responseJson, EstimateReportResult.class);
+                    } else {
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(getString(R.string.no_response_json));
+                    }
+                } catch (Exception ex){
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(getString(R.string.fetch_response_data_error));
+                }
+
+            } else {
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.do_not_have_network));
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(EstimateReportResult result) {
+            showProgress(false);
+            if (Result.SUCCESS.equals(result.getSuccess())){
+                mDataSource = result.getReports();
+                ReportAdapter adapter = new ReportAdapter();
+                mContainer.setAdapter(adapter);
+            } else {
+                Toast.makeText(EstimateReportActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class ReportAdapter extends RecyclerView.Adapter<ReportAdapter.ReportHolder>{
@@ -131,8 +229,9 @@ public class EstimateReportActivity extends AppCompatActivity {
                 @Override
                 public void OnReportClick(View view, int position) {
                     EstimateReport report = mDataSource.get(position);
-                    Intent intent = new Intent(EstimateReportActivity.this, ThirdEstimateActivity.class);
-                    intent.putExtra("id", report.getReportId());
+                    Intent intent = new Intent(EstimateReportActivity.this, EstimateReportDetailActivity.class);
+                    intent.putExtra("report", report);
+                    intent.putExtra("outtersystem", outterSystemId);
                     startActivity(intent);
                 }
             });
@@ -142,13 +241,13 @@ public class EstimateReportActivity extends AppCompatActivity {
         public void onBindViewHolder(ReportHolder holder, int position) {
             final EstimateReport report = mDataSource.get(position);
             holder.txtProject.setText(report.getProjectName());
-            holder.txtSupplier.setText(report.getSupplierName());
-            holder.txtDate.setText(report.getEstimateDate());
-            holder.txtTotalScore.setText(report.getTotalScore());
-            holder.txtMeasureScore.setText(report.getMeasureScore());
-            holder.txtDeductingScore.setText(report.getKeyDeductingScore());
-            holder.txtManageScore.setText(report.getManageScore());
-            holder.txtSafeScore.setText(report.getSafeScore());
+            holder.txtSupplier.setText(report.getConstractionName());
+            holder.txtDate.setText(report.getReportDate());
+            holder.txtTotalScore.setText(String.valueOf(report.getGradeZHDF()));
+            holder.txtMeasureScore.setText(String.valueOf(report.getGradeSCSL()));
+            holder.txtDeductingScore.setText(String.valueOf(report.getGradeZLKF()));
+            holder.txtManageScore.setText(String.valueOf(report.getGradeGLXW()));
+            holder.txtSafeScore.setText(String.valueOf(report.getGradeAQWM()));
 
             if (Configuration.DownloadStatus.NOT_DOWNLOADED == report.getDownloadStatus()){
                 final ImageView iconDownload = holder.btnDownload;

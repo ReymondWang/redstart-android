@@ -8,6 +8,8 @@
     <string name="title_activity_measure">实测实量</string>
     <string name="title_activity_third_estimate">第三方评估</string>
     <string name="title_activity_third_estimate_detail">评估详细</string>
+    <string name="title_activity_estimate_report">第三方评估报告</string>
+    <string name="title_activity_estimate_report_detail">第三方评估报告详细</string>
     <string name="title_activity_third_estimate_submit">填报消项</string>
     <string name="title_activity_passport_upload">证照上传</string>
     <string name="title_activity_passport_upload_modify">编辑证照信息</string>
@@ -134,11 +136,19 @@
     <string name="estimate_item_submit_img">整改图片</string>
 
     <!-- 第三方评估报告 -->
+    <string name="title_report_project">项目名称</string>
+    <string name="title_report_area">区域名称</string>
+    <string name="title_report_date">报告日期</string>
+    <string name="title_report_incharger">负责人</string>
+    <string name="title_report_reporter">评估单位</string>
+    <string name="title_report_supevision">监理单位</string>
+    <string name="title_report_constraction">总包单位</string>
+    <string name="title_report_remark">备注</string>
     <string name="title_measure_score">实测得分</string>
-    <string name="title_deducting_score">质量关键扣分</string>
+    <string name="title_deducting_score">质量扣分</string>
     <string name="title_manage_score">管理行为</string>
     <string name="title_safe_score">文明安全</string>
-    <string name="title_total_score">标段综合得分</string>
+    <string name="title_total_score">综合得分</string>
 
     <!-- 证照信息 -->
     <string name="title_passport_name">证照名称</string>
@@ -206,5 +216,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">设定</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

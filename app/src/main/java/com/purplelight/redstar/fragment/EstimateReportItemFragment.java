@@ -1,4 +1,4 @@
-package com.purplelight.redstar;
+package com.purplelight.redstar.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -8,25 +8,11 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -37,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.purplelight.redstar.EstimateItemDetailActivity;
+import com.purplelight.redstar.EstimateSubmitActivity;
+import com.purplelight.redstar.R;
+import com.purplelight.redstar.ZoomImageViewActivity;
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
@@ -60,163 +50,79 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * 第三方评估界面
- * Created by wangyn on 16/5/9.
+ * 第三方评估报告的明细列表
  */
-public class ThirdEstimateActivity extends AppCompatActivity
-        implements SwipeRefreshLayout.OnRefreshListener, SwipeRefreshLayout.OnLoadListener, View.OnClickListener {
-    private static final String TAG = "ThirdEstimateActivity";
+public class EstimateReportItemFragment extends Fragment
+        implements SwipeRefreshLayout.OnLoadListener, SwipeRefreshLayout.OnRefreshListener {
+
+    private int outterSystemId;
+    private int reportId;
+    private int currentPageNo = 0;
 
     private List<EstimateItem> mDataSource = new ArrayList<>();
     private Set<Integer> mSelectedPosition = new HashSet<>();
 
-    // 查询条件
-    private AppCompatCheckBox mGeneral;
-    private AppCompatCheckBox mImportant;
-    private AutoCompleteTextView mArea;
-    private AutoCompleteTextView mProject;
-    private AutoCompleteTextView mDescription;
-    private AppCompatButton mSearch;
-
-    // 外部系统编号
-    private int outterSystemId;
-
-    // 系统分页信息
-    private int currentPageNo = 0;
-
-    @InjectView(R.id.toolbar) Toolbar mToolbar;
-    @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshFrom;
+    @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshForm;
     @InjectView(R.id.listView) ListView mList;
-    @InjectView(R.id.lytDownload) LinearLayout mDownloadView;
-    @InjectView(R.id.nav_view) NavigationView mNavigationView;
-    @InjectView(R.id.drawer_layout) DrawerLayout mDrawer;
     @InjectView(R.id.loading_progress) ProgressBar mProgress;
-    @InjectView(R.id.btnDownloadAll) FloatingActionButton mDownloadAll;
+
+    public static EstimateReportItemFragment newInstance(int systemId, int reportId) {
+        EstimateReportItemFragment fragment = new EstimateReportItemFragment();
+        Bundle args = new Bundle();
+        args.putInt("outtersystem", systemId);
+        args.putInt("reportId", reportId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_third_estimate);
-        ButterKnife.inject(this);
 
-        outterSystemId = getIntent().getIntExtra("outtersystem", 0);
-
-        View drawView = mNavigationView.getHeaderView(0);
-        mGeneral = (AppCompatCheckBox)drawView.findViewById(R.id.chkGeneral);
-        mImportant = (AppCompatCheckBox)drawView.findViewById(R.id.chkImportant);
-        mArea = (AutoCompleteTextView)drawView.findViewById(R.id.txtArea);
-        mProject = (AutoCompleteTextView)drawView.findViewById(R.id.txtProject);
-        mDescription = (AutoCompleteTextView)drawView.findViewById(R.id.txtDescription);
-        mSearch = (AppCompatButton)drawView.findViewById(R.id.btnSearch);
-
-        setSupportActionBar(mToolbar);
-        mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
-
-        initViews();
-        initEvents();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_thrid_estimate, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                break;
-            case R.id.action_change_mode:
-                Intent intent = new Intent(ThirdEstimateActivity.this, EstimateReportActivity.class);
-                intent.putExtra("outtersystem", outterSystemId);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.frontscale, R.anim.backscale);
-                break;
-            case R.id.action_search:
-                mDrawer.openDrawer(GravityCompat.END);
-                break;
-            default:
+        if (getArguments() != null) {
+            outterSystemId = getArguments().getInt("outtersystem");
+            reportId = getArguments().getInt("reportId");
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_estimate_report_item, container, false);
+        ButterKnife.inject(this, view);
+
+        mRefreshForm.setOnLoadListener(this);
+        mRefreshForm.setOnRefreshListener(this);
+        mRefreshForm.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
+
+        showProgress(true);
+        LoadingTask task = new LoadingTask();
+        task.execute();
+
+        return view;
     }
 
     @Override
     public void onLoad() {
-        mRefreshFrom.setLoading(false);
+        mRefreshForm.setLoading(false);
     }
 
     @Override
     public void onRefresh() {
-        mRefreshFrom.setRefreshing(false);
+        mRefreshForm.setRefreshing(false);
     }
 
-    @Override
-    public void onClick(View v) {
-        mDrawer.closeDrawer(GravityCompat.END);
-
-        showProgress(true);
-        LoadingTask task = new LoadingTask();
-        task.execute();
-    }
-
-    private void initViews(){
-        showProgress(true);
-        mDownloadAll.setVisibility(View.GONE);
-
-        LoadingTask task = new LoadingTask();
-        task.execute();
-    }
-
-    private void initEvents(){
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        mRefreshFrom.setOnRefreshListener(this);
-        mRefreshFrom.setOnLoadListener(this);
-        mSearch.setOnClickListener(this);
-
-        mDownloadAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for(Integer position : mSelectedPosition){
-                    mDataSource.get(position).setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                }
-
-                showSelectedAll(false);
-                showDownloading();
-            }
-        });
-    }
-
-    /**
-     * 重新绑定列表，并确定是否显示全选框
-     * @param show 是否显示全选
-     */
-    private void showSelectedAll(boolean show){
-        mDownloadAll.setVisibility(show ? View.VISIBLE : View.GONE);
-
-        ListAdapter adapter = new ListAdapter(mDataSource, show);
-        mList.setAdapter(adapter);
-    }
-
-    /**
-     * 显示登录进度
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-            mRefreshFrom.animate().setDuration(shortAnimTime).alpha(
+            mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRefreshForm.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -230,52 +136,22 @@ public class ThirdEstimateActivity extends AppCompatActivity
             });
         } else {
             mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-    private void showDownloading(){
-        mDownloadView.setVisibility(View.VISIBLE);
-
-        AnimationSet animationSet = new AnimationSet(true);
-
-        AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
-        showAnimation.setDuration(1000);
-        animationSet.addAnimation(showAnimation);
-        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
-        hideAnimation.setDuration(1000);
-        hideAnimation.setStartOffset(1200);
-        animationSet.addAnimation(hideAnimation);
-
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mDownloadView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        mDownloadView.startAnimation(animationSet);
-    }
-
-    private class LoadingTask extends AsyncTask<String, Void, EstimateItemResult>{
+    private class LoadingTask extends AsyncTask<String, Void, EstimateItemResult> {
         @Override
         protected EstimateItemResult doInBackground(String... params) {
             EstimateItemResult result = new EstimateItemResult();
 
-            if (Validation.IsActivityNetWork(ThirdEstimateActivity.this)){
+            if (Validation.IsActivityNetWork(getActivity())){
                 Gson gson = new Gson();
 
                 EstimateItemParameter parameter = new EstimateItemParameter();
                 parameter.setLoginId(RedStartApplication.getUser().getId());
                 parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
+                parameter.setReportId(reportId);
                 parameter.setSystemId(outterSystemId);
                 parameter.setPageNo(currentPageNo);
                 parameter.setPageSize(Configuration.Page.COMMON_PAGE_SIZE);
@@ -310,12 +186,12 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 ListAdapter adapter = new ListAdapter(mDataSource, false);
                 mList.setAdapter(adapter);
             } else {
-                Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private class ListAdapter extends BaseAdapter{
+    private class ListAdapter extends BaseAdapter {
         private boolean mShowSelect = false;
         private List<EstimateItem> mDataSource = new ArrayList<>();
 
@@ -343,7 +219,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder = new ViewHolder();
             if (convertView == null){
-                convertView = LayoutInflater.from(ThirdEstimateActivity.this).inflate(R.layout.item_third_estimate, parent, false);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.item_third_estimate, parent, false);
                 holder.txtCategory = (TextView)convertView.findViewById(R.id.txtCategory);
                 holder.txtCharacter = (TextView)convertView.findViewById(R.id.txtCharacter);
                 holder.txtAreaAndProject = (TextView)convertView.findViewById(R.id.txtAreaAndProject);
@@ -390,7 +266,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(ThirdEstimateActivity.this, ZoomImageViewActivity.class);
+                        Intent intent = new Intent(getActivity(), ZoomImageViewActivity.class);
                         intent.putExtra("type", ZoomImageViewActivity.ZOOM_URL);
                         intent.putExtra("url", imageUrl);
                         startActivity(intent);
@@ -405,17 +281,9 @@ public class ThirdEstimateActivity extends AppCompatActivity
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ThirdEstimateActivity.this, EstimateItemDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), EstimateItemDetailActivity.class);
                     intent.putExtra("item", item);
                     startActivity(intent);
-                }
-            });
-
-            convertView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showSelectedAll(true);
-                    return true;
                 }
             });
 
@@ -430,7 +298,6 @@ public class ThirdEstimateActivity extends AppCompatActivity
                         if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                             item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
                             iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
-                            showDownloading();
                         }
                     }
                 });
@@ -442,7 +309,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
             holder.btnCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ThirdEstimateActivity.this, EstimateSubmitActivity.class);
+                    Intent intent = new Intent(getActivity(), EstimateSubmitActivity.class);
                     startActivity(intent);
                 }
             });
@@ -466,7 +333,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
         }
 
         private ImageView createImageView(){
-            ImageView imageView = new ImageView(ThirdEstimateActivity.this);
+            ImageView imageView = new ImageView(getActivity());
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT

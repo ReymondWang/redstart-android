@@ -38,5 +38,10 @@
     <dimen name="app_bar_height">180dip</dimen>
     <dimen name="fab_margin">16dip</dimen>
     <dimen name="text_margin">16dip</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="ui_form_header_height">5dip</dimen>
+    <dimen name="ui_form_line_height">1dip</dimen>
+    <dimen name="ui_form_title_width">80dip</dimen>
 
 </resources>
