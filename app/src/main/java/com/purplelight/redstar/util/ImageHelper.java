@@ -33,7 +33,7 @@ import java.util.UUID;
 
 public class ImageHelper {
 	private static final String TAG = "ImageHelper";
-	private static final int DISK_MAX_SIZE = 32 * 1024 * 1024;// SD 32MB
+	private static final int DISK_MAX_SIZE = 320 * 1024 * 1024;// SD 320MB
 	public static final String CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/mcommunity/";
 	public static final String SUBMIT_CACHE_PATH = CACHE_PATH + "submit/";
 

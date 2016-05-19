@@ -35,7 +35,9 @@ public class WelcomeActivity extends AppCompatActivity {
     private final Runnable mCheckLoginRunnable = new Runnable() {
         @Override
         public void run() {
-            QuickRegisterTask task = new QuickRegisterTask();
+//            QuickRegisterTask task = new QuickRegisterTask();
+//            task.execute();
+            LoadingTask task = new LoadingTask();
             task.execute();
         }
     };
@@ -47,43 +49,6 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
 
         mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
-    }
-
-    private class QuickRegisterTask extends AsyncTask<String, Void, QuickRegisterResult>{
-        @Override
-        protected QuickRegisterResult doInBackground(String... params) {
-            QuickRegisterResult result = new QuickRegisterResult();
-            if (Validation.IsActivityNetWork(WelcomeActivity.this)){
-                try{
-                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.QUICK_REGISTER), "");
-                    if (!Validation.IsNullOrEmpty(responseJson)){
-                        result = new Gson().fromJson(responseJson, QuickRegisterResult.class);
-                    } else {
-                        result.setSuccess(Result.ERROR);
-                        result.setMessage(getString(R.string.no_response_json));
-                    }
-                } catch (IOException ex){
-                    result.setSuccess(Result.ERROR);
-                    result.setMessage(ex.getMessage());
-                }
-            } else {
-                result.setSuccess(Result.ERROR);
-                result.setMessage(getString(R.string.do_not_have_network));
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(QuickRegisterResult result) {
-            if (Result.SUCCESS.equals(result.getSuccess())){
-                RedStartApplication.setQuickRegister(result.isQuickRegister());
-
-                LoadingTask task = new LoadingTask();
-                task.execute();
-            } else {
-                Toast.makeText(WelcomeActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private class LoadingTask extends AsyncTask<String, Void, SystemUser>{

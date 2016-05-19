@@ -34,6 +34,8 @@ import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
+import com.purplelight.redstar.provider.dao.IEstimateReportDao;
+import com.purplelight.redstar.provider.dao.impl.EstimateReportDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateReport;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
@@ -41,7 +43,9 @@ import com.purplelight.redstar.web.parameter.EstimateReportParameter;
 import com.purplelight.redstar.web.result.EstimateReportResult;
 import com.purplelight.redstar.web.result.Result;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -170,6 +174,11 @@ public class EstimateReportActivity extends AppCompatActivity
         protected EstimateReportResult doInBackground(String... params) {
             EstimateReportResult result = new EstimateReportResult();
 
+            // 获取本地数据
+            IEstimateReportDao reportDao = new EstimateReportDaoImpl(EstimateReportActivity.this);
+            Map<String, String> map = new HashMap<>();
+            List<EstimateReport> localList = reportDao.query(map);
+
             if (Validation.IsActivityNetWork(EstimateReportActivity.this)){
                 Gson gson = new Gson();
 
@@ -184,6 +193,25 @@ public class EstimateReportActivity extends AppCompatActivity
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_REPORT), requestJson);
                     if (!Validation.IsNullOrEmpty(responseJson)){
                         result = gson.fromJson(responseJson, EstimateReportResult.class);
+                        if(Result.SUCCESS.equals(result.getSuccess())
+                                && result.getReports() != null
+                                && result.getReports().size() > 0){
+                            for(EstimateReport report : result.getReports()){
+                                boolean hasDownloaded = false;
+                                if (localList != null && localList.size() > 0){
+                                    for (EstimateReport localReport : localList){
+                                        if (report.getId() == localReport.getId()){
+                                            hasDownloaded = true;
+                                            report.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!hasDownloaded){
+                                    report.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
+                                }
+                            }
+                        }
                     } else {
                         result.setSuccess(Result.ERROR);
                         result.setMessage(getString(R.string.no_response_json));
@@ -198,19 +226,24 @@ public class EstimateReportActivity extends AppCompatActivity
                 result.setMessage(getString(R.string.do_not_have_network));
             }
 
+            if (Result.ERROR.equals(result.getSuccess())){
+                if (localList != null && localList.size() > 0) {
+                    result.setReports(localList);
+                }
+            }
+
             return result;
         }
 
         @Override
         protected void onPostExecute(EstimateReportResult result) {
             showProgress(false);
-            if (Result.SUCCESS.equals(result.getSuccess())){
-                mDataSource = result.getReports();
-                ReportAdapter adapter = new ReportAdapter();
-                mContainer.setAdapter(adapter);
-            } else {
+            if (Result.ERROR.equals(result.getSuccess())){
                 Toast.makeText(EstimateReportActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
             }
+            mDataSource = result.getReports();
+            ReportAdapter adapter = new ReportAdapter();
+            mContainer.setAdapter(adapter);
         }
     }
 
@@ -259,7 +292,7 @@ public class EstimateReportActivity extends AppCompatActivity
                         // 二次检查
                         if (Configuration.DownloadStatus.NOT_DOWNLOADED == report.getDownloadStatus()){
                             report.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                            iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                            iconDownload.setVisibility(View.GONE);
                             mDownloadView.setVisibility(View.VISIBLE);
 
                             AnimationSet animationSet = new AnimationSet(true);
@@ -292,7 +325,7 @@ public class EstimateReportActivity extends AppCompatActivity
                     }
                 });
             } else {
-                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                holder.btnDownload.setVisibility(View.GONE);
             }
         }
 

@@ -31,6 +31,9 @@ import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
+import com.purplelight.redstar.provider.RedStartProviderMeta;
+import com.purplelight.redstar.provider.dao.IEstimateItemDao;
+import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
@@ -42,8 +45,10 @@ import com.purplelight.redstar.web.result.EstimateItemResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.ButterKnife;
@@ -145,6 +150,12 @@ public class EstimateReportItemFragment extends Fragment
         protected EstimateItemResult doInBackground(String... params) {
             EstimateItemResult result = new EstimateItemResult();
 
+            // 获取本地数据
+            IEstimateItemDao itemDao = new EstimateItemDaoImpl(getActivity());
+            Map<String, String> map = new HashMap<>();
+            map.put(RedStartProviderMeta.EstimateItemMetaData.REPORT_ID, String.valueOf(reportId));
+            List<EstimateItem> localList = itemDao.query(map);
+
             if (Validation.IsActivityNetWork(getActivity())){
                 Gson gson = new Gson();
 
@@ -161,6 +172,25 @@ public class EstimateReportItemFragment extends Fragment
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM), requestJson);
                     if (!Validation.IsNullOrEmpty(responseJson)){
                         result = gson.fromJson(responseJson, EstimateItemResult.class);
+                        if (Result.SUCCESS.equals(result.getSuccess())
+                                && result.getItems() != null
+                                && result.getItems().size() > 0){
+                            for(EstimateItem item : result.getItems()){
+                                boolean hasDownloaded = false;
+                                if (localList != null && localList.size() > 0){
+                                    for (EstimateItem localItem : localList){
+                                        if (item.getId() == localItem.getId()){
+                                            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
+                                            hasDownloaded = true;
+                                        }
+                                    }
+                                }
+                                if (!hasDownloaded){
+                                    item.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
+                                }
+                            }
+                        }
+
                     } else {
                         result.setSuccess(Result.ERROR);
                         result.setMessage(getString(R.string.no_response_json));
@@ -173,6 +203,9 @@ public class EstimateReportItemFragment extends Fragment
             } else {
                 result.setSuccess(Result.ERROR);
                 result.setMessage(getString(R.string.do_not_have_network));
+                if (localList != null && localList.size() > 0){
+                    result.setItems(localList);
+                }
             }
 
             return result;
@@ -181,22 +214,19 @@ public class EstimateReportItemFragment extends Fragment
         @Override
         protected void onPostExecute(EstimateItemResult result) {
             showProgress(false);
-            if (Result.SUCCESS.equals(result.getSuccess())){
-                mDataSource = result.getItems();
-                ListAdapter adapter = new ListAdapter(mDataSource, false);
-                mList.setAdapter(adapter);
-            } else {
+            if (Result.ERROR.equals(result.getSuccess())){
                 Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
             }
+            mDataSource = result.getItems();
+            ListAdapter adapter = new ListAdapter(false);
+            mList.setAdapter(adapter);
         }
     }
 
     private class ListAdapter extends BaseAdapter {
         private boolean mShowSelect = false;
-        private List<EstimateItem> mDataSource = new ArrayList<>();
 
-        public ListAdapter(List<EstimateItem> dataSource, boolean showSelect){
-            mDataSource = dataSource;
+        public ListAdapter(boolean showSelect){
             mShowSelect = showSelect;
         }
 
@@ -212,7 +242,7 @@ public class EstimateReportItemFragment extends Fragment
 
         @Override
         public long getItemId(int position) {
-            return Long.parseLong(mDataSource.get(position).getId());
+            return mDataSource.get(position).getId();
         }
 
         @Override
@@ -297,13 +327,13 @@ public class EstimateReportItemFragment extends Fragment
                         // 二次检查，因为Image的final类型，在点击一次后事件并未消失
                         if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                             item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                            iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                            iconDownload.setVisibility(View.GONE);
                         }
                     }
                 });
             } else {
                 holder.chkSelect.setVisibility(View.GONE);
-                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                holder.btnDownload.setVisibility(View.GONE);
             }
 
             holder.btnCreate.setOnClickListener(new View.OnClickListener() {

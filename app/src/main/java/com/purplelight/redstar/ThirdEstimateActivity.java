@@ -3,11 +3,15 @@ package com.purplelight.redstar;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -41,7 +45,10 @@ import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
+import com.purplelight.redstar.provider.dao.IEstimateItemDao;
+import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
+import com.purplelight.redstar.service.EstimateDownloadService;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
 import com.purplelight.redstar.util.HttpUtil;
@@ -52,8 +59,10 @@ import com.purplelight.redstar.web.result.EstimateItemResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import butterknife.ButterKnife;
@@ -66,6 +75,9 @@ import butterknife.InjectView;
 public class ThirdEstimateActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener, SwipeRefreshLayout.OnLoadListener, View.OnClickListener {
     private static final String TAG = "ThirdEstimateActivity";
+
+    // 填报跳转编号
+    private static final int SUBMIT = 1;
 
     private List<EstimateItem> mDataSource = new ArrayList<>();
     private Set<Integer> mSelectedPosition = new HashSet<>();
@@ -83,6 +95,23 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
     // 系统分页信息
     private int currentPageNo = 0;
+
+    private EstimateDownloadService mService;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = ((EstimateDownloadService.EstimateDownloadServiceBinder)service).getService();
+            Log.d(TAG, "Service connected = " + mConnection);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+    };
+
+    private ListAdapter mAdapter;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshFrom;
@@ -112,6 +141,9 @@ public class ThirdEstimateActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
 
+        mAdapter = new ListAdapter(false);
+        mList.setAdapter(mAdapter);
+
         initViews();
         initEvents();
     }
@@ -120,6 +152,30 @@ public class ThirdEstimateActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_thrid_estimate, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Intent intent = new Intent(this, EstimateDownloadService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK){
+            if (requestCode == SUBMIT){
+                EstimateItem item = data.getParcelableExtra("item");
+                for(int i = 0; i < mDataSource.size(); i++){
+                    if (mDataSource.get(i).getId() == item.getId()){
+                        mDataSource.set(i, item);
+                        break;
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -146,12 +202,16 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
     @Override
     public void onLoad() {
-        mRefreshFrom.setLoading(false);
+        currentPageNo++;
+        LoadingTask task = new LoadingTask();
+        task.execute();
     }
 
     @Override
     public void onRefresh() {
-        mRefreshFrom.setRefreshing(false);
+        currentPageNo = 0;
+        LoadingTask task = new LoadingTask();
+        task.execute();
     }
 
     @Override
@@ -187,7 +247,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
                 }
 
                 showSelectedAll(false);
-                showDownloading();
+//                showDownloading();
             }
         });
     }
@@ -199,7 +259,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
     private void showSelectedAll(boolean show){
         mDownloadAll.setVisibility(show ? View.VISIBLE : View.GONE);
 
-        ListAdapter adapter = new ListAdapter(mDataSource, show);
+        ListAdapter adapter = new ListAdapter(show);
         mList.setAdapter(adapter);
     }
 
@@ -235,18 +295,17 @@ public class ThirdEstimateActivity extends AppCompatActivity
     }
 
     private void showDownloading(){
-        mDownloadView.setVisibility(View.VISIBLE);
-
         AnimationSet animationSet = new AnimationSet(true);
 
+        mDownloadView.setVisibility(View.VISIBLE);
         AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
         showAnimation.setDuration(1000);
         animationSet.addAnimation(showAnimation);
-        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
-        hideAnimation.setDuration(1000);
-        hideAnimation.setStartOffset(1200);
-        animationSet.addAnimation(hideAnimation);
 
+        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
+        hideAnimation.setStartOffset(1200);
+        hideAnimation.setDuration(1000);
+        animationSet.addAnimation(hideAnimation);
         animationSet.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -270,6 +329,13 @@ public class ThirdEstimateActivity extends AppCompatActivity
         protected EstimateItemResult doInBackground(String... params) {
             EstimateItemResult result = new EstimateItemResult();
 
+            // 获取本地保存的数据
+            IEstimateItemDao itemDao = new EstimateItemDaoImpl(ThirdEstimateActivity.this);
+            // 获取当前的用户的数据
+            Map<String, String> map = new HashMap<>();
+            // map.put(RedStartProviderMeta.EstimateItemMetaData.IN_CHARGE_PERSON_ID, RedStartApplication.getUser().getId());
+            List<EstimateItem> localList = itemDao.query(map);
+
             if (Validation.IsActivityNetWork(ThirdEstimateActivity.this)){
                 Gson gson = new Gson();
 
@@ -285,6 +351,25 @@ public class ThirdEstimateActivity extends AppCompatActivity
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM), requestJson);
                     if (!Validation.IsNullOrEmpty(responseJson)){
                         result = gson.fromJson(responseJson, EstimateItemResult.class);
+                        if (Result.SUCCESS.equals(result.getSuccess())
+                                && result.getItems() != null
+                                && result.getItems().size() > 0){
+                            for(EstimateItem item : result.getItems()){
+                                boolean hasDownloaded = false;
+                                if (localList != null && localList.size() > 0){
+                                    for (EstimateItem localItem : localList){
+                                        if (item.getId() == localItem.getId()){
+                                            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
+                                            hasDownloaded = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!hasDownloaded){
+                                    item.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
+                                }
+                            }
+                        }
                     } else {
                         result.setSuccess(Result.ERROR);
                         result.setMessage(getString(R.string.no_response_json));
@@ -296,7 +381,11 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
             } else {
                 result.setSuccess(Result.ERROR);
-                result.setMessage(getString(R.string.do_not_have_network));
+            }
+            if (Result.ERROR.equals(result.getSuccess())){
+                if (localList != null && localList.size() > 0) {
+                    result.setItems(localList);
+                }
             }
 
             return result;
@@ -305,22 +394,23 @@ public class ThirdEstimateActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(EstimateItemResult result) {
             showProgress(false);
-            if (Result.SUCCESS.equals(result.getSuccess())){
-                mDataSource = result.getItems();
-                ListAdapter adapter = new ListAdapter(mDataSource, false);
-                mList.setAdapter(adapter);
-            } else {
+            if (mRefreshFrom.isRefreshing()){
+                mRefreshFrom.setRefreshing(false);
+            }
+            if (mRefreshFrom.isLoading()){
+                mRefreshFrom.setLoading(false);
+            }
+            if (Result.ERROR.equals(result.getSuccess())){
                 Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
             }
+            mDataSource = result.getItems();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
     private class ListAdapter extends BaseAdapter{
         private boolean mShowSelect = false;
-        private List<EstimateItem> mDataSource = new ArrayList<>();
-
-        public ListAdapter(List<EstimateItem> dataSource, boolean showSelect){
-            mDataSource = dataSource;
+        public ListAdapter(boolean showSelect){
             mShowSelect = showSelect;
         }
 
@@ -336,7 +426,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
         @Override
         public long getItemId(int position) {
-            return Long.parseLong(mDataSource.get(position).getId());
+            return mDataSource.get(position).getId();
         }
 
         @Override
@@ -421,7 +511,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
             if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                 holder.chkSelect.setVisibility(mShowSelect ? View.VISIBLE : View.GONE);
-                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download);
+                holder.btnDownload.setVisibility(View.VISIBLE);
                 final ImageView iconDownload = holder.btnDownload;
                 holder.btnDownload.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -429,21 +519,23 @@ public class ThirdEstimateActivity extends AppCompatActivity
                         // 二次检查，因为Image的final类型，在点击一次后事件并未消失
                         if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                             item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                            iconDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                            iconDownload.setVisibility(View.GONE);
                             showDownloading();
+                            mService.addEstimateItem(item);
                         }
                     }
                 });
             } else {
                 holder.chkSelect.setVisibility(View.GONE);
-                holder.btnDownload.setImageResource(R.drawable.ic_cloud_download_gray);
+                holder.btnDownload.setVisibility(View.GONE);
             }
 
             holder.btnCreate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ThirdEstimateActivity.this, EstimateSubmitActivity.class);
-                    startActivity(intent);
+                    intent.putExtra("item", item);
+                    startActivityForResult(intent, SUBMIT);
                 }
             });
 

@@ -28,6 +28,10 @@ public class WebAPI {
 
     public static final String ESTIMATE_REPORT = "/api/estimate/reports";
 
+    public static final String SINGLE_ESTIMATE_ITEM = "/api/estimate/singleitem";
+
+    public static final String SINGLE_ESTIMATE_REPORT = "/api/estimate/singlereport";
+
     /**
      * 取得WebAPI的全路径
      * @param method  方法参数

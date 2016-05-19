@@ -83,7 +83,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_estimate_report_detail"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EstimateItemDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -141,8 +141,20 @@
             android:name=".provider.AppFuncProvider"
             android:authorities="com.purplelight.redstar.provider.RedStartProvider.AppFunc"
             android:exported="false" />
+        <provider
+            android:name=".provider.EstimateReportProvider"
+            android:authorities="com.purplelight.redstar.provider.RedStartProvider.EstimateReport"
+            android:exported="false" />
+        <provider
+            android:name=".provider.EstimateItemProvider"
+            android:authorities="com.purplelight.redstar.provider.RedStartProvider.EstimateItem"
+            android:exported="false" />
 
-
+        <!-- 后台任务 -->
+        <service
+            android:name=".service.EstimateDownloadService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -34,6 +34,7 @@ public class Configuration {
 
     public class Image{
         public static final int THUMB_SIZE = 300;
+        public static final int IMAGE_SIZE = 1920;
     }
 
     public class Fragment{
@@ -67,6 +68,7 @@ public class Configuration {
         public static final int NOT_DOWNLOADED = 1;
         public static final int DOWNLOADING = 2;
         public static final int DOWNLOADED = 3;
+        public static final int DOWNLOAD_FAILURE = 4;
     }
 
     /**

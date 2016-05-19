@@ -77,6 +77,7 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
                 break;
             case R.id.action_create:
                 Intent intent = new Intent(this, EstimateSubmitActivity.class);
+                intent.putExtra("item", mItem);
                 startActivity(intent);
             default:
         }

@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class RedStartProviderMeta {
 
     public static final String DATABASE_NAME = "redstar.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public RedStartProviderMeta(){}
 
@@ -96,6 +96,83 @@ public class RedStartProviderMeta {
         public static final String MODIFIED_DATE = "modified";
     }
 
+    public static final class EstimateReportMetaData implements BaseColumns{
+        private EstimateReportMetaData(){}
+        public static final String AUTHORITY = "com.purplelight.redstar.provider.RedStartProvider.EstimateReport";
+        public static final String TABLE_NAME = "EstimateReport";
+
+        public static final Uri CONTENT_URI =
+                Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.purplelight.redstar.estimatereport";
+
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.purplelight.redstar.estimatereport";
+
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
+        public static final String ESTIMATE_REPORT_ID = "estimatereportid";
+
+        public static final String PROJECT_ID = "projectid";
+
+        public static final String PROJECT_NAME = "projectname";
+
+        public static final String AREA_ID = "areaid";
+
+        public static final String AREA_NAME = "areaname";
+
+        public static final String CATEGORY = "category";
+
+        public static final String CHECK_TYPE = "checktype";
+
+        public static final String REPORT_DATE = "reportDate";
+
+        public static final String IN_CHARGE_PERSON = "inchargeperson";
+
+        public static final String REPORTER = "reporter";
+
+        public static final String SUPERVISION_ID = "supervisionid";
+
+        public static final String SUPERVISION_NAME = "supervisionname";
+
+        public static final String CONSTRACTION_ID = "constractionid";
+
+        public static final String CONSTRACTION_NAME = "constractionname";
+
+        public static final String REMARK = "remark";
+
+        public static final String GRADE_SCSL = "gradescsl";
+
+        public static final String GRADE_MPFH = "gradempfh";
+
+        public static final String GRADE_GGBW = "gradeggbw";
+
+        public static final String GRADE_WLMGG = "gradewlmgg";
+
+        public static final String GRADE_YLGG = "gradeylgg";
+
+        public static final String GRADE_XMZH = "gradexmzh";
+
+        public static final String GRADE_SCDF = "gradescdf";
+
+        public static final String GRADE_ZLKF = "gradeszlkf";
+
+        public static final String GRADE_GLXW = "gradesglxw";
+
+        public static final String GRADE_AQWM = "gradesaqwm";
+
+        public static final String GRADE_ZHDF = "gradeszhdf";
+
+        public static final String DOWNLOAD_STATUS = "downloadstatus";
+
+        public static final String STATUS = "status";
+
+        public static final String CREATED_DATE = "created";
+
+        public static final String MODIFIED_DATE = "modified";
+    }
+
     public static final class EstimateItemMetaData implements BaseColumns{
         private EstimateItemMetaData(){}
         public static final String AUTHORITY = "com.purplelight.redstar.provider.RedStartProvider.EstimateItem";
@@ -151,6 +228,10 @@ public class RedStartProviderMeta {
         public static final String FIXED_THUMBS = "fixedthumbs";
 
         public static final String FIXED_IMAGES = "fixedimages";
+
+        public static final String DOWNLOAD_STATUS = "downloadstatus";
+
+        public static final String UPLOAD_STATUS = "uploadstatus";
 
         public static final String STATUS = "status";
 

@@ -78,6 +78,7 @@
             android:layout_marginRight="@dimen/common_spacing_big"
             android:layout_marginEnd="@dimen/common_spacing_big"
             android:layout_gravity="end"
+            android:visibility="gone"
             android:text="@string/txt_register"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/common_font_middle"/>

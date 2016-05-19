@@ -2,7 +2,11 @@ package com.purplelight.redstar.util;
 
 import com.purplelight.redstar.fastdfs.ProtoCommon;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * 工具类
@@ -73,5 +77,21 @@ public class ConvertUtil {
         results[0] = file_id.substring(0, pos); // group name
         results[1] = file_id.substring(pos + 1); // file name
         return 0;
+    }
+
+    public static String fromListToString(List<String> list, String separator){
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < list.size(); i++){
+            if (i > 0){
+                stringBuilder.append(separator);
+            }
+            stringBuilder.append(list.get(i));
+        }
+        return stringBuilder.toString();
+    }
+
+    public static List<String> fromStringToList(String str, String separator){
+        String[] strArr = str.split("\\" + separator);
+        return Arrays.asList(strArr);
     }
 }

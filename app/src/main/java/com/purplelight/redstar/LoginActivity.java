@@ -19,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.application.RedStartApplication;
@@ -30,6 +31,7 @@ import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.parameter.LoginParameter;
 import com.purplelight.redstar.web.result.LoginResult;
+import com.purplelight.redstar.web.result.QuickRegisterResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.io.IOException;
@@ -70,12 +72,8 @@ public class LoginActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-
-        if (RedStartApplication.isQuickRegister()){
-            mRegister.setVisibility(View.GONE);
-        } else {
-            mRegister.setVisibility(View.VISIBLE);
-        }
+        QuickRegisterTask task = new QuickRegisterTask();
+        task.execute();
     }
 
     private void initEvent(){
@@ -177,6 +175,45 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private class QuickRegisterTask extends AsyncTask<String, Void, QuickRegisterResult>{
+        @Override
+        protected QuickRegisterResult doInBackground(String... params) {
+            QuickRegisterResult result = new QuickRegisterResult();
+            if (Validation.IsActivityNetWork(LoginActivity.this)){
+                try{
+                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.QUICK_REGISTER), "");
+                    if (!Validation.IsNullOrEmpty(responseJson)){
+                        result = new Gson().fromJson(responseJson, QuickRegisterResult.class);
+                    } else {
+                        result.setSuccess(Result.ERROR);
+                        result.setMessage(getString(R.string.no_response_json));
+                    }
+                } catch (IOException ex){
+                    result.setSuccess(Result.ERROR);
+                    result.setMessage(ex.getMessage());
+                }
+            } else {
+                result.setSuccess(Result.ERROR);
+                result.setMessage(getString(R.string.do_not_have_network));
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(QuickRegisterResult result) {
+            if (Result.SUCCESS.equals(result.getSuccess())){
+                RedStartApplication.setQuickRegister(result.isQuickRegister());
+                if (RedStartApplication.isQuickRegister()){
+                    mRegister.setVisibility(View.GONE);
+                } else {
+                    mRegister.setVisibility(View.VISIBLE);
+                }
+            } else {
+                Toast.makeText(LoginActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

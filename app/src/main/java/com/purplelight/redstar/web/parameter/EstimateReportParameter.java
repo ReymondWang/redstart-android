@@ -7,6 +7,8 @@ package com.purplelight.redstar.web.parameter;
 public class EstimateReportParameter extends Parameter {
     private int systemId;
 
+    private int reportId;
+
     private int pageNo;
 
     private int pageSize;
@@ -17,6 +19,14 @@ public class EstimateReportParameter extends Parameter {
 
     public void setSystemId(int systemId) {
         this.systemId = systemId;
+    }
+
+    public int getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(int reportId) {
+        this.reportId = reportId;
     }
 
     public int getPageNo() {

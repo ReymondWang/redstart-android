@@ -38,7 +38,12 @@ import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IAppFunctionDao;
+import com.purplelight.redstar.provider.dao.IEstimateItemDao;
+import com.purplelight.redstar.provider.dao.IEstimateReportDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
+import com.purplelight.redstar.provider.dao.impl.AppFunctionDaoImpl;
+import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
+import com.purplelight.redstar.provider.dao.impl.EstimateReportDaoImpl;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
@@ -196,6 +201,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_clear) {
             ImageHelper.clear();
+            IEstimateItemDao itemDao = new EstimateItemDaoImpl(this);
+            itemDao.clear();
+            IEstimateReportDao reportDao = new EstimateReportDaoImpl(this);
+            reportDao.clear();
+            IAppFunctionDao functionDao = new AppFunctionDaoImpl(this);
+            functionDao.clear();
             Toast.makeText(this, getString(R.string.clear_buffer_success), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(this, FeedbackActivity.class);

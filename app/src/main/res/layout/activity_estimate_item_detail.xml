@@ -27,7 +27,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
@@ -40,24 +40,40 @@
                     android:layout_weight="1.0"
                     android:layout_marginLeft="@dimen/common_spacing_middle"
                     android:layout_marginStart="@dimen/common_spacing_middle"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorPrimary"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="0dip"
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
                     android:text="@string/estimate_item_character"/>
 
                 <TextView
                     android:id="@+id/txtCharacter"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
                     android:layout_marginLeft="@dimen/common_spacing_middle"
                     android:layout_marginStart="@dimen/common_spacing_middle"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorDanger"/>
 
@@ -77,7 +93,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
@@ -88,6 +104,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"/>
 
             </LinearLayout>
@@ -106,7 +123,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
@@ -117,6 +134,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"/>
 
             </LinearLayout>
@@ -135,7 +153,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
@@ -146,21 +164,7 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:textSize="@dimen/common_font_middle"/>
-
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
                     android:gravity="end"
-                    android:textSize="@dimen/common_font_middle"
-                    android:textColor="@color/colorBlack"
-                    android:text="@string/estimate_item_checker"/>
-
-                <TextView
-                    android:id="@+id/txtChecker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"/>
 
             </LinearLayout>
@@ -179,7 +183,37 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/ui_form_title_width"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_font_middle"
+                    android:textColor="@color/colorBlack"
+                    android:text="@string/estimate_item_checker"/>
+
+                <TextView
+                    android:id="@+id/txtChecker"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:gravity="end"
+                    android:textSize="@dimen/common_font_middle"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
@@ -190,21 +224,37 @@
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:layout_width="0dip"
+                    android:layout_width="@dimen/ui_form_title_width"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"
                     android:textColor="@color/colorBlack"
                     android:text="@string/estimate_item_end_date"/>
 
                 <TextView
                     android:id="@+id/txtEndDate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:gravity="end"
                     android:textSize="@dimen/common_font_middle"/>
 
             </LinearLayout>

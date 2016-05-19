@@ -13,10 +13,10 @@ import java.util.List;
 public class EstimateItem implements Parcelable {
 
     // 主键
-    private String id;
+    private int id;
 
     // 所属报告编号
-    private String reportId;
+    private int reportId;
 
     // 项目编号
     private String projectId;
@@ -78,19 +78,22 @@ public class EstimateItem implements Parcelable {
     // 下载状态
     private int downloadStatus;
 
-    public String getId() {
+    // 上传状态
+    private int uploadStatus;
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getReportId() {
+    public int getReportId() {
         return reportId;
     }
 
-    public void setReportId(String reportId) {
+    public void setReportId(int reportId) {
         this.reportId = reportId;
     }
 
@@ -254,11 +257,19 @@ public class EstimateItem implements Parcelable {
         this.downloadStatus = downloadStatus;
     }
 
+    public int getUploadStatus() {
+        return uploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        this.uploadStatus = uploadStatus;
+    }
+
     public EstimateItem(){}
 
     public EstimateItem(Parcel src){
-        id = src.readString();
-        reportId = src.readString();
+        id = src.readInt();
+        reportId = src.readInt();
         projectId = src.readString();
         projectName = src.readString();
         areaName = src.readString();
@@ -279,6 +290,7 @@ public class EstimateItem implements Parcelable {
         src.readStringList(fixedImages);
         status = src.readInt();
         downloadStatus = src.readInt();
+        uploadStatus = src.readInt();
     }
 
     @Override
@@ -288,8 +300,8 @@ public class EstimateItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(reportId);
+        dest.writeInt(id);
+        dest.writeInt(reportId);
         dest.writeString(projectId);
         dest.writeString(projectName);
         dest.writeString(areaName);
@@ -310,6 +322,7 @@ public class EstimateItem implements Parcelable {
         dest.writeStringList(fixedImages);
         dest.writeInt(status);
         dest.writeInt(downloadStatus);
+        dest.writeInt(uploadStatus);
     }
 
     public static final Parcelable.Creator<EstimateItem> CREATOR = new Parcelable.Creator<EstimateItem>(){

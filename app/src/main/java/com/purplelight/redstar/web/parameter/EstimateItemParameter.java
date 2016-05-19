@@ -11,6 +11,8 @@ public class EstimateItemParameter extends Parameter {
 
     private int reportId;
 
+    private int itemId;
+
     private int pageNo;
 
     private int pageSize;
@@ -37,6 +39,14 @@ public class EstimateItemParameter extends Parameter {
 
     public void setReportId(int reportId) {
         this.reportId = reportId;
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 
     public int getPageNo() {
