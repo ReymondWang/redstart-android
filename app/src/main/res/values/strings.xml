@@ -18,6 +18,7 @@
     <string name="title_activity_notification">消息设定</string>
     <string name="title_activity_feedback">意见反馈</string>
     <string name="title_activity_setting">系统设置</string>
+    <string name="title_activity_offline">离线任务</string>
     <string name="title_activity_login">登录</string>
     <string name="title_activity_register">用户注册</string>
     <string name="title_activity_outter_system">外部系统</string>
@@ -31,6 +32,9 @@
     <string name="action_download">下载</string>
     <string name="action_create">填报</string>
     <string name="action_task">查看下载任务</string>
+    <string name="action_download_all">下载全部</string>
+    <string name="action_upload_all">上传全部</string>
+    <string name="action_clear_all">删除全部</string>
 
     <!-- 正在加载 -->
     <string name="txt_loading">正在加载......</string>
@@ -88,6 +92,7 @@
     <string name="txt_row_message">消息通知</string>
     <string name="txt_row_setting">系统设置</string>
     <string name="txt_row_password">修改密码</string>
+    <string name="txt_offline_task">离线任务</string>
     <string name="txt_row_buffer">清除缓存</string>
     <string name="txt_row_advice">意见反馈</string>
 

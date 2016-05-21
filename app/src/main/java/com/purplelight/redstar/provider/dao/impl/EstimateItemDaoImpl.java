@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateItemMetaData;
@@ -59,7 +60,10 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
         cv.put(EstimateItemMetaData.FIXED_IMAGES, ConvertUtil.fromListToString(item.getFixedImages(), SEPARATOR));
         cv.put(EstimateItemMetaData.DOWNLOAD_STATUS, item.getDownloadStatus());
         cv.put(EstimateItemMetaData.UPLOAD_STATUS, item.getUploadStatus());
+        cv.put(EstimateItemMetaData.LOCAL_IMAGE, item.getLocalImage());
+        cv.put(EstimateItemMetaData.HAS_MODIFIED, item.getHasModified());
         cv.put(EstimateItemMetaData.STATUS, item.getStatus());
+        cv.put(EstimateItemMetaData.OUTTER_SYSTEM_ID, item.getOutterSystemId());
 
         Uri insertedUri = contentResolver.insert(uri, cv);
         Log.d(TAG, "inserted uri:" + insertedUri);
@@ -113,7 +117,12 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
             int iFiexImages = c.getColumnIndex(EstimateItemMetaData.FIXED_IMAGES);
             int iDownloadStatus = c.getColumnIndex(EstimateItemMetaData.DOWNLOAD_STATUS);
             int iUploadStatus = c.getColumnIndex(EstimateItemMetaData.UPLOAD_STATUS);
+            int iLocalImage = c.getColumnIndex(EstimateItemMetaData.LOCAL_IMAGE);
+            int iHasModified = c.getColumnIndex(EstimateItemMetaData.HAS_MODIFIED);
             int iStatus = c.getColumnIndex(EstimateItemMetaData.STATUS);
+            int iCreateDate = c.getColumnIndex(EstimateItemMetaData.CREATED_DATE);
+            int iUpdateDate = c.getColumnIndex(EstimateItemMetaData.MODIFIED_DATE);
+            int iOutterSystemId = c.getColumnIndex(EstimateItemMetaData.OUTTER_SYSTEM_ID);
 
             List<EstimateItem> list = new ArrayList<>();
             c.moveToFirst();
@@ -141,7 +150,12 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
                 item.setFixedImages(ConvertUtil.fromStringToList(c.getString(iFiexImages), SEPARATOR));
                 item.setDownloadStatus(c.getInt(iDownloadStatus));
                 item.setUploadStatus(c.getInt(iUploadStatus));
+                item.setLocalImage(c.getInt(iLocalImage));
+                item.setHasModified(c.getInt(iHasModified));
                 item.setStatus(c.getInt(iStatus));
+                item.setCreateDate(c.getLong(iCreateDate));
+                item.setUpdateDate(c.getLong(iUpdateDate));
+                item.setOutterSystemId(c.getInt(iOutterSystemId));
                 list.add(item);
 
                 c.moveToNext();
@@ -215,22 +229,38 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
         cv.put(EstimateItemMetaData.FIXED_IMAGES, ConvertUtil.fromListToString(item.getFixedImages(), SEPARATOR));
         cv.put(EstimateItemMetaData.DOWNLOAD_STATUS, item.getDownloadStatus());
         cv.put(EstimateItemMetaData.UPLOAD_STATUS, item.getUploadStatus());
+        cv.put(EstimateItemMetaData.LOCAL_IMAGE, item.getLocalImage());
+        cv.put(EstimateItemMetaData.HAS_MODIFIED, item.getHasModified());
         cv.put(EstimateItemMetaData.STATUS, item.getStatus());
+        cv.put(EstimateItemMetaData.OUTTER_SYSTEM_ID, item.getOutterSystemId());
 
         String where = EstimateItemMetaData.ESTIMATE_ITEM_ID + "=?";
         String[] selectArgs = {String.valueOf(item.getId())};
 
-        resolver.update(uri, cv, where, selectArgs);
+        int cnt = resolver.update(uri, cv, where, selectArgs);
+        Log.d(TAG, "update cnt = " + cnt);
+    }
+
+    @Override
+    public void saveOrUpdate(EstimateItem item) {
+        EstimateItem localItem = getById(item.getId());
+        if (localItem != null){
+            update(item);
+        } else {
+            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
+            save(item);
+        }
     }
 
     @Override
     public void deleteById(int itemId) {
         Uri uri = EstimateItemMetaData.CONTENT_URI;
 
-        String where = EstimateItemMetaData.REPORT_ID + "=?";
+        String where = EstimateItemMetaData.ESTIMATE_ITEM_ID + "=?";
         String[] selectArgs = {String.valueOf(itemId)};
 
-        getContext().getContentResolver().delete(uri, where, selectArgs);
+        int cnt = getContext().getContentResolver().delete(uri, where, selectArgs);
+        Log.i(TAG, "delete cnt=" + cnt);
     }
 
     @Override

@@ -91,7 +91,11 @@ public class ConvertUtil {
     }
 
     public static List<String> fromStringToList(String str, String separator){
-        String[] strArr = str.split("\\" + separator);
-        return Arrays.asList(strArr);
+        if (!Validation.IsNullOrEmpty(str)){
+            String[] strArr = str.split("\\" + separator);
+            return Arrays.asList(strArr);
+        } else {
+            return new ArrayList<>();
+        }
     }
 }

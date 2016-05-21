@@ -110,7 +110,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + EstimateItemMetaData.FIXED_IMAGES + " TEXT,"
                 + EstimateItemMetaData.DOWNLOAD_STATUS + " INTEGER,"
                 + EstimateItemMetaData.UPLOAD_STATUS + " INTEGER,"
+                + EstimateItemMetaData.LOCAL_IMAGE + " INTEGER,"
+                + EstimateItemMetaData.HAS_MODIFIED + " INTEGER,"
                 + EstimateItemMetaData.STATUS + " INTEGER,"
+                + EstimateItemMetaData.OUTTER_SYSTEM_ID + " INTEGER,"
                 + EstimateItemMetaData.CREATED_DATE + " INTEGER,"
                 + EstimateItemMetaData.MODIFIED_DATE + " INTEGER"
                 + ");");

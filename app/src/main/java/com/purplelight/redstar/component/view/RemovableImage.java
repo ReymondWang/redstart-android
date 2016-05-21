@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.purplelight.redstar.R;
+import com.purplelight.redstar.util.ImageHelper;
 
 /**
  * 显示可删除按钮的图像
@@ -25,7 +26,7 @@ public class RemovableImage extends FrameLayout {
     private ImageView mDelete;
 
     private Drawable mDrawable;
-    private String imageFileName;
+    private String imageFile;
 
     private OnRemovableListener mOnRemovableListener;
 
@@ -54,8 +55,8 @@ public class RemovableImage extends FrameLayout {
     }
 
     public void setImageFile(String filePath){
-        imageFileName = filePath;
-        setImageBitmap(BitmapFactory.decodeFile(filePath));
+        imageFile = filePath;
+        setImageBitmap(ImageHelper.getBitmapFromCache(filePath));
     }
 
     public void setOnRemovableListener(OnRemovableListener listener){
@@ -71,7 +72,7 @@ public class RemovableImage extends FrameLayout {
     }
 
     public String getImageFileName(){
-        return imageFileName;
+        return imageFile;
     }
 
     private void initView(){

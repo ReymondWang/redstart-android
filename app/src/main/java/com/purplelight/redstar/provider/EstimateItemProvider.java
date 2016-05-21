@@ -49,7 +49,10 @@ public class EstimateItemProvider extends ContentProvider {
         sItemMap.put(EstimateItemMetaData.FIXED_IMAGES, EstimateItemMetaData.FIXED_IMAGES);
         sItemMap.put(EstimateItemMetaData.DOWNLOAD_STATUS, EstimateItemMetaData.DOWNLOAD_STATUS);
         sItemMap.put(EstimateItemMetaData.UPLOAD_STATUS, EstimateItemMetaData.UPLOAD_STATUS);
+        sItemMap.put(EstimateItemMetaData.LOCAL_IMAGE, EstimateItemMetaData.LOCAL_IMAGE);
+        sItemMap.put(EstimateItemMetaData.HAS_MODIFIED, EstimateItemMetaData.HAS_MODIFIED);
         sItemMap.put(EstimateItemMetaData.STATUS, EstimateItemMetaData.STATUS);
+        sItemMap.put(EstimateItemMetaData.OUTTER_SYSTEM_ID, EstimateItemMetaData.OUTTER_SYSTEM_ID);
         sItemMap.put(EstimateItemMetaData.CREATED_DATE, EstimateItemMetaData.CREATED_DATE);
         sItemMap.put(EstimateItemMetaData.MODIFIED_DATE, EstimateItemMetaData.MODIFIED_DATE);
     }
@@ -131,10 +134,10 @@ public class EstimateItemProvider extends ContentProvider {
         }
 
         Long now = System.currentTimeMillis();
-        if (values.containsKey(EstimateItemMetaData.CREATED_DATE)){
+        if (!values.containsKey(EstimateItemMetaData.CREATED_DATE)){
             values.put(EstimateItemMetaData.CREATED_DATE, now);
         }
-        if (values.containsKey(EstimateItemMetaData.MODIFIED_DATE)){
+        if (!values.containsKey(EstimateItemMetaData.MODIFIED_DATE)){
             values.put(EstimateItemMetaData.MODIFIED_DATE, now);
         }
 
@@ -176,6 +179,9 @@ public class EstimateItemProvider extends ContentProvider {
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        if (!values.containsKey(EstimateItemMetaData.MODIFIED_DATE)){
+            values.put(EstimateItemMetaData.MODIFIED_DATE, System.currentTimeMillis());
+        }
         int count;
         switch (sUriMatcher.match(uri)){
             case INCOMING_ESTIMATE_ITEM_COLLECTION_URI_INDICATOR:

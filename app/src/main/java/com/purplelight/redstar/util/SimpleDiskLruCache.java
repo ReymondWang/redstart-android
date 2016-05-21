@@ -114,6 +114,19 @@ public class SimpleDiskLruCache {
 		}
 	}
 
+	public void remove(String key){
+		synchronized (mLinkedHashMap) {
+			if (mLinkedHashMap.containsKey(key)){
+				File file = new File(mCacheDir, mLinkedHashMap.get(key));
+				if (file.exists()){
+					if (file.delete()){
+						mLinkedHashMap.remove(key);
+					}
+				}
+			}
+		}
+	}
+
 	private void put(String key, String file) {
 		mLinkedHashMap.put(key, file);
 		cacheSize = mLinkedHashMap.size();

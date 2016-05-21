@@ -72,14 +72,29 @@ public class EstimateItem implements Parcelable {
     // 整改原始图片
     private List<String> fixedImages = new ArrayList<>();
 
+    // 本地图片状态，只影响整改后的图片
+    private int localImage;
+
     // 业务状态
     private int status;
+
+    // 本地已修改
+    private int hasModified;
 
     // 下载状态
     private int downloadStatus;
 
     // 上传状态
     private int uploadStatus;
+
+    // 外部系统主键
+    private int outterSystemId;
+
+    // 创建日期
+    private long createDate;
+
+    // 更新日期
+    private long updateDate;
 
     public int getId() {
         return id;
@@ -241,12 +256,28 @@ public class EstimateItem implements Parcelable {
         this.fixedImages = fixedImages;
     }
 
+    public int getLocalImage() {
+        return localImage;
+    }
+
+    public void setLocalImage(int localImage) {
+        this.localImage = localImage;
+    }
+
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getHasModified() {
+        return hasModified;
+    }
+
+    public void setHasModified(int hasModified) {
+        this.hasModified = hasModified;
     }
 
     public int getDownloadStatus() {
@@ -263,6 +294,30 @@ public class EstimateItem implements Parcelable {
 
     public void setUploadStatus(int uploadStatus) {
         this.uploadStatus = uploadStatus;
+    }
+
+    public int getOutterSystemId() {
+        return outterSystemId;
+    }
+
+    public void setOutterSystemId(int outterSystemId) {
+        this.outterSystemId = outterSystemId;
+    }
+
+    public long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(long createDate) {
+        this.createDate = createDate;
+    }
+
+    public long getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(long updateDate) {
+        this.updateDate = updateDate;
     }
 
     public EstimateItem(){}
@@ -288,9 +343,14 @@ public class EstimateItem implements Parcelable {
         improvmentAction = src.readString();
         src.readStringList(fixedThumbs);
         src.readStringList(fixedImages);
+        localImage = src.readInt();
         status = src.readInt();
+        hasModified = src.readInt();
         downloadStatus = src.readInt();
         uploadStatus = src.readInt();
+        outterSystemId = src.readInt();
+        createDate = src.readLong();
+        updateDate = src.readLong();
     }
 
     @Override
@@ -320,9 +380,14 @@ public class EstimateItem implements Parcelable {
         dest.writeString(improvmentAction);
         dest.writeStringList(fixedThumbs);
         dest.writeStringList(fixedImages);
+        dest.writeInt(localImage);
         dest.writeInt(status);
+        dest.writeInt(hasModified);
         dest.writeInt(downloadStatus);
         dest.writeInt(uploadStatus);
+        dest.writeInt(outterSystemId);
+        dest.writeLong(createDate);
+        dest.writeLong(updateDate);
     }
 
     public static final Parcelable.Creator<EstimateItem> CREATOR = new Parcelable.Creator<EstimateItem>(){

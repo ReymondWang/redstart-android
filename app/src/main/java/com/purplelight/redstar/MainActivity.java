@@ -195,6 +195,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_setting){
             Intent intent = new Intent(this, NotificationActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_offline_task){
+            Intent intent = new Intent(this, OfflineTaskCategoryActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_sync) {
         } else if (id == R.id.nav_password) {
             Intent intent = new Intent(this, ModifyPasswordActivity.class);

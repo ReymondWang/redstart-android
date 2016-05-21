@@ -27,13 +27,15 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 public class ImageHelper {
 	private static final String TAG = "ImageHelper";
-	private static final int DISK_MAX_SIZE = 320 * 1024 * 1024;// SD 320MB
+	private static final int DISK_MAX_SIZE = 512 * 1024 * 1024;// SD 512MB
 	public static final String CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/mcommunity/";
 	public static final String SUBMIT_CACHE_PATH = CACHE_PATH + "submit/";
 
@@ -78,6 +80,18 @@ public class ImageHelper {
 					Log.i(TAG, "put bitmap into SD key = " + key);
 					mDiskCache.put(key, bitmap);
 				}
+			}
+		}
+	}
+
+	public static void removeBitmapFromCache(String key){
+		synchronized(mMemoryCache){
+			mMemoryCache.remove(key);
+		}
+		synchronized (mDiskCache) {
+			if (mDiskCache.containsKey(key)) {
+				Log.i(TAG, "remove bitmap into SD key = " + key);
+				mDiskCache.remove(key);
 			}
 		}
 	}
@@ -294,5 +308,28 @@ public class ImageHelper {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 		return baos.toByteArray();
+	}
+
+	public static void SaveBitmapToFile(Bitmap bitmap, String path, String fileName) throws IOException{
+		File dictionary = new File(path);
+		if (!dictionary.exists()){
+			dictionary.mkdir();
+		}
+		File file = new File(path, fileName);
+		if (file.exists()){
+			file.delete();
+		}
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
+		fileOutputStream.flush();
+		fileOutputStream.close();
+	}
+
+	public static void DeleteFiles(List<String> fileNames){
+		if (fileNames != null && fileNames.size() > 0){
+			for(String fileName : fileNames){
+				ImageHelper.removeBitmapFromCache(fileName);
+			}
+		}
 	}
 }

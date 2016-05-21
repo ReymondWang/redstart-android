@@ -3,12 +3,12 @@ package com.purplelight.redstar;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -22,48 +22,29 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.adapter.EstimateItemAdapter;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
-import com.purplelight.redstar.constant.WebAPI;
-import com.purplelight.redstar.provider.dao.IEstimateItemDao;
-import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.service.EstimateDownloadService;
-import com.purplelight.redstar.task.BitmapDownloaderTask;
-import com.purplelight.redstar.task.DownloadedDrawable;
-import com.purplelight.redstar.util.HttpUtil;
-import com.purplelight.redstar.util.ImageHelper;
-import com.purplelight.redstar.util.Validation;
-import com.purplelight.redstar.web.parameter.EstimateItemParameter;
+import com.purplelight.redstar.task.EstimateItemLoadTask;
 import com.purplelight.redstar.web.result.EstimateItemResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -78,9 +59,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
     // 填报跳转编号
     private static final int SUBMIT = 1;
-
-    private List<EstimateItem> mDataSource = new ArrayList<>();
-    private Set<Integer> mSelectedPosition = new HashSet<>();
+    private static final int DETAIL = 2;
 
     // 查询条件
     private AppCompatCheckBox mGeneral;
@@ -98,6 +77,22 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
     private EstimateDownloadService mService;
 
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(EstimateDownloadService.ACTION_STATUS_CHANGED)){
+                EstimateItem item = intent.getParcelableExtra("item");
+                for (int i = 0; i < mDataSource.size(); i++){
+                    if (item.getId() == mDataSource.get(i).getId()){
+                        mDataSource.set(i, item);
+                        break;
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    };
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -111,7 +106,8 @@ public class ThirdEstimateActivity extends AppCompatActivity
         }
     };
 
-    private ListAdapter mAdapter;
+    private List<EstimateItem> mDataSource = new ArrayList<>();
+    private EstimateItemAdapter mAdapter;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.refresh_form) SwipeRefreshLayout mRefreshFrom;
@@ -141,11 +137,12 @@ public class ThirdEstimateActivity extends AppCompatActivity
         setSupportActionBar(mToolbar);
         mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
 
-        mAdapter = new ListAdapter(false);
-        mList.setAdapter(mAdapter);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(EstimateDownloadService.ACTION_STATUS_CHANGED);
+        registerReceiver(mReceiver, filter);
 
-        initViews();
         initEvents();
+        initViews();
     }
 
     @Override
@@ -163,9 +160,17 @@ public class ThirdEstimateActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unbindService(mConnection);
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK){
-            if (requestCode == SUBMIT){
+            if (requestCode == SUBMIT || requestCode == DETAIL){
                 EstimateItem item = data.getParcelableExtra("item");
                 for(int i = 0; i < mDataSource.size(); i++){
                     if (mDataSource.get(i).getId() == item.getId()){
@@ -194,6 +199,13 @@ public class ThirdEstimateActivity extends AppCompatActivity
             case R.id.action_search:
                 mDrawer.openDrawer(GravityCompat.END);
                 break;
+            case R.id.action_downloadAll:
+                downloadAll();
+                break;
+            case R.id.action_task:
+                Intent intent1 = new Intent(ThirdEstimateActivity.this, OfflineTaskCategoryActivity.class);
+                startActivity(intent1);
+                break;
             default:
         }
 
@@ -203,14 +215,28 @@ public class ThirdEstimateActivity extends AppCompatActivity
     @Override
     public void onLoad() {
         currentPageNo++;
-        LoadingTask task = new LoadingTask();
+        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setPageNo(currentPageNo);
+        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(EstimateItemResult result) {
+                onDataLoaded(result, true);
+            }
+        });
         task.execute();
     }
 
     @Override
     public void onRefresh() {
         currentPageNo = 0;
-        LoadingTask task = new LoadingTask();
+        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setPageNo(currentPageNo);
+        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(EstimateItemResult result) {
+                onDataLoaded(result, false);
+            }
+        });
         task.execute();
     }
 
@@ -219,7 +245,41 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mDrawer.closeDrawer(GravityCompat.END);
 
         showProgress(true);
-        LoadingTask task = new LoadingTask();
+        currentPageNo = 0;
+        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setPageNo(currentPageNo);
+        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(EstimateItemResult result) {
+                onDataLoaded(result, false);
+            }
+        });
+        task.execute();
+    }
+
+    private void downloadAll(){
+        showProgress(true);
+        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setPageNo(0);
+        task.setPageSize(1000); // 下载1000条，固定数值，如果超过一千条则不能下载。
+        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(EstimateItemResult result) {
+                showProgress(false);
+
+                if (Result.SUCCESS.equals(result.getSuccess())){
+                    for(EstimateItem item : result.getItems()){
+                        if (item.getDownloadStatus() == Configuration.DownloadStatus.NOT_DOWNLOADED ||
+                                item.getDownloadStatus() == Configuration.DownloadStatus.DOWNLOAD_FAILURE){
+                            mService.addEstimateItem(item);
+                        }
+                    }
+                    showDownloading();
+                } else {
+                    Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         task.execute();
     }
 
@@ -227,7 +287,14 @@ public class ThirdEstimateActivity extends AppCompatActivity
         showProgress(true);
         mDownloadAll.setVisibility(View.GONE);
 
-        LoadingTask task = new LoadingTask();
+        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setPageNo(currentPageNo);
+        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(EstimateItemResult result) {
+                onDataLoaded(result, false);
+            }
+        });
         task.execute();
     }
 
@@ -239,28 +306,37 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mRefreshFrom.setOnLoadListener(this);
         mSearch.setOnClickListener(this);
 
-        mDownloadAll.setOnClickListener(new View.OnClickListener() {
+        mAdapter = new EstimateItemAdapter(this, mDataSource);
+        mAdapter.setShowCheckBox(false);
+        mAdapter.setShowUpload(false);
+        mAdapter.setShowDownload(true);
+        mAdapter.setItemClickListener(new EstimateItemAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                for(Integer position : mSelectedPosition){
-                    mDataSource.get(position).setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                }
-
-                showSelectedAll(false);
-//                showDownloading();
+            public void OnItemClick(EstimateItem item) {
+                Intent intent = new Intent(ThirdEstimateActivity.this, EstimateItemDetailActivity.class);
+                intent.putExtra("item", item);
+                startActivityForResult(intent, DETAIL);
             }
         });
-    }
-
-    /**
-     * 重新绑定列表，并确定是否显示全选框
-     * @param show 是否显示全选
-     */
-    private void showSelectedAll(boolean show){
-        mDownloadAll.setVisibility(show ? View.VISIBLE : View.GONE);
-
-        ListAdapter adapter = new ListAdapter(show);
-        mList.setAdapter(adapter);
+        mAdapter.setDownloadListener(new EstimateItemAdapter.OnDownLoadListener() {
+            @Override
+            public void OnDownload(EstimateItem item) {
+                if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
+                    item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
+                    showDownloading();
+                    mService.addEstimateItem(item);
+                }
+            }
+        });
+        mAdapter.setSubmitListener(new EstimateItemAdapter.OnSubmitListener() {
+            @Override
+            public void OnSubmit(EstimateItem item) {
+                Intent intent = new Intent(ThirdEstimateActivity.this, EstimateSubmitActivity.class);
+                intent.putExtra("item", item);
+                startActivityForResult(intent, SUBMIT);
+            }
+        });
+        mList.setAdapter(mAdapter);
     }
 
     /**
@@ -324,262 +400,24 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mDownloadView.startAnimation(animationSet);
     }
 
-    private class LoadingTask extends AsyncTask<String, Void, EstimateItemResult>{
-        @Override
-        protected EstimateItemResult doInBackground(String... params) {
-            EstimateItemResult result = new EstimateItemResult();
-
-            // 获取本地保存的数据
-            IEstimateItemDao itemDao = new EstimateItemDaoImpl(ThirdEstimateActivity.this);
-            // 获取当前的用户的数据
-            Map<String, String> map = new HashMap<>();
-            // map.put(RedStartProviderMeta.EstimateItemMetaData.IN_CHARGE_PERSON_ID, RedStartApplication.getUser().getId());
-            List<EstimateItem> localList = itemDao.query(map);
-
-            if (Validation.IsActivityNetWork(ThirdEstimateActivity.this)){
-                Gson gson = new Gson();
-
-                EstimateItemParameter parameter = new EstimateItemParameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
-                parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
-                parameter.setSystemId(outterSystemId);
-                parameter.setPageNo(currentPageNo);
-                parameter.setPageSize(Configuration.Page.COMMON_PAGE_SIZE);
-
-                String requestJson = gson.toJson(parameter);
-                try{
-                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM), requestJson);
-                    if (!Validation.IsNullOrEmpty(responseJson)){
-                        result = gson.fromJson(responseJson, EstimateItemResult.class);
-                        if (Result.SUCCESS.equals(result.getSuccess())
-                                && result.getItems() != null
-                                && result.getItems().size() > 0){
-                            for(EstimateItem item : result.getItems()){
-                                boolean hasDownloaded = false;
-                                if (localList != null && localList.size() > 0){
-                                    for (EstimateItem localItem : localList){
-                                        if (item.getId() == localItem.getId()){
-                                            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
-                                            hasDownloaded = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (!hasDownloaded){
-                                    item.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
-                                }
-                            }
-                        }
-                    } else {
-                        result.setSuccess(Result.ERROR);
-                        result.setMessage(getString(R.string.no_response_json));
-                    }
-                } catch (Exception ex){
-                    result.setSuccess(Result.ERROR);
-                    result.setMessage(getString(R.string.fetch_response_data_error));
-                }
-
-            } else {
-                result.setSuccess(Result.ERROR);
-            }
-            if (Result.ERROR.equals(result.getSuccess())){
-                if (localList != null && localList.size() > 0) {
-                    result.setItems(localList);
-                }
-            }
-
-            return result;
+    private void onDataLoaded(EstimateItemResult result, boolean append){
+        showProgress(false);
+        if (mRefreshFrom.isRefreshing()){
+            mRefreshFrom.setRefreshing(false);
         }
-
-        @Override
-        protected void onPostExecute(EstimateItemResult result) {
-            showProgress(false);
-            if (mRefreshFrom.isRefreshing()){
-                mRefreshFrom.setRefreshing(false);
-            }
-            if (mRefreshFrom.isLoading()){
-                mRefreshFrom.setLoading(false);
-            }
-            if (Result.ERROR.equals(result.getSuccess())){
-                Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            mDataSource = result.getItems();
-            mAdapter.notifyDataSetChanged();
+        if (mRefreshFrom.isLoading()){
+            mRefreshFrom.setLoading(false);
         }
+        if (Result.ERROR.equals(result.getSuccess())){
+            Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        if (append){
+            mDataSource.addAll(result.getItems());
+        } else {
+            mDataSource.clear();
+            mDataSource.addAll(result.getItems());
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
-    private class ListAdapter extends BaseAdapter{
-        private boolean mShowSelect = false;
-        public ListAdapter(boolean showSelect){
-            mShowSelect = showSelect;
-        }
-
-        @Override
-        public int getCount() {
-            return mDataSource.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mDataSource.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return mDataSource.get(position).getId();
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = new ViewHolder();
-            if (convertView == null){
-                convertView = LayoutInflater.from(ThirdEstimateActivity.this).inflate(R.layout.item_third_estimate, parent, false);
-                holder.txtCategory = (TextView)convertView.findViewById(R.id.txtCategory);
-                holder.txtCharacter = (TextView)convertView.findViewById(R.id.txtCharacter);
-                holder.txtAreaAndProject = (TextView)convertView.findViewById(R.id.txtAreaAndProject);
-                holder.txtDescription = (TextView)convertView.findViewById(R.id.txtDescription);
-                holder.lytImage = (LinearLayout)convertView.findViewById(R.id.lytImage);
-                holder.btnDownload = (ImageView) convertView.findViewById(R.id.btnDownload);
-                holder.btnCreate = (ImageView)convertView.findViewById(R.id.btnCreate);
-                holder.chkSelect = (AppCompatCheckBox)convertView.findViewById(R.id.chkSelect);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder)convertView.getTag();
-            }
-
-            final EstimateItem item = mDataSource.get(position);
-            holder.txtCategory.setText(item.getCategory());
-            holder.txtCharacter.setText(item.getCharacter());
-            holder.txtAreaAndProject.setText(item.getProjectName() + "  " + item.getAreaName());
-            holder.txtDescription.setText(item.getDescription());
-
-            List<String> imageUrlList = item.getImages();
-            List<String> thumbUrlList = item.getThumbs();
-            for (int i = 0; i < imageUrlList.size(); i++){
-                final String imageUrl = imageUrlList.get(i);
-                final String thumbUrl = thumbUrlList.get(i);
-                Bitmap bitmap = ImageHelper.getBitmapFromCache(thumbUrl);
-
-                // 尽可能的复用已经创建的ImageView，提高效率
-                ImageView imageView;
-                if (holder.lytImage.getChildCount() > i){
-                    imageView = (ImageView)holder.lytImage.getChildAt(i);
-                } else {
-                    imageView = createImageView();
-                    holder.lytImage.addView(imageView);
-                }
-                if (bitmap != null){
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    BitmapDownloaderTask task = new BitmapDownloaderTask(imageView);
-                    DownloadedDrawable drawable = new DownloadedDrawable(task, getResources(), R.drawable.cc_bg_default_topic_grid);
-                    imageView.setImageDrawable(drawable);
-                    task.execute(thumbUrl);
-                }
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ThirdEstimateActivity.this, ZoomImageViewActivity.class);
-                        intent.putExtra("type", ZoomImageViewActivity.ZOOM_URL);
-                        intent.putExtra("url", imageUrl);
-                        startActivity(intent);
-                    }
-                });
-            }
-            // 删除多余的ImageView
-            for (int i = imageUrlList.size(); i < holder.lytImage.getChildCount(); i++){
-                holder.lytImage.removeViewAt(i);
-            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ThirdEstimateActivity.this, EstimateItemDetailActivity.class);
-                    intent.putExtra("item", item);
-                    startActivity(intent);
-                }
-            });
-
-            convertView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showSelectedAll(true);
-                    return true;
-                }
-            });
-
-            if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
-                holder.chkSelect.setVisibility(mShowSelect ? View.VISIBLE : View.GONE);
-                holder.btnDownload.setVisibility(View.VISIBLE);
-                final ImageView iconDownload = holder.btnDownload;
-                holder.btnDownload.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 二次检查，因为Image的final类型，在点击一次后事件并未消失
-                        if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
-                            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                            iconDownload.setVisibility(View.GONE);
-                            showDownloading();
-                            mService.addEstimateItem(item);
-                        }
-                    }
-                });
-            } else {
-                holder.chkSelect.setVisibility(View.GONE);
-                holder.btnDownload.setVisibility(View.GONE);
-            }
-
-            holder.btnCreate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ThirdEstimateActivity.this, EstimateSubmitActivity.class);
-                    intent.putExtra("item", item);
-                    startActivityForResult(intent, SUBMIT);
-                }
-            });
-
-            holder.chkSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked){
-                        if (!mSelectedPosition.contains(position)) {
-                            mSelectedPosition.add(position);
-                        }
-                    } else {
-                        if (mSelectedPosition.contains(position)) {
-                            mSelectedPosition.remove(position);
-                        }
-                    }
-                }
-            });
-
-            return convertView;
-        }
-
-        private ImageView createImageView(){
-            ImageView imageView = new ImageView(ThirdEstimateActivity.this);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.width = getResources().getDimensionPixelOffset(R.dimen.ui_image_row_height);
-            params.height = getResources().getDimensionPixelOffset(R.dimen.ui_image_row_height);
-            params.setMargins(0, 0, getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle), 0);
-            imageView.setLayoutParams(params);
-
-            return imageView;
-        }
-
-        private class ViewHolder{
-            TextView txtCategory;
-            TextView txtCharacter;
-            TextView txtAreaAndProject;
-            TextView txtDescription;
-            LinearLayout lytImage;
-            ImageView btnDownload;
-            ImageView btnCreate;
-            AppCompatCheckBox chkSelect;
-        }
-    }
 }

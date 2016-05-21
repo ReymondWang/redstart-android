@@ -26,6 +26,8 @@ public class WebAPI {
 
     public static final String ESTIMATE_ITEM = "/api/estimate/items";
 
+    public static final String ESTIMATE_ITEM_SUBMIT = "/api/estimate/submit";
+
     public static final String ESTIMATE_REPORT = "/api/estimate/reports";
 
     public static final String SINGLE_ESTIMATE_ITEM = "/api/estimate/singleitem";

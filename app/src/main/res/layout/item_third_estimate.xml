@@ -60,7 +60,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+            </LinearLayout>
 
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/txtImprovementTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_font_middle"
+            android:visibility="gone"
+            android:text="@string/estimate_item_submit"/>
+
+        <TextView
+            android:id="@+id/txtImprovementAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_spacing_middle"
+            android:visibility="gone"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/common_font_middle"/>
+
+        <HorizontalScrollView
+            android:id="@+id/lytFixedImageContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_spacing_middle"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/lytFixedImage"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
             </LinearLayout>
 
         </HorizontalScrollView>
@@ -69,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dip"
             android:layout_marginTop="@dimen/common_spacing_big"
-            android:layout_gravity="bottom"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <android.support.v7.widget.AppCompatCheckBox
@@ -79,10 +111,23 @@
                 android:layout_weight="1.0"
                 android:visibility="gone" />
 
-            <LinearLayout
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.0" />
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/common_spacing_xbig"
+                android:layout_marginEnd="@dimen/common_spacing_xbig"/>
+
+            <ImageView
+                android:id="@+id/btnUpload"
+                android:layout_width="26dip"
+                android:layout_height="26dip"
+                android:layout_marginRight="@dimen/common_spacing_xbig"
+                android:layout_marginEnd="@dimen/common_spacing_xbig"
+                android:src="@drawable/ic_cloud_upload_primary"
+                android:contentDescription="@string/common_image_description"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/btnDownload"
@@ -91,7 +136,8 @@
                 android:layout_marginRight="@dimen/common_spacing_xbig"
                 android:layout_marginEnd="@dimen/common_spacing_xbig"
                 android:src="@drawable/ic_cloud_download"
-                android:contentDescription="@string/common_image_description"/>
+                android:contentDescription="@string/common_image_description"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/btnCreate"
@@ -100,7 +146,18 @@
                 android:layout_marginRight="@dimen/common_spacing_big"
                 android:layout_marginEnd="@dimen/common_spacing_big"
                 android:src="@drawable/ic_create"
-                android:contentDescription="@string/common_image_description"/>
+                android:contentDescription="@string/common_image_description"
+                android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/btnDelete"
+                android:layout_width="26dip"
+                android:layout_height="26dip"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_marginEnd="@dimen/common_spacing_big"
+                android:src="@drawable/ic_delete_forever"
+                android:contentDescription="@string/common_image_description"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

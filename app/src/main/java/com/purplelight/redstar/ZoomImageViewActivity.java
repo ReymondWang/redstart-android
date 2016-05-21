@@ -5,11 +5,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.purplelight.redstar.component.view.ZoomImageView;
-import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.Validation;
 
@@ -18,13 +16,11 @@ import butterknife.InjectView;
 
 public class ZoomImageViewActivity extends AppCompatActivity {
     public static final int ZOOM_RESOURCE = 1;
-    public static final int ZOOM_FILE_PATH = 2;
-    public static final int ZOOM_URL = 3;
+    public static final int ZOOM_FILE = 2;
 
     private int imageType;
     private int imageResource;
-    private String imageFilePath;
-    private String imageUrl;
+    private String imageFile;
 
     @InjectView(R.id.imageView) ZoomImageView mImageView;
 
@@ -36,8 +32,7 @@ public class ZoomImageViewActivity extends AppCompatActivity {
 
         imageType = getIntent().getIntExtra("type", ZOOM_RESOURCE);
         imageResource = getIntent().getIntExtra("resource", 0);
-        imageFilePath = getIntent().getStringExtra("filename");
-        imageUrl = getIntent().getStringExtra("url");
+        imageFile = getIntent().getStringExtra("file");
 
         initViews();
         initEvents();
@@ -50,20 +45,18 @@ public class ZoomImageViewActivity extends AppCompatActivity {
                     mImageView.setImage(BitmapFactory.decodeResource(getResources(), imageResource));
                 }
                 break;
-            case ZOOM_FILE_PATH:
-                if (!Validation.IsNullOrEmpty(imageFilePath)){
-                    mImageView.setImage(BitmapFactory.decodeFile(imageFilePath));
-                }
-                break;
-            case ZOOM_URL:
-                if (!Validation.IsNullOrEmpty(imageUrl)){
-                    Bitmap bitmap = ImageHelper.getBitmapFromCache(imageUrl);
+            case ZOOM_FILE:
+                if (!Validation.IsNullOrEmpty(imageFile)){
+                    Bitmap bitmap = ImageHelper.getBitmapFromCache(imageFile);
                     if (bitmap != null){
                         mImageView.setImage(bitmap);
                     } else {
-                        mImageView.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.cc_bg_default_topic_grid));
-                        DownloadTask task = new DownloadTask();
-                        task.execute(imageUrl);
+                        // 网络图片的情况，从网上获取一次
+                        if(imageFile.startsWith("http")){
+                            mImageView.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.cc_bg_default_topic_grid));
+                            DownloadTask task = new DownloadTask();
+                            task.execute(imageFile);
+                        }
                     }
                 }
                 break;

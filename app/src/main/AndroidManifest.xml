@@ -73,6 +73,10 @@
             android:label="@string/title_activity_third_estimate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".EstimateDetailOfflineActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_third_estimate"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EstimateReportActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -131,6 +135,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".OfflineTaskCategoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_offline"
+            android:screenOrientation="portrait" />
 
         <!-- 数据库Provider -->
         <provider
@@ -155,6 +164,11 @@
             android:name=".service.EstimateDownloadService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".service.EstimateUploadService"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>

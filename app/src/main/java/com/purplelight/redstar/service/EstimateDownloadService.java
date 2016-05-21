@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.purplelight.redstar.constant.Configuration;
+import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.dao.IEstimateReportDao;
 import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class EstimateDownloadService extends Service {
     private static final String TAG = "EstimateDownloadService";
+    public static final String ACTION_STATUS_CHANGED = "com.purplelight.redstar.EstimateDownloadStatusChanged";
 
     private List<EstimateItem> estimateItemList = new ArrayList<>();
     private List<EstimateReport> estimateReportList = new ArrayList<>();
@@ -83,13 +85,17 @@ public class EstimateDownloadService extends Service {
                     EstimateItem item = estimateItemList.get(0);
                     Log.i(TAG, "EstimateItemId:" + item.getId());
 
-                    IEstimateItemDao itemDao = new EstimateItemDaoImpl(EstimateDownloadService.this);
+                    IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(EstimateDownloadService.this);
                     itemDao.save(item);
 
                     boolean success = downLoadImage(item.getThumbs()) && downLoadImage(item.getImages())
                             && downLoadImage(item.getFixedThumbs()) && downLoadImage(item.getFixedImages());
+                    item.setDownloadStatus(success ? Configuration.DownloadStatus.DOWNLOADED
+                            : Configuration.DownloadStatus.DOWNLOAD_FAILURE);
                     itemDao.updateDownloadStatus(success ? Configuration.DownloadStatus.DOWNLOADED
-                                    : Configuration.DownloadStatus.DOWNLOAD_FAILURE, item.getId());
+                            : Configuration.DownloadStatus.DOWNLOAD_FAILURE, item.getId());
+
+                    notifyChanged(item);
 
                     if (estimateItemList != null && estimateItemList.size() > 0){
                         estimateItemList.remove(item);
@@ -129,5 +135,11 @@ public class EstimateDownloadService extends Service {
             }
         }
         return success;
+    }
+
+    private void notifyChanged(EstimateItem item){
+        Intent intent = new Intent(ACTION_STATUS_CHANGED);
+        intent.putExtra("item", item);
+        sendBroadcast(intent);
     }
 }

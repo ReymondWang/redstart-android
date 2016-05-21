@@ -10,13 +10,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.speech.tts.Voice;
 import android.support.v7.app.ActionBar;
@@ -35,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.component.view.ConfirmDialog;
@@ -46,12 +43,8 @@ import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.ImageHelper;
-import com.purplelight.redstar.util.Validation;
-import com.purplelight.redstar.web.result.Result;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -146,9 +139,11 @@ public class EstimateSubmitActivity extends AppCompatActivity {
                 mItem.setImprovmentAction(mContent.getText().toString());
                 mItem.setFixedThumbs(mThumbNames);
                 mItem.setFixedImages(mImageNames);
+                mItem.setEndDate(ConvertUtil.ToDateStr(Calendar.getInstance()));
+                mItem.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
 
                 IEstimateItemDao itemDao = new EstimateItemDaoImpl(EstimateSubmitActivity.this);
-                itemDao.update(mItem);
+                itemDao.saveOrUpdate(mItem);
 
                 Intent intent = new Intent();
                 intent.putExtra("item", mItem);
@@ -165,8 +160,11 @@ public class EstimateSubmitActivity extends AppCompatActivity {
         if (mToolbar != null){
             mToolbar.setDisplayHomeAsUpEnabled(true);
         }
-
         mCategory.setText(mItem.getDescription());
+        mContent.setText(mItem.getImprovmentAction());
+        if (mItem.getFixedThumbs() != null && mItem.getFixedThumbs().size() > 0){
+            mThumbNames = mItem.getFixedThumbs();
+        }
         if (mItem.getFixedImages() != null && mItem.getFixedImages().size() > 0){
             mImageNames = mItem.getFixedImages();
         }
@@ -196,10 +194,13 @@ public class EstimateSubmitActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                for(int i = 0; i < mImageNames.size(); i++){
-                    if (removableImage.getImageFileName().equals(
-                            ImageHelper.SUBMIT_CACHE_PATH + mImageNames.get(i))){
+                for(int i = 0; i < mThumbNames.size(); i++){
+                    if (removableImage.getImageFileName().equals(mThumbNames.get(i))){
+                        ImageHelper.removeBitmapFromCache(mThumbNames.get(i));
+                        ImageHelper.removeBitmapFromCache(mImageNames.get(i));
+                        mThumbNames.remove(i);
                         mImageNames.remove(i);
+
                         break;
                     }
                 }
@@ -218,45 +219,25 @@ public class EstimateSubmitActivity extends AppCompatActivity {
         Paint paint = new Paint();
         paint.setColor(getResources().getColor(R.color.colorDanger));
         paint.setTypeface(Typeface.DEFAULT);
-        paint.setTextSize(getResources().getDimension(R.dimen.common_spacing_big));
+        paint.setTextSize(getResources().getDimension(R.dimen.common_font_xxxxbig));
 
         int left = getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle);
         int top = getResources().getDimensionPixelOffset(R.dimen.common_spacing_middle)
-                + getResources().getDimensionPixelOffset(R.dimen.common_spacing_big);
+                + getResources().getDimensionPixelOffset(R.dimen.common_font_xxxxbig);
         Canvas canvas = new Canvas(orgBmp);
         canvas.drawText(singStr, left, top, paint);
 
         String imageFileName = ImageHelper.generateRandomFileName();
+        Bitmap compressBmp = ImageHelper.CompressImageToSize(orgBmp, Configuration.Image.IMAGE_SIZE,
+                Configuration.Image.IMAGE_SIZE);
+        ImageHelper.addBitmapToCache(imageFileName, compressBmp);
+
         String thumbFileName = ImageHelper.generateThumbFileName(imageFileName);
-        try{
-            Bitmap compressBmp = ImageHelper.CompressImageToSize(orgBmp, Configuration.Image.IMAGE_SIZE,
-                    Configuration.Image.IMAGE_SIZE);
-            Bitmap thumbBmp = ImageHelper.CompressImageToSize(orgBmp, Configuration.Image.THUMB_SIZE,
-                    Configuration.Image.THUMB_SIZE);
-            saveBitmapToFile(compressBmp, ImageHelper.SUBMIT_CACHE_PATH, imageFileName);
-            saveBitmapToFile(thumbBmp, ImageHelper.SUBMIT_CACHE_PATH, thumbFileName);
-        } catch (IOException ex){
-            imageFileName = "";
-            thumbFileName = "";
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+        Bitmap thumbBmp = ImageHelper.CompressImageToSize(orgBmp, Configuration.Image.THUMB_SIZE,
+                Configuration.Image.THUMB_SIZE);
+        ImageHelper.addBitmapToCache(thumbFileName, thumbBmp);
 
         return new String[]{imageFileName, thumbFileName};
-    }
-
-    private void saveBitmapToFile(Bitmap bitmap, String path, String fileName) throws IOException{
-        File dictionary = new File(path);
-        if (!dictionary.exists()){
-            dictionary.mkdir();
-        }
-        File file = new File(path, fileName);
-        if (file.exists()){
-            file.delete();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
-        fileOutputStream.flush();
-        fileOutputStream.close();
     }
 
     /**
@@ -284,12 +265,8 @@ public class EstimateSubmitActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] fileNameArr) {
             showProgress(false);
-            if (!Validation.IsNullOrEmpty(fileNameArr[0])){
-                mImageNames.add(fileNameArr[0]);
-            }
-            if (!Validation.IsNullOrEmpty(fileNameArr[1])){
-                mThumbNames.add(fileNameArr[1]);
-            }
+            mImageNames.add(fileNameArr[0]);
+            mThumbNames.add(fileNameArr[1]);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -334,6 +311,7 @@ public class EstimateSubmitActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ImageHolder holder, int position) {
+            final String thumbName = mThumbNames.get(position);
             final String fileName = mImageNames.get(position);
 
             int mWidth = mScreenSize.x / mImageColumnNum;
@@ -343,7 +321,7 @@ public class EstimateSubmitActivity extends AppCompatActivity {
 
             RemovableImage image = (RemovableImage)holder.itemView;
             image.setLayoutParams(params);
-            image.setImageFile(ImageHelper.SUBMIT_CACHE_PATH + fileName);
+            image.setImageFile(thumbName);
             image.setOnRemovableListener(new RemovableImage.OnRemovableListener() {
                 @Override
                 public void remove(RemovableImage me) {
@@ -354,8 +332,8 @@ public class EstimateSubmitActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(EstimateSubmitActivity.this, ZoomImageViewActivity.class);
-                    intent.putExtra("type", ZoomImageViewActivity.ZOOM_FILE_PATH);
-                    intent.putExtra("filename", ImageHelper.SUBMIT_CACHE_PATH + fileName);
+                    intent.putExtra("type", ZoomImageViewActivity.ZOOM_FILE);
+                    intent.putExtra("file", fileName);
                     startActivity(intent);
                 }
             });
@@ -363,7 +341,7 @@ public class EstimateSubmitActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return mImageNames.size();
+            return mThumbNames.size();
         }
 
         class ImageHolder extends RecyclerView.ViewHolder{

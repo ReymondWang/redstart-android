@@ -35,6 +35,9 @@ public class Configuration {
     public class Image{
         public static final int THUMB_SIZE = 300;
         public static final int IMAGE_SIZE = 1920;
+
+        public static final int IS_LOCAL_IMAGE = 1;
+        public static final int IS_NET_IMAGE = 0;
     }
 
     public class Fragment{
@@ -71,6 +74,13 @@ public class Configuration {
         public static final int DOWNLOAD_FAILURE = 4;
     }
 
+    public class UploadStatus{
+        public static final int NOT_UPLOADED = 0;
+        public static final int UPLOADING = 1;
+        public static final int UPLOADED = 2;
+        public static final int UPLOAD_FAILURE = 3;
+    }
+
     /**
      * 图片处理类型
      */
@@ -78,6 +88,11 @@ public class Configuration {
         public static final int CAMERA = 1;
         public static final int PHOTO = 2;
         public static final int CROP = 3;
+    }
+
+    public class ModifyStatus{
+        public static final int NO_MODIFIED = 0;
+        public static final int MODIFIED = 1;
     }
 
     /**

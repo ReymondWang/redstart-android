@@ -17,6 +17,7 @@ public interface IEstimateItemDao {
     EstimateItem getById(int itemId);
     void updateDownloadStatus(int downloadStatus, int id);
     void update(EstimateItem item);
+    void saveOrUpdate(EstimateItem item);
     void deleteById(int itemId);
     void clear();
 }

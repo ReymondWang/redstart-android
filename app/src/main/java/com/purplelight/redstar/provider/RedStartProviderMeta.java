@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class RedStartProviderMeta {
 
     public static final String DATABASE_NAME = "redstar.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
     public RedStartProviderMeta(){}
 
@@ -233,7 +233,13 @@ public class RedStartProviderMeta {
 
         public static final String UPLOAD_STATUS = "uploadstatus";
 
+        public static final String LOCAL_IMAGE = "localimage";
+
+        public static final String HAS_MODIFIED = "hasmodified";
+
         public static final String STATUS = "status";
+
+        public static final String OUTTER_SYSTEM_ID = "outtersystemid";
 
         public static final String CREATED_DATE = "created";
 
