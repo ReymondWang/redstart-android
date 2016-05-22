@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lytContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing_middle"
+        android:layout_marginBottom="@dimen/common_spacing_middle"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtCheckItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"/>
+
+        <TextView
+            android:id="@+id/txtIsPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing_middle"
+            android:layout_marginLeft="@dimen/common_spacing_middle"
+            android:gravity="end"
+            android:visibility="gone"/>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/chkSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing_middle"
+            android:layout_marginLeft="@dimen/common_spacing_middle"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lytBottomLine"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_spacing_xsmall"
+        android:orientation="horizontal"
+        android:background="@color/colorGray" />
+
+</LinearLayout>

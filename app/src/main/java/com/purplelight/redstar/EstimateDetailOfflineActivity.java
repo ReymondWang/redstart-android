@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.purplelight.redstar.adapter.EstimateItemAdapter;
+import com.purplelight.redstar.component.view.ConfirmDialog;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
@@ -163,13 +164,7 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
             mAdapter.setDeleteClickListener(new EstimateItemAdapter.OnDeleteListener() {
                 @Override
                 public void OnDelete(EstimateItem item) {
-                    for (int i = 0; i < mDataSource.size(); i++){
-                        if(item.getId() == mDataSource.get(i).getId()){
-                            deleteItem(item);
-                            mDataSource.remove(i);
-                        }
-                    }
-                    mAdapter.notifyDataSetChanged();
+                    confirmDelete(item);
                 }
             });
             mListView.setAdapter(mAdapter);
@@ -243,11 +238,7 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
                 break;
             case R.id.action_clear_all:
-                for (EstimateItem estimateItem : mDataSource){
-                    deleteItem(estimateItem);
-                }
-                mDataSource.clear();
-                mAdapter.notifyDataSetChanged();
+                confirmDeleteAll();
                 break;
             default:
         }
@@ -282,6 +273,42 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
         });
 
         mDownloadView.startAnimation(animationSet);
+    }
+
+    private void confirmDelete(final EstimateItem item){
+        final ConfirmDialog dialog = new ConfirmDialog(this);
+        dialog.setTitle(getString(R.string.title_delete_common_confirm));
+        dialog.setConfirmListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                for (int i = 0; i < mDataSource.size(); i++){
+                    if(item.getId() == mDataSource.get(i).getId()){
+                        deleteItem(item);
+                        mDataSource.remove(i);
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        dialog.show();
+    }
+
+    private void confirmDeleteAll(){
+        final ConfirmDialog dialog = new ConfirmDialog(this);
+        dialog.setTitle(getString(R.string.title_delete_all_common_confirm));
+        dialog.setConfirmListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                for (EstimateItem estimateItem : mDataSource){
+                    deleteItem(estimateItem);
+                }
+                mDataSource.clear();
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        dialog.show();
     }
 
     private void deleteItem(EstimateItem item){

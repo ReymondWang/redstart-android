@@ -24,15 +24,19 @@ public class WebAPI {
 
     public static final String FEEDBACK = "api/feedback/add";
 
-    public static final String ESTIMATE_ITEM = "/api/estimate/items";
+    public static final String ESTIMATE_ITEM = "api/estimate/items";
 
-    public static final String ESTIMATE_ITEM_SUBMIT = "/api/estimate/submit";
+    public static final String ESTIMATE_ITEM_SUBMIT = "api/estimate/submit";
 
-    public static final String ESTIMATE_REPORT = "/api/estimate/reports";
+    public static final String ESTIMATE_REPORT = "api/estimate/reports";
 
-    public static final String SINGLE_ESTIMATE_ITEM = "/api/estimate/singleitem";
+    public static final String SINGLE_ESTIMATE_ITEM = "api/estimate/singleitem";
 
-    public static final String SINGLE_ESTIMATE_REPORT = "/api/estimate/singlereport";
+    public static final String SINGLE_ESTIMATE_REPORT = "api/estimate/singlereport";
+
+    public static final String SPECIAL_CHECK_ITEM = "api/specialcheck/items";
+
+    public static final String SPECIAL_CHECK_ITEM_SUBMIT = "api/specialcheck/submit";
 
     /**
      * 取得WebAPI的全路径

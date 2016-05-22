@@ -25,6 +25,7 @@ import com.purplelight.redstar.provider.RedStartProviderMeta;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
+import com.purplelight.redstar.task.EstimateItemLoadTask;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.parameter.EstimateItemParameter;
@@ -90,8 +91,23 @@ public class EstimateReportItemFragment extends Fragment
         mList.setAdapter(mAdapter);
 
         showProgress(true);
-        LoadingTask task = new LoadingTask();
-        task.execute();
+
+        EstimateItemLoadTask loadTask = new EstimateItemLoadTask(getActivity(), outterSystemId);
+        loadTask.setPageNo(currentPageNo);
+        loadTask.setReportId(reportId);
+        loadTask.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(EstimateItemResult result) {
+                showProgress(false);
+                if (Result.ERROR.equals(result.getSuccess())){
+                    Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                mDataSource = result.getItems();
+                mAdapter.setDataSource(mDataSource);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        loadTask.execute();
 
         return view;
     }
@@ -131,84 +147,6 @@ public class EstimateReportItemFragment extends Fragment
         } else {
             mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
             mRefreshForm.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    private class LoadingTask extends AsyncTask<String, Void, EstimateItemResult> {
-        @Override
-        protected EstimateItemResult doInBackground(String... params) {
-            EstimateItemResult result = new EstimateItemResult();
-
-            // 获取本地数据
-            IEstimateItemDao itemDao = new EstimateItemDaoImpl(getActivity());
-            Map<String, String> map = new HashMap<>();
-            map.put(RedStartProviderMeta.EstimateItemMetaData.REPORT_ID, String.valueOf(reportId));
-            List<EstimateItem> localList = itemDao.query(map);
-
-            if (Validation.IsActivityNetWork(getActivity())){
-                Gson gson = new Gson();
-
-                EstimateItemParameter parameter = new EstimateItemParameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
-                parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
-                parameter.setReportId(reportId);
-                parameter.setSystemId(outterSystemId);
-                parameter.setPageNo(currentPageNo);
-                parameter.setPageSize(Configuration.Page.COMMON_PAGE_SIZE);
-
-                String requestJson = gson.toJson(parameter);
-                try{
-                    String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM), requestJson);
-                    if (!Validation.IsNullOrEmpty(responseJson)){
-                        result = gson.fromJson(responseJson, EstimateItemResult.class);
-                        if (Result.SUCCESS.equals(result.getSuccess())
-                                && result.getItems() != null
-                                && result.getItems().size() > 0){
-                            for(EstimateItem item : result.getItems()){
-                                boolean hasDownloaded = false;
-                                if (localList != null && localList.size() > 0){
-                                    for (EstimateItem localItem : localList){
-                                        if (item.getId() == localItem.getId()){
-                                            item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
-                                            hasDownloaded = true;
-                                        }
-                                    }
-                                }
-                                if (!hasDownloaded){
-                                    item.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
-                                }
-                            }
-                        }
-
-                    } else {
-                        result.setSuccess(Result.ERROR);
-                        result.setMessage(getString(R.string.no_response_json));
-                    }
-                } catch (Exception ex){
-                    result.setSuccess(Result.ERROR);
-                    result.setMessage(getString(R.string.fetch_response_data_error));
-                }
-
-            } else {
-                result.setSuccess(Result.ERROR);
-                result.setMessage(getString(R.string.do_not_have_network));
-                if (localList != null && localList.size() > 0){
-                    result.setItems(localList);
-                }
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(EstimateItemResult result) {
-            showProgress(false);
-            if (Result.ERROR.equals(result.getSuccess())){
-                Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            mDataSource = result.getItems();
-            mAdapter.setDataSource(mDataSource);
-            mAdapter.notifyDataSetChanged();
         }
     }
 

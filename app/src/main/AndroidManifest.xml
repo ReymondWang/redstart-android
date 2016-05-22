@@ -73,7 +73,8 @@
             android:label="@string/title_activity_third_estimate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EstimateDetailOfflineActivity"
+        <activity
+            android:name=".EstimateDetailOfflineActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate"
             android:screenOrientation="portrait" />
@@ -97,6 +98,15 @@
             android:name=".EstimateSubmitActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_third_estimate_submit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SpecialCheckActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_special_check"
+            android:screenOrientation="portrait" />
+        <activity android:name=".SpecialCheckSubmitActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_special_check_submit"
             android:screenOrientation="portrait" />
         <activity
             android:name=".PassportUploadActivity"

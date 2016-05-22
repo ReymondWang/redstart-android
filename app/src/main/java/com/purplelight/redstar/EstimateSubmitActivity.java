@@ -255,7 +255,7 @@ public class EstimateSubmitActivity extends AppCompatActivity {
         return bitmap;
     }
 
-    private class HandleImageTask extends AsyncTask<String, Voice, String[]>{
+    private class HandleImageTask extends AsyncTask<String, Void, String[]>{
         @Override
         protected String[] doInBackground(String... params) {
             Bitmap orgBmp = decodeUriAsCopyBitmap(imageUri);

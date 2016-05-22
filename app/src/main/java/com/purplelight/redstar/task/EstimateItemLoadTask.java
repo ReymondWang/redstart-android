@@ -30,6 +30,7 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
     private Context mContext;
     private int mSearchtype = Configuration.EstimateItemSearchType.INCHARGER;
     private int mOutterSystemId;
+    private int mReportId;
     private int mPageNo;
     private int mPageSize = Configuration.Page.COMMON_PAGE_SIZE;
 
@@ -76,6 +77,14 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
         mPageNo = pageNo;
     }
 
+    public int getReportId() {
+        return mReportId;
+    }
+
+    public void setReportId(int reportId) {
+        mReportId = reportId;
+    }
+
     public void setLoadedListener(OnLoadedListener listener){
         mLoadedListener = listener;
     }
@@ -97,6 +106,7 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
             EstimateItemParameter parameter = new EstimateItemParameter();
             parameter.setLoginId(RedStartApplication.getUser().getId());
             parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
+            parameter.setReportId(mReportId);
             parameter.setSystemId(mOutterSystemId);
             parameter.setPageNo(mPageNo);
             parameter.setPageSize(mPageSize);
@@ -132,6 +142,7 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
                     result.setMessage(mContext.getString(R.string.no_response_json));
                 }
             } catch (Exception ex){
+                ex.printStackTrace();
                 result.setSuccess(Result.ERROR);
                 result.setMessage(mContext.getString(R.string.fetch_response_data_error));
             }

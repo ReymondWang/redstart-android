@@ -12,7 +12,6 @@ import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
-import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.util.Base64;
 import com.purplelight.redstar.util.ConvertUtil;
@@ -121,7 +120,7 @@ public class EstimateUploadService extends Service {
                             item.setUploadStatus(Configuration.UploadStatus.UPLOADED);
                         } else {
                             item.setUploadStatus(Configuration.UploadStatus.UPLOAD_FAILURE);
-                            itemDao.save(item);
+                            itemDao.update(item);
                         }
 
                     } catch (IOException ex){

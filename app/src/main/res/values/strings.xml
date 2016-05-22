@@ -11,7 +11,9 @@
     <string name="title_activity_estimate_report">第三方评估报告</string>
     <string name="title_activity_estimate_report_detail">第三方评估报告详细</string>
     <string name="title_activity_third_estimate_submit">填报消项</string>
-    <string name="title_activity_passport_upload">证照上传</string>
+    <string name="title_activity_special_check">专项检查</string>
+    <string name="title_activity_special_check_submit">专项检查填报</string>
+    <string name="title_activity_passport_upload">证照查看</string>
     <string name="title_activity_passport_upload_modify">编辑证照信息</string>
     <string name="title_activity_passport_type">证照类型</string>
     <string name="title_activity_modify_password">修改密码</string>
@@ -125,6 +127,8 @@
     <string name="title_logout_confirm">您是否确认退出？</string>
     <string name="title_clear_buffer_confirm">您是否确认清空缓存？</string>
     <string name="title_delete_image_confirm">您是否确认删除图片？</string>
+    <string name="title_delete_common_confirm">您是否确认删除该项？</string>
+    <string name="title_delete_all_common_confirm">您是否确认删除全部？</string>
     <string name="clear_buffer_success">清除缓存成功</string>
 
     <!-- 第三方评估详细信息 -->
