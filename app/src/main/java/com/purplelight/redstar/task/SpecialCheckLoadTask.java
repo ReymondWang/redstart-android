@@ -8,6 +8,9 @@ import com.purplelight.redstar.R;
 import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
+import com.purplelight.redstar.provider.DomainFactory;
+import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
+import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.parameter.SpecialItemParameter;
@@ -15,6 +18,8 @@ import com.purplelight.redstar.web.result.Result;
 import com.purplelight.redstar.web.result.SpecialItemResult;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 专项检查明细加载任务
@@ -97,17 +102,41 @@ public class SpecialCheckLoadTask extends AsyncTask<String, Void, SpecialItemRes
         parameter.setPageSize(mPageSize);
         String requestJson = gson.toJson(parameter);
 
+        ISpecialCheckItemDao itemDao = DomainFactory.createSpecialItemDao(mContext);
+        List<SpecialItem> localList = itemDao.query(new HashMap<String, String>());
         try{
             String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.SPECIAL_CHECK_ITEM), requestJson);
             if (!Validation.IsNullOrEmpty(responseJson)){
                 result = gson.fromJson(responseJson, SpecialItemResult.class);
+                if (result.getItems() != null && result.getItems().size() > 0){
+                    for (int i = 0; i < result.getItems().size(); i++){
+                        SpecialItem item = result.getItems().get(i);
+                        boolean hasDownloaded = false;
+                        if (localList != null && localList.size() > 0){
+                            for (SpecialItem localItem : localList){
+                                if (item.getId() == localItem.getId()){
+                                    result.getItems().set(i, localItem);
+                                    hasDownloaded = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!hasDownloaded){
+                            item.setDownloadStatus(Configuration.DownloadStatus.NOT_DOWNLOADED);
+                        }
+                    }
+                }
             } else {
+                result.setItems(localList);
+
                 result.setSuccess(Result.ERROR);
                 result.setMessage(mContext.getString(R.string.no_response_json));
             }
 
         } catch (IOException ex){
             ex.printStackTrace();
+
+            result.setItems(localList);
 
             result.setSuccess(Result.ERROR);
             result.setMessage(mContext.getString(R.string.fetch_response_data_error));

@@ -13,11 +13,9 @@ import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.entity.EstimateItem;
-import com.purplelight.redstar.util.Base64;
 import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.ImageHelper;
-import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.parameter.EstimateUploadParameter;
 import com.purplelight.redstar.web.result.Result;
 
@@ -89,41 +87,46 @@ public class EstimateUploadService extends Service {
 
                     IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(EstimateUploadService.this);
                     List<String> uploadFileNames = new ArrayList<>();
+
+                    boolean hasUploadError = false;
                     if (item.getFixedImages() != null && item.getFixedImages().size() > 0){
-                        for (String fixImage : item.getFixedImages()){
-                            if (!Validation.IsNullOrEmpty(fixImage)){
-                                byte[] fileBytes = ImageHelper.GetBytesFromBitmap(ImageHelper.getBitmapFromCache(fixImage));
-                                uploadFileNames.add(Base64.encode(fileBytes));
-                            }
+                        try {
+                            uploadFileNames = ImageHelper.updateFromCache(item.getFixedImages());
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                            hasUploadError = true;
                         }
                     }
+                    if (!hasUploadError){
+                        EstimateUploadParameter parameter = new EstimateUploadParameter();
+                        parameter.setLoginId(RedStartApplication.getUser().getId());
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(item.getUpdateDate());
+                        parameter.setDate(ConvertUtil.ToDateStr(calendar));
+                        parameter.setImprovementAction(item.getImprovmentAction());
+                        parameter.setImageFileNames(uploadFileNames);
+                        parameter.setSystemId(item.getOutterSystemId());
+                        parameter.setItemId(item.getId());
 
-                    EstimateUploadParameter parameter = new EstimateUploadParameter();
-                    parameter.setLoginId(RedStartApplication.getUser().getId());
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(item.getUpdateDate());
-                    parameter.setDate(ConvertUtil.ToDateStr(calendar));
-                    parameter.setImprovementAction(item.getImprovmentAction());
-                    parameter.setImageFileNames(uploadFileNames);
-                    parameter.setSystemId(item.getOutterSystemId());
-                    parameter.setItemId(item.getId());
+                        try{
+                            Gson gson = new Gson();
+                            String paramJson = gson.toJson(parameter);
+                            String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM_SUBMIT), paramJson);
+                            Result result = gson.fromJson(responseJson, Result.class);
+                            if (Result.SUCCESS.equals(result.getSuccess())){
+                                ImageHelper.DeleteFiles(item.getFixedThumbs());
+                                ImageHelper.DeleteFiles(item.getFixedImages());
+                                itemDao.deleteById(item.getId());
+                                item.setUploadStatus(Configuration.UploadStatus.UPLOADED);
+                            } else {
+                                item.setUploadStatus(Configuration.UploadStatus.UPLOAD_FAILURE);
+                                itemDao.update(item);
+                            }
 
-                    try{
-                        Gson gson = new Gson();
-                        String paramJson = gson.toJson(parameter);
-                        String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.ESTIMATE_ITEM_SUBMIT), paramJson);
-                        Result result = gson.fromJson(responseJson, Result.class);
-                        if (Result.SUCCESS.equals(result.getSuccess())){
-                            ImageHelper.DeleteFiles(item.getFixedThumbs());
-                            ImageHelper.DeleteFiles(item.getFixedImages());
-                            itemDao.deleteById(item.getId());
-                            item.setUploadStatus(Configuration.UploadStatus.UPLOADED);
-                        } else {
+                        } catch (IOException ex){
                             item.setUploadStatus(Configuration.UploadStatus.UPLOAD_FAILURE);
-                            itemDao.update(item);
                         }
-
-                    } catch (IOException ex){
+                    } else {
                         item.setUploadStatus(Configuration.UploadStatus.UPLOAD_FAILURE);
                     }
 

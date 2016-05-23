@@ -200,7 +200,7 @@ public class FeedbackActivity extends AppCompatActivity {
 
             if (Validation.IsActivityNetWork(FeedbackActivity.this)){
                 try {
-                    retFileName = ImageHelper.upload(params[0]);
+                    retFileName = ImageHelper.upload(params[0], Configuration.Image.JPEG);
                 } catch (Exception ex){
                     Log.e(TAG, ex.getMessage());
                     Toast.makeText(FeedbackActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();

@@ -73,6 +73,14 @@ public class SpecialItemCheckResultView extends LinearLayout {
         mShowBottomLine = showBottomLine;
     }
 
+    public boolean isChecked(){
+        return mCheckbox.isChecked();
+    }
+
+    public String getName(){
+        return txtCheckItem.getText().toString();
+    }
+
     private void initView(){
         if (mRowHeight != 0){
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(

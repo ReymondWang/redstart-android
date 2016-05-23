@@ -47,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
     // 截取图片的大小
     private int mHeadImageSize = 100;
     // 调用相机拍照时，临时存储文件。
-    private Uri imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp.jpg"));
+    private Uri imageUri;
 
     @InjectView(R.id.lytHeadImg) LinearLayout lytHeadImg;
     @InjectView(R.id.lytUserName) LinearLayout lytUserName;
@@ -66,6 +66,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.inject(this);
+
+        File imageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        imageUri = Uri.fromFile(new File(imageDir, "headimage.jpg"));
 
         initEvents();
     }
@@ -276,7 +279,7 @@ public class ProfileActivity extends AppCompatActivity {
             Result result = new Result();
             if (Validation.IsActivityNetWork(ProfileActivity.this)){
                 try {
-                    String fileName = ImageHelper.upload(params[0]);
+                    String fileName = ImageHelper.upload(params[0], Configuration.Image.JPEG);
                     SystemUser user = RedStartApplication.getUser();
                     user.setHeadImgPath(fileName);
                     RedStartApplication.setUser(user);

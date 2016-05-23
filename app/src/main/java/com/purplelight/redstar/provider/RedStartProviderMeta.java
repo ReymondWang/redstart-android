@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class RedStartProviderMeta {
 
     public static final String DATABASE_NAME = "redstar.db";
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 2;
 
     public RedStartProviderMeta(){}
 
@@ -240,6 +240,68 @@ public class RedStartProviderMeta {
         public static final String STATUS = "status";
 
         public static final String OUTTER_SYSTEM_ID = "outtersystemid";
+
+        public static final String CREATED_DATE = "created";
+
+        public static final String MODIFIED_DATE = "modified";
+    }
+
+    public static final class SpecialCheckItemMetaData implements BaseColumns{
+        private SpecialCheckItemMetaData(){}
+
+        public static final String AUTHORITY = "com.purplelight.redstar.provider.RedStartProvider.SpecialCheckItem";
+        public static final String TABLE_NAME = "SpecialCheckItem";
+
+        public static final Uri CONTENT_URI =
+                Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.purplelight.redstar.specialcheckitem";
+
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.purplelight.redstar.specialcheckitem";
+
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
+        public static final String SPECIAL_CHECK_ITEM_ID = "specialcheckitemid";
+
+        public static final String SYSTEM_ID = "systemid";
+
+        public static final String CATEGORY = "category";
+
+        public static final String PROJECT_NAME = "projectname";
+
+        public static final String AREA_NAME = "areaname";
+
+        public static final String CREATE_DATE = "createdate";
+
+        public static final String PLACES = "places";
+
+        public static final String BUILDING_ID = "buildingid";
+
+        public static final String CODE = "code";
+
+        public static final String NAMES = "names";
+
+        public static final String PERSON_NAME = "personname";
+
+        public static final String REMARK = "remark";
+
+        public static final String CHECK_DATE = "checkdate";
+
+        public static final String PASS_PERCENT = "passpercent";
+
+        public static final String RESULT_ITEMS = "resultitmes";
+
+        public static final String BUILDING = "building";
+
+        public static final String THUMB_NAIL = "thumbnail";
+
+        public static final String IMAGES = "images";
+
+        public static final String DOWNLOAD_STATUS = "download_status";
+
+        public static final String UPLOAD_STATUS = "upload_status";
 
         public static final String CREATED_DATE = "created";
 

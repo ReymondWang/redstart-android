@@ -104,9 +104,14 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_special_check"
             android:screenOrientation="portrait" />
-        <activity android:name=".SpecialCheckSubmitActivity"
+        <activity
+            android:name=".SpecialCheckSubmitActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_special_check_submit"
+            android:screenOrientation="portrait" />
+        <activity android:name=".SpecialCheckOfflineActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_special_check"
             android:screenOrientation="portrait" />
         <activity
             android:name=".PassportUploadActivity"
@@ -168,6 +173,10 @@
             android:name=".provider.EstimateItemProvider"
             android:authorities="com.purplelight.redstar.provider.RedStartProvider.EstimateItem"
             android:exported="false" />
+        <provider
+            android:name=".provider.SpecialCheckItemProvider"
+            android:authorities="com.purplelight.redstar.provider.RedStartProvider.SpecialCheckItem"
+            android:exported="false" />
 
         <!-- 后台任务 -->
         <service
@@ -176,6 +185,10 @@
             android:exported="false" />
         <service
             android:name=".service.EstimateUploadService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".service.SpecialItemDownloadService"
             android:enabled="true"
             android:exported="false" />
 

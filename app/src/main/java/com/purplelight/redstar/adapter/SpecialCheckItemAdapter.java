@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.purplelight.redstar.R;
 import com.purplelight.redstar.ZoomImageViewActivity;
 import com.purplelight.redstar.component.view.SpecialItemCheckResultView;
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.provider.entity.SpecialItemCheckResult;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
@@ -200,6 +201,8 @@ public class SpecialCheckItemAdapter extends BaseAdapter {
 
             if (i < item.getResultItems().size()){
                 result.setResult(item.getResultItems().get(i).getResult());
+            } else {
+                result.setResult(2);
             }
 
             view.setResult(result);
@@ -254,6 +257,24 @@ public class SpecialCheckItemAdapter extends BaseAdapter {
             holder.lytImage.removeViewAt(i);
         }
 
+        if (mShowStatus){
+            if (item.getUploadStatus() == Configuration.UploadStatus.UPLOAD_FAILURE){
+                holder.txtStatus.setText("上传失败");
+            } else if (item.getUploadStatus() == Configuration.UploadStatus.UPLOADED){
+                holder.txtStatus.setText("已上传");
+            } else if (item.getUploadStatus() == Configuration.UploadStatus.UPLOADING){
+                holder.txtStatus.setText("上传中");
+            } else if (item.getDownloadStatus() == Configuration.DownloadStatus.DOWNLOAD_FAILURE){
+                holder.txtStatus.setText("下载失败");
+            } else if (item.getDownloadStatus() == Configuration.DownloadStatus.DOWNLOADED){
+                holder.txtStatus.setText("已下载");
+            } else if (item.getDownloadStatus() == Configuration.DownloadStatus.DOWNLOADING){
+                holder.txtStatus.setText("下载中");
+            } else if (item.getDownloadStatus() == Configuration.DownloadStatus.NOT_DOWNLOADED){
+                holder.txtStatus.setText("未下载");
+            }
+        }
+
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -298,29 +319,43 @@ public class SpecialCheckItemAdapter extends BaseAdapter {
         }
 
         if (mShowDownload){
-            holder.btnDownload.setVisibility(View.VISIBLE);
-            holder.btnDownload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mDownloadListener != null){
-                        mDownloadListener.OnDownload(item);
+            if (item.getDownloadStatus() == Configuration.DownloadStatus.NOT_DOWNLOADED ||
+                    item.getDownloadStatus() == Configuration.DownloadStatus.DOWNLOAD_FAILURE){
+                holder.btnDownload.setVisibility(View.VISIBLE);
+                final ImageView iconDownload = holder.btnDownload;
+                holder.btnDownload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        iconDownload.setVisibility(View.GONE);
+                        if (mDownloadListener != null){
+                            mDownloadListener.OnDownload(item);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                holder.btnDownload.setVisibility(View.GONE);
+            }
         } else {
             holder.btnDownload.setVisibility(View.GONE);
         }
 
         if (mShowUpload){
-            holder.btnUpload.setVisibility(View.VISIBLE);
-            holder.btnUpload.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mUploadListener != null){
-                        mUploadListener.OnUpload(item);
+            if (item.getUploadStatus() == Configuration.UploadStatus.UPLOAD_FAILURE ||
+                    item.getUploadStatus() == Configuration.UploadStatus.NOT_UPLOADED){
+                holder.btnUpload.setVisibility(View.VISIBLE);
+                final ImageView iconUpload = holder.btnUpload;
+                holder.btnUpload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        iconUpload.setVisibility(View.GONE);
+                        if (mUploadListener != null){
+                            mUploadListener.OnUpload(item);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                holder.btnUpload.setVisibility(View.GONE);
+            }
         } else {
             holder.btnUpload.setVisibility(View.GONE);
         }

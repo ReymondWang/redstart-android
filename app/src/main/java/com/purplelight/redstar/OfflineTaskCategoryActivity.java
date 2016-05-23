@@ -20,9 +20,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
+import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
+import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.Validation;
 
@@ -36,6 +39,7 @@ import butterknife.InjectView;
 
 public class OfflineTaskCategoryActivity extends AppCompatActivity {
     private static final int ESTIMATE = 1;
+    private static final int SPECIAL_CHECK = 2;
 
     @InjectView(R.id.listView) ListView mList;
     @InjectView(R.id.loading_progress) ProgressBar mProgress;
@@ -56,10 +60,17 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final ArrayList<? extends Parcelable> items = mDataSource.get(position).items;
-                Intent intent = new Intent(OfflineTaskCategoryActivity.this, EstimateDetailOfflineActivity.class);
-                intent.putParcelableArrayListExtra("items", items);
-                startActivity(intent);
+                Entity entity = mDataSource.get(position);
+                final ArrayList<? extends Parcelable> items = entity.items;
+                if (entity.type == ESTIMATE){
+                    Intent intent = new Intent(OfflineTaskCategoryActivity.this, EstimateDetailOfflineActivity.class);
+                    intent.putParcelableArrayListExtra("items", items);
+                    startActivity(intent);
+                } else if (entity.type == SPECIAL_CHECK){
+//                    Intent intent = new Intent(OfflineTaskCategoryActivity.this, EstimateDetailOfflineActivity.class);
+//                    intent.putParcelableArrayListExtra("items", items);
+//                    startActivity(intent);
+                }
             }
         });
     }
@@ -116,35 +127,8 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
         @Override
         protected List<Entity> doInBackground(String... params) {
             List<Entity> list = new ArrayList<>();
-
-            IEstimateItemDao itemDao = new EstimateItemDaoImpl(OfflineTaskCategoryActivity.this);
-            List<EstimateItem> items = itemDao.query(new HashMap<String, String>());
-
-            String date = "";
-            ArrayList<EstimateItem> subList = new ArrayList<>();
-            Entity entity = new Entity();
-            entity.type = ESTIMATE;
-            entity.name = getString(R.string.title_activity_third_estimate);
-            for(EstimateItem item : items){
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(item.getUpdateDate());
-                String cmpDate = ConvertUtil.ToDateStr(calendar);
-                if (!date.equals(cmpDate)){
-                    if (!Validation.IsNullOrEmpty(date)){
-                        entity.items = subList;
-                        list.add(entity);
-                        entity = new Entity();
-                        entity.type = ESTIMATE;
-                        entity.name = getString(R.string.title_activity_third_estimate);
-                        subList = new ArrayList<>();
-                    }
-                    date = cmpDate;
-                    entity.date = date;
-                }
-                subList.add(item);
-            }
-            entity.items = subList;
-            list.add(entity);
+            list.addAll(getOffLineEstimate());
+            list.addAll(getOffLineSpecialItem());
 
             return list;
         }
@@ -203,6 +187,76 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
             public TextView txtDate;
             public TextView txtCount;
         }
+    }
+
+    private List<Entity> getOffLineEstimate(){
+        List<Entity> list = new ArrayList<>();
+
+        IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(OfflineTaskCategoryActivity.this);
+        List<EstimateItem> items = itemDao.query(new HashMap<String, String>());
+
+        String date = "";
+        ArrayList<EstimateItem> subList = new ArrayList<>();
+        Entity entity = new Entity();
+        entity.type = ESTIMATE;
+        entity.name = getString(R.string.title_activity_third_estimate);
+        for(EstimateItem item : items){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(item.getUpdateDate());
+            String cmpDate = ConvertUtil.ToDateStr(calendar);
+            if (!date.equals(cmpDate)){
+                if (!Validation.IsNullOrEmpty(date)){
+                    entity.items = subList;
+                    list.add(entity);
+                    entity = new Entity();
+                    entity.type = ESTIMATE;
+                    entity.name = getString(R.string.title_activity_third_estimate);
+                    subList = new ArrayList<>();
+                }
+                date = cmpDate;
+                entity.date = date;
+            }
+            subList.add(item);
+        }
+        entity.items = subList;
+        list.add(entity);
+
+        return list;
+    }
+
+    private List<Entity> getOffLineSpecialItem(){
+        List<Entity> list = new ArrayList<>();
+
+        ISpecialCheckItemDao itemDao = DomainFactory.createSpecialItemDao(OfflineTaskCategoryActivity.this);
+        List<SpecialItem> items = itemDao.query(new HashMap<String, String>());
+
+        String date = "";
+        ArrayList<SpecialItem> subList = new ArrayList<>();
+        Entity entity = new Entity();
+        entity.type = SPECIAL_CHECK;
+        entity.name = getString(R.string.title_activity_special_check);
+        for(SpecialItem item : items){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(item.getUpdateTime());
+            String cmpDate = ConvertUtil.ToDateStr(calendar);
+            if (!date.equals(cmpDate)){
+                if (!Validation.IsNullOrEmpty(date)){
+                    entity.items = subList;
+                    list.add(entity);
+                    entity = new Entity();
+                    entity.type = SPECIAL_CHECK;
+                    entity.name = getString(R.string.title_activity_special_check);
+                    subList = new ArrayList<>();
+                }
+                date = cmpDate;
+                entity.date = date;
+            }
+            subList.add(item);
+        }
+        entity.items = subList;
+        list.add(entity);
+
+        return list;
     }
 
     private class Entity{

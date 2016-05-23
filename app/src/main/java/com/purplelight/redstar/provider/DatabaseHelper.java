@@ -9,6 +9,7 @@ import com.purplelight.redstar.provider.RedStartProviderMeta.SystemUserMetaData;
 import com.purplelight.redstar.provider.RedStartProviderMeta.AppFuncMetaData;
 import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateReportMetaData;
 import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateItemMetaData;
+import com.purplelight.redstar.provider.RedStartProviderMeta.SpecialCheckItemMetaData;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private final static String TAG = "DatabaseHelper";
@@ -117,6 +118,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + EstimateItemMetaData.CREATED_DATE + " INTEGER,"
                 + EstimateItemMetaData.MODIFIED_DATE + " INTEGER"
                 + ");");
+
+        db.execSQL("CREATE TABLE " + SpecialCheckItemMetaData.TABLE_NAME + " ("
+                + SpecialCheckItemMetaData._ID + " INTEGER PRIMARY KEY,"
+                + SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID + " INTEGER,"
+                + SpecialCheckItemMetaData.SYSTEM_ID + " INTEGER,"
+                + SpecialCheckItemMetaData.CATEGORY + " TEXT,"
+                + SpecialCheckItemMetaData.PROJECT_NAME + " TEXT,"
+                + SpecialCheckItemMetaData.AREA_NAME + " TEXT,"
+                + SpecialCheckItemMetaData.CREATE_DATE + " TEXT,"
+                + SpecialCheckItemMetaData.PLACES + " TEXT,"
+                + SpecialCheckItemMetaData.BUILDING_ID + " TEXT,"
+                + SpecialCheckItemMetaData.CODE + " TEXT,"
+                + SpecialCheckItemMetaData.NAMES + " TEXT,"
+                + SpecialCheckItemMetaData.PERSON_NAME + " TEXT,"
+                + SpecialCheckItemMetaData.REMARK + " TEXT,"
+                + SpecialCheckItemMetaData.CHECK_DATE + " TEXT,"
+                + SpecialCheckItemMetaData.PASS_PERCENT + " INTEGER,"
+                + SpecialCheckItemMetaData.RESULT_ITEMS + " TEXT,"
+                + SpecialCheckItemMetaData.BUILDING + " TEXT,"
+                + SpecialCheckItemMetaData.THUMB_NAIL + " TEXT,"
+                + SpecialCheckItemMetaData.IMAGES + " TEXT,"
+                + SpecialCheckItemMetaData.DOWNLOAD_STATUS + " INTEGER,"
+                + SpecialCheckItemMetaData.UPLOAD_STATUS + " INTEGER,"
+                + SpecialCheckItemMetaData.CREATED_DATE + " INTEGER,"
+                + SpecialCheckItemMetaData.MODIFIED_DATE + " INTEGER"
+                + ");");
     }
 
     @Override
@@ -128,6 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AppFuncMetaData.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EstimateReportMetaData.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EstimateItemMetaData.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SpecialCheckItemMetaData.TABLE_NAME);
         onCreate(db);
     }
 }

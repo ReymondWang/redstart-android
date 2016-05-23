@@ -8,6 +8,8 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
 
+import com.purplelight.redstar.constant.Configuration;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,7 +32,7 @@ public class SimpleDiskLruCache {
 	private static final int MAX_REMOVALS = 4;
 	private static final int INITIAL_CAPACITY = 32;
 	private static final float LOAD_FACTOR = 0.75f;
-	
+
 	private final File mCacheDir;
 	private int cacheSize = 0;
 	private int cacheByteSize = 0;
@@ -38,11 +40,25 @@ public class SimpleDiskLruCache {
 	private long maxCacheByteSize = 1024 * 1024 * 16; // 16MB default
 	private CompressFormat mCompressFormat = CompressFormat.PNG;
 	private int mCompressQuality = 70;
-	
+
 	private final Map<String, String> mLinkedHashMap =
 			Collections.synchronizedMap(new LinkedHashMap<String, String>(
 					INITIAL_CAPACITY, LOAD_FACTOR, true));
-	
+
+	private final Map<String, String> mFormatHashMap =
+			Collections.synchronizedMap(new LinkedHashMap<String, String>(
+					INITIAL_CAPACITY, LOAD_FACTOR, true));
+
+	private void setCompressFormat(String format){
+		if (format.equals(Configuration.Image.PNG)){
+			mCompressFormat = CompressFormat.PNG;
+		} else if (format.equals(Configuration.Image.JPEG)){
+			mCompressFormat = CompressFormat.JPEG;
+		} else {
+			mCompressFormat = CompressFormat.PNG;
+		}
+	}
+
 	/**
 	 * A filename filter to use to identify the cache filenames which have CACHE_FILENAME_PREFIX
 	 * prepended.
@@ -95,6 +111,19 @@ public class SimpleDiskLruCache {
 	 * @param data The bitmap to store.
 	 */
 	public void put(String key, Bitmap data) {
+		put(key, data, Configuration.Image.PNG);
+	}
+
+	public void put(String key, Bitmap data, String format){
+		// 设定图片格式
+		setCompressFormat(format);
+
+		synchronized (mFormatHashMap){
+			if (mFormatHashMap.get(key) == null){
+				mFormatHashMap.put(key, format);
+			}
+		}
+
 		synchronized (mLinkedHashMap) {
 			if (mLinkedHashMap.get(key) == null) {
 				try {
@@ -125,6 +154,20 @@ public class SimpleDiskLruCache {
 				}
 			}
 		}
+		synchronized (mFormatHashMap) {
+			if (mFormatHashMap.containsKey(key)){
+				mFormatHashMap.remove(key);
+			}
+		}
+	}
+
+	public String getFormat(String key){
+		synchronized (mFormatHashMap) {
+			if (mFormatHashMap.containsKey(key)){
+				return mFormatHashMap.get(key);
+			}
+		}
+		return Configuration.Image.PNG;
 	}
 
 	private void put(String key, String file) {

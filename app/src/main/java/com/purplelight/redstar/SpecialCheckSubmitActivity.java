@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +22,9 @@ import android.widget.ProgressBar;
 
 import com.purplelight.redstar.adapter.RemovableImageAdapter;
 import com.purplelight.redstar.component.view.SpecialItemCheckResultView;
+import com.purplelight.redstar.constant.Configuration;
+import com.purplelight.redstar.provider.DomainFactory;
+import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.provider.entity.SpecialItemCheckResult;
 import com.purplelight.redstar.task.ImageHandleTask;
@@ -52,6 +56,8 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
     private SpecialItem mItem;
     private RemovableImageAdapter mAdapter;
 
+    private List<SpecialItemCheckResultView> mCheckResultViews = new ArrayList<>();
+
     @InjectView(R.id.loading_progress) ProgressBar mProgress;
     @InjectView(R.id.content_form) LinearLayout mFrom;
     @InjectView(R.id.lytCheckItems) LinearLayout mCheckItems;
@@ -68,6 +74,10 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
         imageUri = Uri.fromFile(new File(imageDir, "temp"));
 
         mItem = getIntent().getParcelableExtra("item");
+        if (mItem != null){
+            mImageNames = mItem.getImages();
+            mThumbNames = mItem.getThumbnail();
+        }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
@@ -103,9 +113,23 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_special_check_submit, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_save:
+                saveItem();
+                Intent intent = new Intent();
+                intent.putExtra("item", mItem);
+                setResult(RESULT_OK, intent);
+
                 finish();
                 break;
             default:
@@ -138,6 +162,7 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
 
                 SpecialItemCheckResultView view = createItemView();
                 view.setResult(result);
+                mCheckResultViews.add(view);
 
                 mCheckItems.addView(view);
             }
@@ -158,5 +183,24 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
         view.setShowBottomLine(true);
 
         return view;
+    }
+
+    private void saveItem(){
+        List<SpecialItemCheckResult> list = new ArrayList<>();
+        for(SpecialItemCheckResultView resultView : mCheckResultViews){
+            SpecialItemCheckResult result = new SpecialItemCheckResult();
+            result.setName(resultView.getName());
+            result.setResult(resultView.isChecked() ? 1 : 0);
+
+            list.add(result);
+        }
+
+        mItem.setResultItems(list);
+        mItem.setImages(mImageNames);
+        mItem.setThumbnail(mThumbNames);
+        mItem.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
+
+        ISpecialCheckItemDao itemDao = DomainFactory.createSpecialItemDao(this);
+        itemDao.saveOrUpdate(mItem);
     }
 }

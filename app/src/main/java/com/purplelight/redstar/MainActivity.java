@@ -40,6 +40,7 @@ import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IAppFunctionDao;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.dao.IEstimateReportDao;
+import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.dao.impl.AppFunctionDaoImpl;
 import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
@@ -204,12 +205,15 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_clear) {
             ImageHelper.clear();
-            IEstimateItemDao itemDao = new EstimateItemDaoImpl(this);
+            IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(this);
             itemDao.clear();
-            IEstimateReportDao reportDao = new EstimateReportDaoImpl(this);
+            IEstimateReportDao reportDao = DomainFactory.createEstimateReportDao(this);
             reportDao.clear();
-            IAppFunctionDao functionDao = new AppFunctionDaoImpl(this);
+            IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(this);
             functionDao.clear();
+            ISpecialCheckItemDao checkItemDao = DomainFactory.createSpecialItemDao(this);
+            checkItemDao.clear();
+
             Toast.makeText(this, getString(R.string.clear_buffer_success), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(this, FeedbackActivity.class);

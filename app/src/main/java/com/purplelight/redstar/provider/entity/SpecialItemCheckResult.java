@@ -3,6 +3,11 @@ package com.purplelight.redstar.provider.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
+
 /**
  * 专项检查结果
  * Created by wangyn on 16/5/22.
@@ -57,5 +62,13 @@ public class SpecialItemCheckResult implements Parcelable {
             return new SpecialItemCheckResult[size];
         }
     };
+
+    public static String fromListToString(List<SpecialItemCheckResult> list){
+        return new Gson().toJson(list);
+    }
+
+    public static List<SpecialItemCheckResult> fromStringToList(String json){
+        return new Gson().fromJson(json, new TypeToken<List<SpecialItemCheckResult>>(){}.getType());
+    }
 
 }

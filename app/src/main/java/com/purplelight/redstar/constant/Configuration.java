@@ -8,7 +8,7 @@ public class Configuration {
 
     public class Server{
 //        public static final String WEB = "http://139.196.186.85:8080/";
-        public static final String WEB = "http://192.168.0.100:8080/mcm/";
+        public static final String WEB = "http://192.168.1.245:8080/mcm/";
 
         public static final String IMAGE = "http://139.196.186.85:8888/";
     }
@@ -28,16 +28,19 @@ public class Configuration {
     }
 
     public class Http{
-        public static final int CONNECT_TIME_OUT = 3000;
-        public static final int READ_TIME_OUT = 3000;
+        public static final int CONNECT_TIME_OUT = 10000;
+        public static final int READ_TIME_OUT = 10000;
     }
 
     public class Image{
         public static final int THUMB_SIZE = 300;
-        public static final int IMAGE_SIZE = 1920;
+        public static final int IMAGE_SIZE = 1024;
 
         public static final int IS_LOCAL_IMAGE = 1;
         public static final int IS_NET_IMAGE = 0;
+
+        public static final String PNG = ".png";
+        public static final String JPEG = ".jpg";
     }
 
     public class Fragment{

@@ -6,6 +6,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 
 /**
  *
@@ -38,5 +41,35 @@ public class LoadHelper {
             loadingView.setVisibility(show ? View.VISIBLE : View.GONE);
             dataView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    public static void showDownloading(final View loadingView){
+        AnimationSet animationSet = new AnimationSet(true);
+
+        loadingView.setVisibility(View.VISIBLE);
+        AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
+        showAnimation.setDuration(1000);
+        animationSet.addAnimation(showAnimation);
+
+        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
+        hideAnimation.setStartOffset(1200);
+        hideAnimation.setDuration(1000);
+        animationSet.addAnimation(hideAnimation);
+        animationSet.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                loadingView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        loadingView.startAnimation(animationSet);
     }
 }

@@ -48,6 +48,14 @@ public class SpecialItem implements Parcelable {
 
     private List<String> images = new ArrayList<>();
 
+    private int downloadStatus;
+
+    private int uploadStatus;
+
+    private long createTime;
+
+    private long updateTime;
+
     public int getId() {
         return id;
     }
@@ -192,6 +200,38 @@ public class SpecialItem implements Parcelable {
         this.images = images;
     }
 
+    public int getDownloadStatus() {
+        return downloadStatus;
+    }
+
+    public void setDownloadStatus(int downloadStatus) {
+        this.downloadStatus = downloadStatus;
+    }
+
+    public int getUploadStatus() {
+        return uploadStatus;
+    }
+
+    public void setUploadStatus(int uploadStatus) {
+        this.uploadStatus = uploadStatus;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public SpecialItem(){}
 
     public SpecialItem(Parcel src){
@@ -209,10 +249,14 @@ public class SpecialItem implements Parcelable {
         remark = src.readString();
         checkDate = src.readString();
         passPercent = src.readInt();
-        src.readList(resultItems, SpecialItemCheckResult.class.getClassLoader());
+        src.readTypedList(resultItems, SpecialItemCheckResult.CREATOR);
         building = src.readString();
         src.readStringList(thumbnail);
         src.readStringList(images);
+        downloadStatus = src.readInt();
+        uploadStatus = src.readInt();
+        createTime = src.readLong();
+        updateTime = src.readLong();
     }
 
     @Override
@@ -240,6 +284,10 @@ public class SpecialItem implements Parcelable {
         dest.writeString(building);
         dest.writeStringList(thumbnail);
         dest.writeStringList(images);
+        dest.writeInt(downloadStatus);
+        dest.writeInt(uploadStatus);
+        dest.writeLong(createTime);
+        dest.writeLong(updateTime);
     }
 
     public static Creator<SpecialItem> CREATOR = new Creator<SpecialItem>() {

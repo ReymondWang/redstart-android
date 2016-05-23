@@ -9,6 +9,7 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.fastdfs.ClientGlobal;
 import com.purplelight.redstar.fastdfs.StorageClient;
 import com.purplelight.redstar.fastdfs.StorageServer;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +39,6 @@ public class ImageHelper {
 	private static final String TAG = "ImageHelper";
 	private static final int DISK_MAX_SIZE = 512 * 1024 * 1024;// SD 512MB
 	public static final String CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/mcommunity/";
-	public static final String SUBMIT_CACHE_PATH = CACHE_PATH + "submit/";
 
 	private final static LruCache<String, Bitmap> mMemoryCache;
 	private final static SimpleDiskLruCache mDiskCache;
@@ -60,10 +61,10 @@ public class ImageHelper {
 	}
 
 	public static void addBitmapToCache(String key, Bitmap bitmap){
-		addBitmapToCache(key, bitmap, false);
+		addBitmapToCache(key, bitmap, Configuration.Image.PNG, false);
 	}
 
-	public static void addBitmapToCache(String key, Bitmap bitmap, boolean forceReplaced){
+	public static void addBitmapToCache(String key, Bitmap bitmap, String format, boolean forceReplaced){
 		if (bitmap != null){
 			synchronized(mMemoryCache){
 				if(forceReplaced){
@@ -78,10 +79,14 @@ public class ImageHelper {
 			synchronized (mDiskCache) {
 				if (!mDiskCache.containsKey(key) || forceReplaced) {
 					Log.i(TAG, "put bitmap into SD key = " + key);
-					mDiskCache.put(key, bitmap);
+					mDiskCache.put(key, bitmap, format);
 				}
 			}
 		}
+	}
+
+	public static void addBitmapToCache(String key, Bitmap bitmap, String format){
+		addBitmapToCache(key, bitmap, format, false);
 	}
 
 	public static void removeBitmapFromCache(String key){
@@ -94,6 +99,15 @@ public class ImageHelper {
 				mDiskCache.remove(key);
 			}
 		}
+	}
+
+	public static String getFormat(String key){
+		synchronized (mDiskCache) {
+			if (mDiskCache.containsKey(key)) {
+				return mDiskCache.getFormat(key);
+			}
+		}
+		return Configuration.Image.PNG;
 	}
 
 	public static Bitmap getBitmapFromCache(String key){
@@ -143,9 +157,9 @@ public class ImageHelper {
 	 * @return             fdfs的文件名
 	 * @throws Exception   异常信息
 	 */
-	public static String upload(Bitmap bitmap) throws Exception{
+	public static String upload(Bitmap bitmap, String format) throws Exception{
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		bitmap.compress(Bitmap.CompressFormat.PNG, 100, output);
+		bitmap.compress(Bitmap.CompressFormat.JPEG, 90, output);
 		bitmap.recycle();
 		byte[] bytes = output.toByteArray();
 		try{
@@ -155,8 +169,6 @@ public class ImageHelper {
 		}
 
 		ClientGlobal.init();
-
-		String fileExtName = ".png";
 		long fileLength = bytes.length;
 
 		TrackerClient tracker = new TrackerClient();
@@ -165,11 +177,23 @@ public class ImageHelper {
 		StorageClient client = new StorageClient(trackerServer, storageServer);
 
 		NameValuePair[] metaList = new NameValuePair[2];
-		metaList[0] = new NameValuePair("fileExtName", fileExtName);
+		metaList[0] = new NameValuePair("fileExtName", format);
 		metaList[1] = new NameValuePair("fileLength", String.valueOf(fileLength));
 
-		String[] result = client.upload_file(bytes, fileExtName, metaList);
+		String[] result = client.upload_file(bytes, format, metaList);
 		return result[1];
+	}
+
+	public static List<String> updateFromCache(List<String> keyList) throws Exception{
+		List<String> fileNameList = new ArrayList<>();
+
+		if (keyList != null && keyList.size() > 0){
+			for(String key : keyList){
+				fileNameList.add(Configuration.Server.IMAGE + upload(getBitmapFromCache(key), getFormat(key)));
+			}
+		}
+
+		return fileNameList;
 	}
 
 	public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight){
