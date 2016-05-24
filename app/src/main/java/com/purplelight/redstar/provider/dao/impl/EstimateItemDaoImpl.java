@@ -160,6 +160,7 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
 
                 c.moveToNext();
             }
+            c.close();
 
             return list;
         }

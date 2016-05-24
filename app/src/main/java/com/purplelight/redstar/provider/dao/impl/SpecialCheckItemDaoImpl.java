@@ -229,6 +229,7 @@ public class SpecialCheckItemDaoImpl extends BaseDaoImpl implements ISpecialChec
 
                 c.moveToNext();
             }
+            c.close();
 
             return list;
         }

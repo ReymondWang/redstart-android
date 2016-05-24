@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
+        android:layout_marginStart="@dimen/nav_header_vertical_spacing"
+        android:text="@string/search_title"
+        android:textSize="@dimen/common_font_big"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:layout_marginBottom="@dimen/common_spacing_big"
+        android:layout_height="@dimen/common_spacing_xsmall"
+        android:background="@color/colorGray" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginStart="@dimen/common_spacing_big"
+        android:paddingLeft="@dimen/common_spacing_middle"
+        android:paddingRight="@dimen/common_spacing_middle"
+        android:textColor="@color/colorBlack"
+        android:text="@string/search_project"/>
+    <Spinner
+        android:id="@+id/spnProject"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginRight="@dimen/common_spacing_big"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/common_spacing_middle"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginRight="@dimen/common_spacing_big"
+        android:layout_height="@dimen/common_spacing_xsmall"
+        android:background="@color/colorGray" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginStart="@dimen/common_spacing_big"
+        android:paddingLeft="@dimen/common_spacing_middle"
+        android:paddingRight="@dimen/common_spacing_middle"
+        android:textColor="@color/colorBlack"
+        android:text="@string/search_passport_category"/>
+    <EditText
+        android:id="@+id/txtCategory"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginRight="@dimen/common_spacing_big"
+        android:background="@null"
+        android:inputType="text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/common_spacing_middle"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginRight="@dimen/common_spacing_big"
+        android:layout_height="@dimen/common_spacing_xsmall"
+        android:background="@color/colorGray" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/common_spacing_large"
+        android:layout_marginLeft="@dimen/common_spacing_big"
+        android:layout_marginRight="@dimen/common_spacing_big"
+        android:background="@drawable/bg_button_corner"
+        android:textColor="@color/colorWhite"
+        android:text="@string/search_button"/>
+
+</LinearLayout>

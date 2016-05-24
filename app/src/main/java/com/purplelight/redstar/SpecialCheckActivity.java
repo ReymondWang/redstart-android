@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -154,10 +155,23 @@ public class SpecialCheckActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_special_check, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.action_downloadAll:
+                downLoadAll();
+                break;
+            case R.id.action_task:
+                Intent intent = new Intent(this, OfflineTaskCategoryActivity.class);
+                startActivity(intent);
                 break;
             default:
         }
@@ -201,6 +215,37 @@ public class SpecialCheckActivity extends AppCompatActivity
                     mDataSource.addAll(result.getItems());
                     mAdapter.notifyDataSetChanged();
                 }
+            }
+        });
+        task.execute();
+    }
+
+    private void downLoadAll(){
+        LoadHelper.showProgress(SpecialCheckActivity.this, mRefreshForm, mProgress, true);
+        SpecialCheckLoadTask task = new SpecialCheckLoadTask(this, mSystemId);
+        task.setPageNo(mCurrentPageNo);
+        task.setPageSize(1000);
+        task.setLoadedListener(new SpecialCheckLoadTask.OnLoadedListener() {
+            @Override
+            public void onLoaded(SpecialItemResult result) {
+                LoadHelper.showProgress(SpecialCheckActivity.this, mRefreshForm, mProgress, false);
+                if (mRefreshForm.isLoading()){
+                    mRefreshForm.setLoading(false);
+                }
+                if (mRefreshForm.isRefreshing()){
+                    mRefreshForm.setRefreshing(false);
+                }
+
+                if (Result.ERROR.equals(result.getSuccess())){
+                    Toast.makeText(SpecialCheckActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+                if (result.getItems() != null && result.getItems().size() > 0){
+                    for(SpecialItem item : result.getItems()){
+                        mService.addSpecialItem(item);
+                    }
+                }
+
             }
         });
         task.execute();

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    tools:context="com.purplelight.redstar.PassportDetailActivity">
+
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="@dimen/ui_progress_bar_size"
+        android:layout_height="@dimen/ui_progress_bar_size"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/common_spacing_big"/>
+
+    <ScrollView
+        android:id="@+id/content_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"
+                android:layout_marginTop="@dimen/common_spacing_big"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtProject"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig" />
+
+                <TextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorDanger"
+                    android:textSize="@dimen/common_font_big"
+                    android:gravity="end"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray"/>
+
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/common_font_big"
+                android:paddingLeft="@dimen/common_spacing_xbig"
+                android:paddingRight="@dimen/common_spacing_xbig" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig"
+                    android:text="@string/title_passport_resource"/>
+
+                <TextView
+                    android:id="@+id/txtResource"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig"
+                    android:text="@string/title_passport_confirm_date"/>
+
+                <TextView
+                    android:id="@+id/txtStartDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig"
+                    android:text="@string/title_passport_expire_date"/>
+
+                <TextView
+                    android:id="@+id/txtEndDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:minHeight="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ui_table_row_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig"
+                    android:text="@string/title_report_remark"/>
+
+                <TextView
+                    android:id="@+id/txtRemark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2.5"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_spacing_xbig"
+                android:layout_marginStart="@dimen/common_spacing_xbig"
+                android:minHeight="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/ui_table_row_height"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/common_font_big"
+                    android:paddingLeft="@dimen/common_spacing_xbig"
+                    android:paddingRight="@dimen/common_spacing_xbig"
+                    android:layout_marginTop="@dimen/common_spacing_big"
+                    android:text="@string/title_passport_file"/>
+
+                <LinearLayout
+                    android:id="@+id/lytPassportFiles"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:layout_weight="2.5"
+                    android:orientation="vertical"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>

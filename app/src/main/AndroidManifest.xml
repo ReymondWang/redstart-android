@@ -109,16 +109,21 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_special_check_submit"
             android:screenOrientation="portrait" />
-        <activity android:name=".SpecialCheckOfflineActivity"
+        <activity
+            android:name=".SpecialCheckOfflineActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_special_check"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PassportUploadActivity"
+            android:name=".PassportActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_passport_upload"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".PassportDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_passport_detail"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PassportModifyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -189,6 +194,10 @@
             android:exported="false" />
         <service
             android:name=".service.SpecialItemDownloadService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".service.SpecialItemUploadService"
             android:enabled="true"
             android:exported="false" />
 

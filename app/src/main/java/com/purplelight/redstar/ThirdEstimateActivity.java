@@ -1,15 +1,11 @@
 package com.purplelight.redstar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -25,9 +21,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,6 +33,7 @@ import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.service.EstimateDownloadService;
 import com.purplelight.redstar.task.EstimateItemLoadTask;
+import com.purplelight.redstar.util.LoadHelper;
 import com.purplelight.redstar.web.result.EstimateItemResult;
 import com.purplelight.redstar.web.result.Result;
 
@@ -244,7 +238,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
     public void onClick(View v) {
         mDrawer.closeDrawer(GravityCompat.END);
 
-        showProgress(true);
+        LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
         currentPageNo = 0;
         EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
         task.setPageNo(currentPageNo);
@@ -258,14 +252,14 @@ public class ThirdEstimateActivity extends AppCompatActivity
     }
 
     private void downloadAll(){
-        showProgress(true);
+        LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
         EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
         task.setPageNo(0);
         task.setPageSize(1000); // 下载1000条，固定数值，如果超过一千条则不能下载。
         task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
             @Override
             public void onLoaded(EstimateItemResult result) {
-                showProgress(false);
+                LoadHelper.showProgress(ThirdEstimateActivity.this, mRefreshFrom, mProgress, false);
 
                 if (Result.SUCCESS.equals(result.getSuccess())){
                     for(EstimateItem item : result.getItems()){
@@ -274,7 +268,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
                             mService.addEstimateItem(item);
                         }
                     }
-                    showDownloading();
+                    LoadHelper.showDownloading(mDownloadView);
                 } else {
                     Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -284,7 +278,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
     }
 
     private void initViews(){
-        showProgress(true);
+        LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
         mDownloadAll.setVisibility(View.GONE);
 
         EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
@@ -323,7 +317,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
             public void OnDownload(EstimateItem item) {
                 if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus()){
                     item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADING);
-                    showDownloading();
+                    LoadHelper.showDownloading(mDownloadView);
                     mService.addEstimateItem(item);
                 }
             }
@@ -339,69 +333,8 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mList.setAdapter(mAdapter);
     }
 
-    /**
-     * 显示登录进度
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-            mRefreshFrom.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mRefreshFrom.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
-    private void showDownloading(){
-        AnimationSet animationSet = new AnimationSet(true);
-
-        mDownloadView.setVisibility(View.VISIBLE);
-        AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
-        showAnimation.setDuration(1000);
-        animationSet.addAnimation(showAnimation);
-
-        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
-        hideAnimation.setStartOffset(1200);
-        hideAnimation.setDuration(1000);
-        animationSet.addAnimation(hideAnimation);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mDownloadView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        mDownloadView.startAnimation(animationSet);
-    }
-
     private void onDataLoaded(EstimateItemResult result, boolean append){
-        showProgress(false);
+        LoadHelper.showProgress(this, mRefreshFrom, mProgress, false);
         if (mRefreshFrom.isRefreshing()){
             mRefreshFrom.setRefreshing(false);
         }

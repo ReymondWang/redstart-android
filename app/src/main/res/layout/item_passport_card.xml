@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,40 +12,49 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_spacing_big"
+            android:layout_marginStart="@dimen/common_spacing_big"
+            android:layout_marginTop="@dimen/common_spacing_big"
+            android:background="@color/colorWhite"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtProject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:textColor="@color/colorPrimary"/>
+
+            <TextView
+                android:id="@+id/txtCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="end"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_marginEnd="@dimen/common_spacing_big"
+                android:textColor="@color/colorDanger"/>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/txtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/common_spacing_big"
-            android:text="XXXXX土地出让协议"
+            android:layout_marginLeft="@dimen/common_spacing_big"
+            android:layout_marginStart="@dimen/common_spacing_big"
+            android:layout_marginTop="@dimen/common_spacing_big"
+            android:textColor="@color/colorBlack"
             android:textSize="@dimen/common_font_xbig"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/common_spacing_big"
-            android:background="@color/colorWhite"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="证照类型"
-                android:textColor="@color/colorBlack"/>
-
-            <TextView
-                android:id="@+id/txtCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/common_spacing_big"
-                android:text="土地出让协议"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/common_spacing_big"
+            android:layout_marginStart="@dimen/common_spacing_big"
             android:layout_marginTop="@dimen/common_spacing_big"
             android:background="@color/colorWhite"
             android:orientation="horizontal">
@@ -52,7 +62,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="对应资源"
+                android:text="@string/title_passport_resource"
                 android:textColor="@color/colorBlack"/>
 
             <TextView
@@ -60,95 +70,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/common_spacing_big"
-                android:text="XXXXXX宗地1＃地块"/>
+                android:layout_marginStart="@dimen/common_spacing_big"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/common_spacing_big"
-            android:background="@color/colorWhite"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/common_spacing_big"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1.0"
+                android:textColor="@color/colorBlack"
+                android:text="@string/title_passport_confirm_date"/>
 
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:textColor="@color/colorBlack"
-                    android:text="申请日期"/>
-
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:text="2015-05-04"/>
-
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:textColor="@color/colorBlack"
-                    android:text="发证日期"/>
-
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:text="2015-05-04"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/txtPassportDate"
+                android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/common_spacing_big"
-                android:orientation="horizontal">
+                android:layout_weight="1.5"/>
 
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:textColor="@color/colorBlack"
-                    android:text="到期日期"/>
+            <TextView
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:textColor="@color/colorBlack"
+                android:text="@string/title_passport_expire_date"/>
 
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:text="2015-05-04"/>
-
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:textColor="@color/colorBlack"
-                    android:text="提醒日期"/>
-
-                <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:text="2015-05-04"/>
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/txtExpireDate"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"/>
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imgPassport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/common_spacing_big"
-            android:layout_marginLeft="@dimen/common_spacing_big"
-            android:layout_marginRight="@dimen/common_spacing_big"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/common_image_description"/>
 
     </LinearLayout>
 

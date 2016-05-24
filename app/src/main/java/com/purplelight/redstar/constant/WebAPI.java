@@ -38,6 +38,12 @@ public class WebAPI {
 
     public static final String SPECIAL_CHECK_ITEM_SUBMIT = "api/specialcheck/submit";
 
+    public static final String PASSPORT = "api/passport/items";
+
+    public static final String PASSPORT_FILE = "api/passport/files";
+
+    public static final String PROJECT = "api/common/projects";
+
     /**
      * 取得WebAPI的全路径
      * @param method  方法参数

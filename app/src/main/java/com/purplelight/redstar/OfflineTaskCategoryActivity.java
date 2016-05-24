@@ -67,9 +67,9 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
                     intent.putParcelableArrayListExtra("items", items);
                     startActivity(intent);
                 } else if (entity.type == SPECIAL_CHECK){
-//                    Intent intent = new Intent(OfflineTaskCategoryActivity.this, EstimateDetailOfflineActivity.class);
-//                    intent.putParcelableArrayListExtra("items", items);
-//                    startActivity(intent);
+                    Intent intent = new Intent(OfflineTaskCategoryActivity.this, SpecialCheckOfflineActivity.class);
+                    intent.putParcelableArrayListExtra("items", items);
+                    startActivity(intent);
                 }
             }
         });

@@ -70,12 +70,12 @@ public class ImageHandleTask extends AsyncTask<String, Void, String[]> {
         String imageFileName = ImageHelper.generateRandomFileName();
         Bitmap compressBmp = ImageHelper.CompressImageToSize(orgBmp, Configuration.Image.IMAGE_SIZE,
                 Configuration.Image.IMAGE_SIZE);
-        ImageHelper.addBitmapToCache(imageFileName, compressBmp);
+        ImageHelper.addBitmapToCache(imageFileName, compressBmp, Configuration.Image.JPEG);
 
         String thumbFileName = ImageHelper.generateThumbFileName(imageFileName);
         Bitmap thumbBmp = ImageHelper.CompressImageToSize(orgBmp, Configuration.Image.THUMB_SIZE,
                 Configuration.Image.THUMB_SIZE);
-        ImageHelper.addBitmapToCache(thumbFileName, thumbBmp);
+        ImageHelper.addBitmapToCache(thumbFileName, thumbBmp, Configuration.Image.JPEG);
 
         return new String[]{imageFileName, thumbFileName};
     }

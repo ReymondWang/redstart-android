@@ -4,10 +4,10 @@
         android:id="@+id/nav_setting"
         android:icon="@drawable/ic_settings_gray"
         android:title="@string/txt_row_setting" />
-    <item
-        android:id="@+id/nav_password"
-        android:icon="@drawable/ic_lock_outline"
-        android:title="@string/txt_row_password" />
+    <!--<item-->
+        <!--android:id="@+id/nav_password"-->
+        <!--android:icon="@drawable/ic_lock_outline"-->
+        <!--android:title="@string/txt_row_password" />-->
     <item
         android:id="@+id/nav_offline_task"
         android:icon="@drawable/ic_cloud_done_gray"

@@ -14,6 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_spacing_xsmall"
+        android:visibility="gone"
         android:background="@color/colorGray" />
 
     <LinearLayout
@@ -22,6 +23,7 @@
         android:layout_height="@dimen/ui_table_row_height"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:visibility="gone"
         android:background="@drawable/bg_clickable_row">
 
         <ImageView
@@ -50,6 +52,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_spacing_xsmall"
+        android:visibility="gone"
         android:background="@color/colorGray" />
 
     <LinearLayout

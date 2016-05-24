@@ -29,6 +29,7 @@ import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.service.EstimateDownloadService;
 import com.purplelight.redstar.service.EstimateUploadService;
 import com.purplelight.redstar.util.ImageHelper;
+import com.purplelight.redstar.util.LoadHelper;
 
 import java.util.List;
 
@@ -147,7 +148,7 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
             mAdapter.setDownloadListener(new EstimateItemAdapter.OnDownLoadListener() {
                 @Override
                 public void OnDownload(EstimateItem item) {
-                    showDownloading();
+                    LoadHelper.showDownloading(mDownloadView);
                     mDownloadService.addEstimateItem(item);
                     item.setDownloadStatus(Configuration.DownloadStatus.DOWNLOADED);
                     mAdapter.notifyDataSetChanged();
@@ -243,36 +244,6 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
             default:
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showDownloading(){
-        AnimationSet animationSet = new AnimationSet(true);
-
-        mDownloadView.setVisibility(View.VISIBLE);
-        AlphaAnimation showAnimation = new AlphaAnimation(0f, 1.0f);
-        showAnimation.setDuration(1000);
-        animationSet.addAnimation(showAnimation);
-
-        AlphaAnimation hideAnimation = new AlphaAnimation(1.0f, 0f);
-        hideAnimation.setStartOffset(1200);
-        hideAnimation.setDuration(1000);
-        animationSet.addAnimation(hideAnimation);
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mDownloadView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        mDownloadView.startAnimation(animationSet);
     }
 
     private void confirmDelete(final EstimateItem item){

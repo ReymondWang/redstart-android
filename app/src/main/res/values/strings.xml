@@ -14,6 +14,7 @@
     <string name="title_activity_special_check">专项检查</string>
     <string name="title_activity_special_check_submit">专项检查填报</string>
     <string name="title_activity_passport_upload">证照查看</string>
+    <string name="title_activity_passport_detail">证照详细</string>
     <string name="title_activity_passport_upload_modify">编辑证照信息</string>
     <string name="title_activity_passport_type">证照类型</string>
     <string name="title_activity_modify_password">修改密码</string>
@@ -52,6 +53,10 @@
 
     <!-- 搜索框 -->
     <string name="search_title">查询条件</string>
+    <string name="search_project">项目</string>
+    <string name="search_passport_category">证照类型</string>
+    <string name="search_passport_category_hint">请输入证照类型</string>
+    <string name="search_button">查询</string>
 
     <!-- 登录 -->
     <string name="btn_login">登    录</string>
@@ -171,7 +176,7 @@
     <string name="title_passport_resource_hint">请选择对应资源</string>
     <string name="title_passport_apply_date">申办日期</string>
     <string name="title_passport_apply_date_hint">请选择申办日期</string>
-    <string name="title_passport_confirm_date">发证日期</string>
+    <string name="title_passport_confirm_date">证照日期</string>
     <string name="title_passport_confirm_date_hint">请选择发证日期</string>
     <string name="title_passport_expire_date">到期日期</string>
     <string name="title_passport_expire_date_hint">请选择到期日期</string>
@@ -222,6 +227,7 @@
     <string name="user_phone_must_input">请输入电话</string>
     <string name="press_back_noce_more">再次按下返回键退出</string>
     <string name="download_task_failed">下载任务失败</string>
+    <string name="no_app_can_open_pdf">您没有可以打开PDF文件的工具</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

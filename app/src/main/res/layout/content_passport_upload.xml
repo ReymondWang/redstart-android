@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/common_spacing_big"
     android:background="@color/colorGray"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.purplelight.redstar.PassportUploadActivity"
+    tools:context=".PassportActivity"
     tools:showIn="@layout/app_bar_passport_upload">
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="@dimen/common_spacing_middle"
-        android:divider="@null">
-    </ListView>
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="@dimen/ui_progress_bar_size"
+        android:layout_height="@dimen/ui_progress_bar_size"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dip"/>
 
-</RelativeLayout>
+    <com.purplelight.redstar.component.view.SwipeRefreshLayout
+        android:id="@+id/refresh_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="@dimen/common_spacing_middle"
+            android:divider="@null">
+        </ListView>
+
+    </com.purplelight.redstar.component.view.SwipeRefreshLayout>
+
+</FrameLayout>

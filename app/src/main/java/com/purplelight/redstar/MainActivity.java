@@ -175,7 +175,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        // 暂时取消消息管理的菜单入口
+//        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -200,20 +201,13 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, OfflineTaskCategoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
-        } else if (id == R.id.nav_password) {
-            Intent intent = new Intent(this, ModifyPasswordActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_clear) {
-            ImageHelper.clear();
-            IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(this);
-            itemDao.clear();
-            IEstimateReportDao reportDao = DomainFactory.createEstimateReportDao(this);
-            reportDao.clear();
-            IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(this);
-            functionDao.clear();
-            ISpecialCheckItemDao checkItemDao = DomainFactory.createSpecialItemDao(this);
-            checkItemDao.clear();
-
+        }
+//        else if (id == R.id.nav_password) {
+//            Intent intent = new Intent(this, ModifyPasswordActivity.class);
+//            startActivity(intent);
+//        }
+        else if (id == R.id.nav_clear) {
+            clear();
             Toast.makeText(this, getString(R.string.clear_buffer_success), Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(this, FeedbackActivity.class);
@@ -264,13 +258,24 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    private void clear(){
+        ImageHelper.clear();
+        IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(this);
+        itemDao.clear();
+        IEstimateReportDao reportDao = DomainFactory.createEstimateReportDao(this);
+        reportDao.clear();
+        IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(this);
+        functionDao.clear();
+        ISpecialCheckItemDao checkItemDao = DomainFactory.createSpecialItemDao(this);
+        checkItemDao.clear();
+    }
+
     private void logout(){
         RedStartApplication.setUser(null);
         ISystemUserDao userDao = DomainFactory.createSystemUserDao(this);
         userDao.clear();
 
-        IAppFunctionDao functionDao = DomainFactory.createAppFuncDao(this);
-        functionDao.clear();
+        clear();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
