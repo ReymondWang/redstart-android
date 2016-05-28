@@ -13,6 +13,7 @@ import java.util.List;
  * Created by wangyn on 16/5/22.
  */
 public class SpecialItemCheckResult implements Parcelable {
+
     private String name;
 
     private int result;

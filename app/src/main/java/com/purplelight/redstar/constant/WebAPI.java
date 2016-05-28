@@ -44,6 +44,8 @@ public class WebAPI {
 
     public static final String PROJECT = "api/common/projects";
 
+    public static final String UPGRADE = "api/upgrade/info";
+
     /**
      * 取得WebAPI的全路径
      * @param method  方法参数

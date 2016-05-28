@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity
 
         mRefreshFrom.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
         mRefreshFrom.setHeight(mScreenSize.x / 2);
+        mRefreshFrom.setMode(SwipeRefreshLayout.Mode.PULL_FROM_START);
 
         initEvent();
 
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, OfflineTaskCategoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
+
         }
 //        else if (id == R.id.nav_password) {
 //            Intent intent = new Intent(this, ModifyPasswordActivity.class);

@@ -2,10 +2,12 @@ package com.purplelight.redstar.component.view;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.purplelight.redstar.R;
@@ -19,7 +21,9 @@ public class SpecialItemCheckResultView extends LinearLayout {
 
     private TextView txtCheckItem;
     private TextView txtIsPass;
-    private AppCompatCheckBox mCheckbox;
+    private RadioGroup lytRadio;
+    private AppCompatRadioButton radCheck;
+    private AppCompatRadioButton radNoCheck;
     private LinearLayout mBottomLine;
     private LinearLayout mContent;
 
@@ -39,7 +43,9 @@ public class SpecialItemCheckResultView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.item_special_check_detail, this);
         txtCheckItem = (TextView)findViewById(R.id.txtCheckItem);
         txtIsPass = (TextView)findViewById(R.id.txtIsPass);
-        mCheckbox = (AppCompatCheckBox)findViewById(R.id.chkSelect);
+        lytRadio = (RadioGroup)findViewById(R.id.lytRadio);
+        radCheck = (AppCompatRadioButton)findViewById(R.id.radCheck);
+        radNoCheck = (AppCompatRadioButton)findViewById(R.id.radNoCheck);
         mBottomLine = (LinearLayout)findViewById(R.id.lytBottomLine);
         mContent = (LinearLayout)findViewById(R.id.lytContent);
     }
@@ -74,7 +80,7 @@ public class SpecialItemCheckResultView extends LinearLayout {
     }
 
     public boolean isChecked(){
-        return mCheckbox.isChecked();
+        return radCheck.isChecked() && !radNoCheck.isChecked();
     }
 
     public String getName(){
@@ -94,20 +100,23 @@ public class SpecialItemCheckResultView extends LinearLayout {
             txtCheckItem.setText(mResult.getName());
             if (mEditable){
                 txtIsPass.setVisibility(GONE);
-                mCheckbox.setVisibility(VISIBLE);
+                lytRadio.setVisibility(VISIBLE);
                 switch (mResult.getResult()){
                     case 0:
-                        mCheckbox.setChecked(false);
+                        radCheck.setChecked(false);
+                        radNoCheck.setChecked(true);
                         break;
                     case 1:
-                        mCheckbox.setChecked(true);
+                        radCheck.setChecked(true);
+                        radNoCheck.setChecked(false);
                         break;
                     default:
-                        mCheckbox.setChecked(false);
+                        radCheck.setChecked(false);
+                        radNoCheck.setChecked(false);
                         break;
                 }
             } else {
-                mCheckbox.setVisibility(GONE);
+                lytRadio.setVisibility(GONE);
                 switch (mResult.getResult()){
                     case 0:
                         txtIsPass.setVisibility(VISIBLE);

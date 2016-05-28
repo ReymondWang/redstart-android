@@ -167,6 +167,10 @@
     <string name="title_safe_score">文明安全</string>
     <string name="title_total_score">综合得分</string>
 
+    <!-- 专项检查 -->
+    <string name="label_check_mark">√</string>
+    <string name="label_not_check_marl">×</string>
+
     <!-- 证照信息 -->
     <string name="title_passport_name">证照名称</string>
     <string name="title_passport_name_hint">请输入证照名称</string>

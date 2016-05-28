@@ -180,13 +180,13 @@ public class SpecialCheckActivity extends AppCompatActivity
 
     @Override
     public void onLoad() {
-        mCurrentPageNo = 0;
+        mCurrentPageNo++;
         initViews();
     }
 
     @Override
     public void onRefresh() {
-        mCurrentPageNo++;
+        mCurrentPageNo = 0;
         initViews();
     }
 

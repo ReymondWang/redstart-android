@@ -12,7 +12,8 @@
         android:layout_width="@dimen/ui_progress_bar_size"
         android:layout_height="@dimen/ui_progress_bar_size"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dip"/>
+        android:layout_marginTop="80dip"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/content_form"
