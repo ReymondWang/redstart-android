@@ -61,6 +61,14 @@ public class EstimateDownloadService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBinder = null;
+        estimateItemList = null;
+        estimateReportList = null;
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }

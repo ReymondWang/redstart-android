@@ -7,8 +7,8 @@ package com.purplelight.redstar.constant;
 public class Configuration {
 
     public class Server{
-//        public static final String WEB = "http://139.196.186.85:8080/";
-        public static final String WEB = "http://192.168.0.240:8080/mcm/";
+//        public static final String WEB = "http://139.196.186.85:8080/mcm/";
+        public static final String WEB = "http://192.168.0.100:8080/mcm/";
 
         public static final String IMAGE = "http://139.196.186.85:8888/";
     }
@@ -84,6 +84,11 @@ public class Configuration {
         public static final int UPLOAD_FAILURE = 3;
     }
 
+    public class EditStatus{
+        public static final int EDITABLE = 1;
+        public static final int NOT_EDITABLE = 0;
+    }
+
     /**
      * 图片处理类型
      */
@@ -106,6 +111,12 @@ public class Configuration {
         public static final int INCHARGER = 1;
         // 以验收责任人的角度进行查询
         public static final int CHECHER = 1;
+    }
+
+    public class EstimateType{
+        public static final int THIRD = 0;
+        public static final int QUYU = 1;
+        public static final int ANQUAN = 2;
     }
 
     public class UpgradeInfo{

@@ -58,6 +58,7 @@ public class EstimateReportActivity extends AppCompatActivity
     private Point mScreenSize = new Point();
 
     private int outterSystemId;
+    private int estimateType;
 
     // 系统分页信息
     private int currentPageNo = 0;
@@ -74,6 +75,19 @@ public class EstimateReportActivity extends AppCompatActivity
         ButterKnife.inject(this);
 
         outterSystemId = getIntent().getIntExtra("outtersystem", 0);
+        estimateType = getIntent().getIntExtra("checkType", 0);
+
+        switch (estimateType){
+            case Configuration.EstimateType.THIRD:
+                setTitle(getString(R.string.title_activity_estimate_report));
+                break;
+            case Configuration.EstimateType.QUYU:
+                setTitle(getString(R.string.title_activity_quyu_report));
+                break;
+            case Configuration.EstimateType.ANQUAN:
+                setTitle(getString(R.string.title_activity_anquan_report));
+                break;
+        }
 
         mToolbar = getSupportActionBar();
 
@@ -100,6 +114,7 @@ public class EstimateReportActivity extends AppCompatActivity
             case R.id.action_change_mode:
                 Intent intent = new Intent(this, ThirdEstimateActivity.class);
                 intent.putExtra("outtersystem", outterSystemId);
+                intent.putExtra("checkType", estimateType + "");
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.frontscale, R.anim.backscale);
@@ -185,6 +200,7 @@ public class EstimateReportActivity extends AppCompatActivity
                 EstimateReportParameter parameter = new EstimateReportParameter();
                 parameter.setLoginId(RedStartApplication.getUser().getId());
                 parameter.setSystemId(outterSystemId);
+                parameter.setEstimateType(estimateType);
                 parameter.setPageNo(currentPageNo);
                 parameter.setPageSize(Configuration.Page.COMMON_PAGE_SIZE);
 
@@ -265,6 +281,7 @@ public class EstimateReportActivity extends AppCompatActivity
                     Intent intent = new Intent(EstimateReportActivity.this, EstimateReportDetailActivity.class);
                     intent.putExtra("report", report);
                     intent.putExtra("outtersystem", outterSystemId);
+                    intent.putExtra("checkType", estimateType);
                     startActivity(intent);
                 }
             });

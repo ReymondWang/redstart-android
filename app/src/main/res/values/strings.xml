@@ -7,9 +7,17 @@
     <string name="title_activity_profile_modify">编辑个人信息</string>
     <string name="title_activity_measure">实测实量</string>
     <string name="title_activity_third_estimate">第三方评估</string>
-    <string name="title_activity_third_estimate_detail">评估详细</string>
+    <string name="title_activity_third_estimate_detail">第三方评估详细</string>
     <string name="title_activity_estimate_report">第三方评估报告</string>
     <string name="title_activity_estimate_report_detail">第三方评估报告详细</string>
+    <string name="title_activity_quyu">区域连接检查</string>
+    <string name="title_activity_quyu_detail">区域连接检查详细</string>
+    <string name="title_activity_quyu_report">区域连接检查报告</string>
+    <string name="title_activity_quyu_report_detail">区域连接检查报告详细</string>
+    <string name="title_activity_anquan">安全文明检查</string>
+    <string name="title_activity_anquan_detail">安全文明检查详细</string>
+    <string name="title_activity_anquan_report">安全文明检查报告</string>
+    <string name="title_activity_anquan_report_detail">安全文明检查报告详细</string>
     <string name="title_activity_third_estimate_submit">填报消项</string>
     <string name="title_activity_special_check">专项检查</string>
     <string name="title_activity_special_check_submit">专项检查填报</string>
@@ -136,21 +144,26 @@
     <string name="title_delete_all_common_confirm">您是否确认删除全部？</string>
     <string name="clear_buffer_success">清除缓存成功</string>
 
+    <!-- 第三方评估明细查询 -->
+    <string name="estimate_only_myself">只看自己</string>
+
     <!-- 第三方评估详细信息 -->
     <string name="estimate_item_category_important">重要</string>
     <string name="estimate_item_category_general">一般</string>
-    <string name="estimate_item_category">分类：</string>
-    <string name="estimate_item_character">性质：</string>
-    <string name="estimate_item_area">区域：</string>
-    <string name="estimate_item_project">项目：</string>
-    <string name="estimate_item_incharger">整改人：</string>
-    <string name="estimate_item_checker">验收人：</string>
-    <string name="estimate_item_start_date">开始日期：</string>
-    <string name="estimate_item_end_date">完成日期：</string>
-    <string name="estimate_item_description">问题描述：</string>
-    <string name="estimate_item_submit">整改措施：</string>
+    <string name="estimate_item_category">分类</string>
+    <string name="estimate_item_character">性质</string>
+    <string name="estimate_item_area">区域</string>
+    <string name="estimate_item_project">项目</string>
+    <string name="estimate_item_partition">所属分布工程</string>
+    <string name="estimate_item_incharger">整改人</string>
+    <string name="estimate_item_checker">验收人</string>
+    <string name="estimate_item_start_date">开始日期</string>
+    <string name="estimate_item_end_date">完成日期</string>
+    <string name="estimate_item_description">问题描述</string>
+    <string name="estimate_item_submit">整改措施</string>
     <string name="estimate_item_submit_hint">请输入整改措施</string>
     <string name="estimate_item_submit_img">整改图片</string>
+    <string name="estimate_submit_input_msg">您必须输入整改内容和图片</string>
 
     <!-- 第三方评估报告 -->
     <string name="title_report_project">项目名称</string>
@@ -170,6 +183,7 @@
     <!-- 专项检查 -->
     <string name="label_check_mark">√</string>
     <string name="label_not_check_marl">×</string>
+    <string name="special_check_submit_input_msg">您必须将结果填写完整</string>
 
     <!-- 证照信息 -->
     <string name="title_passport_name">证照名称</string>
@@ -232,6 +246,11 @@
     <string name="press_back_noce_more">再次按下返回键退出</string>
     <string name="download_task_failed">下载任务失败</string>
     <string name="no_app_can_open_pdf">您没有可以打开PDF文件的工具</string>
+    <string name="find_new_version">发现新版本，是否更新？</string>
+    <string name="upgrade_message">红星OM更新......</string>
+    <string name="start_downloading">开始下载......</string>
+    <string name="download_finished">下载完成</string>
+    <string name="download_failed">下载失败</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

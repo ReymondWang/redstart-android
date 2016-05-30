@@ -5,9 +5,4 @@
         android:icon="@drawable/ic_list_white"
         android:title="@string/action_change_mode"
         app:showAsAction="ifRoom" />
-
-    <item android:id="@+id/action_task"
-        android:orderInCategory="100"
-        android:title="@string/action_task"
-        app:showAsAction="never" />
 </menu>

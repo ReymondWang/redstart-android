@@ -67,6 +67,13 @@ public class SpecialItemDownloadService extends Service {
         mBinder = new SpecialItemDownloadServiceBinder();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBinder = null;
+        itemList = null;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

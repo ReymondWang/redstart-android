@@ -29,8 +29,14 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
 
     private Context mContext;
     private int mSearchtype = Configuration.EstimateItemSearchType.INCHARGER;
+    private int mEstimateType;
     private int mOutterSystemId;
     private int mReportId;
+    private boolean mOnlyMySelf = true;
+    private String mProjectId;
+    private String mPartition;
+    private String mInChargerName;
+    private String mDescription;
     private int mPageNo;
     private int mPageSize = Configuration.Page.COMMON_PAGE_SIZE;
 
@@ -51,6 +57,14 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
 
     public void setSearchtype(int searchtype) {
         mSearchtype = searchtype;
+    }
+
+    public int getEstimateType() {
+        return mEstimateType;
+    }
+
+    public void setEstimateType(int estimateType) {
+        mEstimateType = estimateType;
     }
 
     public int getOutterSystemId() {
@@ -85,6 +99,46 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
         mReportId = reportId;
     }
 
+    public boolean isOnlyMySelf() {
+        return mOnlyMySelf;
+    }
+
+    public void setOnlyMySelf(boolean onlyMySelf) {
+        mOnlyMySelf = onlyMySelf;
+    }
+
+    public String getProjectId() {
+        return mProjectId;
+    }
+
+    public void setProjectId(String projectId) {
+        mProjectId = projectId;
+    }
+
+    public String getPartition() {
+        return mPartition;
+    }
+
+    public void setPartition(String partition) {
+        mPartition = partition;
+    }
+
+    public String getInChargerName() {
+        return mInChargerName;
+    }
+
+    public void setInChargerName(String inChargerName) {
+        mInChargerName = inChargerName;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public void setDescription(String description) {
+        mDescription = description;
+    }
+
     public void setLoadedListener(OnLoadedListener listener){
         mLoadedListener = listener;
     }
@@ -106,8 +160,22 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
             EstimateItemParameter parameter = new EstimateItemParameter();
             parameter.setLoginId(RedStartApplication.getUser().getId());
             parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
+            parameter.setEstimateType(mEstimateType);
             parameter.setReportId(mReportId);
             parameter.setSystemId(mOutterSystemId);
+            parameter.setOnlyMyself(mOnlyMySelf);
+            if (!Validation.IsNullOrEmpty(mProjectId)){
+                parameter.setProjectId(mProjectId);
+            }
+            if (!Validation.IsNullOrEmpty(mPartition)){
+                parameter.setPartition(mPartition);
+            }
+            if (!Validation.IsNullOrEmpty(mInChargerName)){
+                parameter.setInChargeName(mInChargerName);
+            }
+            if (!Validation.IsNullOrEmpty(mDescription)){
+                parameter.setDescription(mDescription);
+            }
             parameter.setPageNo(mPageNo);
             parameter.setPageSize(mPageSize);
 

@@ -61,6 +61,13 @@ public class EstimateUploadService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        estimateItemList = null;
+        mBinder = null;
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }

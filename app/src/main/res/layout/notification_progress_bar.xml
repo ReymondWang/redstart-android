@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorLightBlack">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_spacing_middle"
+        android:layout_marginLeft="@dimen/common_spacing_middle"
+        android:layout_marginStart="@dimen/common_spacing_middle"
+        android:text="@string/upgrade_message"
+        android:textSize="@dimen/common_font_big"
+        android:textColor="@color/colorWhite"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgDownLoadIcon"
+            android:padding="5dp"
+            android:layout_width="@dimen/notification_icon_size"
+            android:layout_height="@dimen/notification_icon_size"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/common_image_description" />
+
+        <ProgressBar
+            android:id="@+id/download_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            style="?android:attr/progressBarStyleHorizontal"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -54,11 +54,17 @@ public class SpecialItemUploadService extends Service {
         }
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         mBinder = new SpecialItemUploadServiceBinder();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBinder = null;
+        itemList = null;
     }
 
     @Nullable

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.purplelight.redstar.R;
+import com.purplelight.redstar.util.Validation;
 
 /**
  * 确认对话框
@@ -14,6 +15,7 @@ import com.purplelight.redstar.R;
  */
 public class ConfirmDialog extends Dialog {
     private TextView txtTitle;
+    private TextView txtContent;
     private TextView btnConfirm;
     private TextView btnCancel;
 
@@ -30,6 +32,7 @@ public class ConfirmDialog extends Dialog {
         View mView = LayoutInflater.from(context).inflate(R.layout.dialog_common_confirm, null);
 
         txtTitle = (TextView)mView.findViewById(R.id.txtTitle);
+        txtContent = (TextView)mView.findViewById(R.id.txtContent);
         btnConfirm = (TextView)mView.findViewById(R.id.btnConfirm);
         btnCancel = (TextView)mView.findViewById(R.id.btnCancel);
 
@@ -47,6 +50,13 @@ public class ConfirmDialog extends Dialog {
 
     public void setTitle(String title){
         txtTitle.setText(title);
+    }
+
+    public void setContent(String content){
+        if (!Validation.IsNullOrEmpty(content)){
+            txtContent.setVisibility(View.VISIBLE);
+            txtContent.setText(content);
+        }
     }
 
     public void setConfirmListener(View.OnClickListener listener){

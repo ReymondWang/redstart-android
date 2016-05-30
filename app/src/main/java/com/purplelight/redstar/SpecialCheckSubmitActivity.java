@@ -190,7 +190,7 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
         for(SpecialItemCheckResultView resultView : mCheckResultViews){
             SpecialItemCheckResult result = new SpecialItemCheckResult();
             result.setName(resultView.getName());
-            result.setResult(resultView.isChecked() ? 1 : 0);
+            result.setResult(resultView.value());
 
             list.add(result);
         }

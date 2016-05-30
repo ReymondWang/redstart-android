@@ -44,4 +44,6 @@
     <dimen name="ui_form_line_height">1dip</dimen>
     <dimen name="ui_form_title_width">80dip</dimen>
 
+    <dimen name="notification_icon_size">50dp</dimen>
+
 </resources>

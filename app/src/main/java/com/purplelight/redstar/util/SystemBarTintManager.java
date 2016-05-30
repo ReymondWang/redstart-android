@@ -19,6 +19,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 
+import com.purplelight.redstar.R;
+
 import java.lang.reflect.Method;
 
 /**
@@ -78,8 +80,8 @@ public class SystemBarTintManager {
                     android.R.attr.windowTranslucentNavigation};
             TypedArray a = activity.obtainStyledAttributes(attrs);
             try {
-                mStatusBarAvailable = a.getBoolean(0, false);
-                mNavBarAvailable = a.getBoolean(1, false);
+                mStatusBarAvailable = a.getBoolean(R.styleable.SystemBarTintManager_status_bar_available, false);
+                mNavBarAvailable = a.getBoolean(R.styleable.SystemBarTintManager_nav_bar_available, false);
             } finally {
                 a.recycle();
             }

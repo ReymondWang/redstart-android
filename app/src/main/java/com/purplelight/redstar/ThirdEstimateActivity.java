@@ -21,10 +21,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.purplelight.redstar.adapter.EstimateItemAdapter;
@@ -33,8 +35,13 @@ import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.service.EstimateDownloadService;
 import com.purplelight.redstar.task.EstimateItemLoadTask;
+import com.purplelight.redstar.task.ProjectLoadTask;
+import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.LoadHelper;
+import com.purplelight.redstar.util.SpinnerItem;
+import com.purplelight.redstar.web.entity.ProjectInfo;
 import com.purplelight.redstar.web.result.EstimateItemResult;
+import com.purplelight.redstar.web.result.ProjectResult;
 import com.purplelight.redstar.web.result.Result;
 
 import java.util.ArrayList;
@@ -56,21 +63,23 @@ public class ThirdEstimateActivity extends AppCompatActivity
     private static final int DETAIL = 2;
 
     // 查询条件
-    private AppCompatCheckBox mGeneral;
-    private AppCompatCheckBox mImportant;
-    private AutoCompleteTextView mArea;
-    private AutoCompleteTextView mProject;
-    private AutoCompleteTextView mDescription;
+    private AppCompatCheckBox mOnlyMyself;
+    private Spinner mProject;
+    private EditText mPartition;
+    private EditText mInCharger;
+    private EditText mDescription;
     private AppCompatButton mSearch;
 
     // 外部系统编号
     private int outterSystemId;
 
+    // 评估类型
+    private int estimateType;
+
     // 系统分页信息
     private int currentPageNo = 0;
 
     private EstimateDownloadService mService;
-
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -86,7 +95,6 @@ public class ThirdEstimateActivity extends AppCompatActivity
             }
         }
     };
-
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -100,6 +108,8 @@ public class ThirdEstimateActivity extends AppCompatActivity
         }
     };
 
+    private List<SpinnerItem> mProjects = new ArrayList<>();
+    private ArrayAdapter<SpinnerItem> mProjectAdapter;
     private List<EstimateItem> mDataSource = new ArrayList<>();
     private EstimateItemAdapter mAdapter;
 
@@ -119,13 +129,26 @@ public class ThirdEstimateActivity extends AppCompatActivity
         ButterKnife.inject(this);
 
         outterSystemId = getIntent().getIntExtra("outtersystem", 0);
+        estimateType = ConvertUtil.ToInt(getIntent().getStringExtra("checkType"));
+
+        switch (estimateType){
+            case Configuration.EstimateType.THIRD:
+                setTitle(getString(R.string.title_activity_third_estimate));
+                break;
+            case Configuration.EstimateType.QUYU:
+                setTitle(getString(R.string.title_activity_quyu));
+                break;
+            case Configuration.EstimateType.ANQUAN:
+                setTitle(getString(R.string.title_activity_anquan));
+                break;
+        }
 
         View drawView = mNavigationView.getHeaderView(0);
-        mGeneral = (AppCompatCheckBox)drawView.findViewById(R.id.chkGeneral);
-        mImportant = (AppCompatCheckBox)drawView.findViewById(R.id.chkImportant);
-        mArea = (AutoCompleteTextView)drawView.findViewById(R.id.txtArea);
-        mProject = (AutoCompleteTextView)drawView.findViewById(R.id.txtProject);
-        mDescription = (AutoCompleteTextView)drawView.findViewById(R.id.txtDescription);
+        mOnlyMyself = (AppCompatCheckBox)drawView.findViewById(R.id.chkOnlyMyself);
+        mProject = (Spinner)drawView.findViewById(R.id.spnProject);
+        mPartition = (EditText)drawView.findViewById(R.id.txtPartition);
+        mInCharger = (EditText)drawView.findViewById(R.id.txtInCharger);
+        mDescription = (EditText)drawView.findViewById(R.id.txtDescription);
         mSearch = (AppCompatButton)drawView.findViewById(R.id.btnSearch);
 
         setSupportActionBar(mToolbar);
@@ -136,6 +159,10 @@ public class ThirdEstimateActivity extends AppCompatActivity
         registerReceiver(mReceiver, filter);
 
         initEvents();
+
+        LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
+        mDownloadAll.setVisibility(View.GONE);
+
         initViews();
     }
 
@@ -186,12 +213,14 @@ public class ThirdEstimateActivity extends AppCompatActivity
             case R.id.action_change_mode:
                 Intent intent = new Intent(ThirdEstimateActivity.this, EstimateReportActivity.class);
                 intent.putExtra("outtersystem", outterSystemId);
+                intent.putExtra("checkType", estimateType);
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.frontscale, R.anim.backscale);
                 break;
             case R.id.action_search:
                 mDrawer.openDrawer(GravityCompat.END);
+                loadProjects();
                 break;
             case R.id.action_downloadAll:
                 downloadAll();
@@ -209,29 +238,13 @@ public class ThirdEstimateActivity extends AppCompatActivity
     @Override
     public void onLoad() {
         currentPageNo++;
-        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
-        task.setPageNo(currentPageNo);
-        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
-            @Override
-            public void onLoaded(EstimateItemResult result) {
-                onDataLoaded(result, true);
-            }
-        });
-        task.execute();
+        initViews();
     }
 
     @Override
     public void onRefresh() {
         currentPageNo = 0;
-        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
-        task.setPageNo(currentPageNo);
-        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
-            @Override
-            public void onLoaded(EstimateItemResult result) {
-                onDataLoaded(result, false);
-            }
-        });
-        task.execute();
+        initViews();
     }
 
     @Override
@@ -240,12 +253,26 @@ public class ThirdEstimateActivity extends AppCompatActivity
 
         LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
         currentPageNo = 0;
-        EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
-        task.setPageNo(currentPageNo);
-        task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
+        initViews();
+    }
+
+    private void loadProjects(){
+        ProjectLoadTask task = new ProjectLoadTask(this, outterSystemId);
+        task.setOnLoadedListener(new ProjectLoadTask.OnLoadedListener() {
             @Override
-            public void onLoaded(EstimateItemResult result) {
-                onDataLoaded(result, false);
+            public void OnLoaded(ProjectResult projectResult) {
+                if (Result.SUCCESS.equals(projectResult.getSuccess())){
+                    mProjects.clear();
+                    mProjects.add(new SpinnerItem("", "--请选择--"));
+                    if (projectResult.getProjects() != null && projectResult.getProjects().size() > 0){
+                        for (ProjectInfo projectInfo : projectResult.getProjects()){
+                            mProjects.add(new SpinnerItem(projectInfo.getProjectId(), projectInfo.getProjectName()));
+                        }
+                        mProjectAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Toast.makeText(ThirdEstimateActivity.this, projectResult.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         task.execute();
@@ -254,6 +281,13 @@ public class ThirdEstimateActivity extends AppCompatActivity
     private void downloadAll(){
         LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
         EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setEstimateType(estimateType);
+        task.setOnlyMySelf(true);
+        SpinnerItem spinnerItem = (SpinnerItem)mProject.getSelectedItem();
+        task.setProjectId(spinnerItem.getID());
+        task.setPartition(mPartition.getText().toString());
+        task.setInChargerName(mInCharger.getText().toString());
+        task.setDescription(mDescription.getText().toString());
         task.setPageNo(0);
         task.setPageSize(1000); // 下载1000条，固定数值，如果超过一千条则不能下载。
         task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
@@ -278,15 +312,19 @@ public class ThirdEstimateActivity extends AppCompatActivity
     }
 
     private void initViews(){
-        LoadHelper.showProgress(this, mRefreshFrom, mProgress, true);
-        mDownloadAll.setVisibility(View.GONE);
-
         EstimateItemLoadTask task = new EstimateItemLoadTask(this, outterSystemId);
+        task.setEstimateType(estimateType);
+        task.setOnlyMySelf(mOnlyMyself.isChecked());
+        SpinnerItem spinnerItem = (SpinnerItem)mProject.getSelectedItem();
+        task.setProjectId(spinnerItem.getID());
+        task.setPartition(mPartition.getText().toString());
+        task.setInChargerName(mInCharger.getText().toString());
+        task.setDescription(mDescription.getText().toString());
         task.setPageNo(currentPageNo);
         task.setLoadedListener(new EstimateItemLoadTask.OnLoadedListener() {
             @Override
             public void onLoaded(EstimateItemResult result) {
-                onDataLoaded(result, false);
+                onDataLoaded(result);
             }
         });
         task.execute();
@@ -300,6 +338,10 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mRefreshFrom.setOnLoadListener(this);
         mSearch.setOnClickListener(this);
 
+        mProjects.add(new SpinnerItem("", "--请选择--"));
+        mProjectAdapter = new ArrayAdapter<>(this, R.layout.item_drop_down, mProjects);
+        mProject.setAdapter(mProjectAdapter);
+
         mAdapter = new EstimateItemAdapter(this, mDataSource);
         mAdapter.setShowCheckBox(false);
         mAdapter.setShowUpload(false);
@@ -309,6 +351,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
             public void OnItemClick(EstimateItem item) {
                 Intent intent = new Intent(ThirdEstimateActivity.this, EstimateItemDetailActivity.class);
                 intent.putExtra("item", item);
+                intent.putExtra("checkType", estimateType);
                 startActivityForResult(intent, DETAIL);
             }
         });
@@ -333,7 +376,7 @@ public class ThirdEstimateActivity extends AppCompatActivity
         mList.setAdapter(mAdapter);
     }
 
-    private void onDataLoaded(EstimateItemResult result, boolean append){
+    private void onDataLoaded(EstimateItemResult result){
         LoadHelper.showProgress(this, mRefreshFrom, mProgress, false);
         if (mRefreshFrom.isRefreshing()){
             mRefreshFrom.setRefreshing(false);
@@ -344,12 +387,11 @@ public class ThirdEstimateActivity extends AppCompatActivity
         if (Result.ERROR.equals(result.getSuccess())){
             Toast.makeText(ThirdEstimateActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        if (append){
-            mDataSource.addAll(result.getItems());
-        } else {
+        if (currentPageNo == 0){
             mDataSource.clear();
-            mDataSource.addAll(result.getItems());
         }
+        mDataSource.addAll(result.getItems());
+
         mAdapter.notifyDataSetChanged();
     }
 

@@ -347,9 +347,8 @@ public class SpecialCheckItemAdapter extends BaseAdapter {
                 holder.btnUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        iconUpload.setVisibility(View.GONE);
-                        if (mUploadListener != null){
-                            mUploadListener.OnUpload(item);
+                        if (mUploadListener != null && mUploadListener.OnUpload(item)){
+                            iconUpload.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -415,7 +414,7 @@ public class SpecialCheckItemAdapter extends BaseAdapter {
     }
 
     public interface OnUploadListener{
-        void OnUpload(SpecialItem item);
+        boolean OnUpload(SpecialItem item);
     }
 
     public interface OnDownLoadListener{

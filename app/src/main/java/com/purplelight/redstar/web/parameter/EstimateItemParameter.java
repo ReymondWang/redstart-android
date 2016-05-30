@@ -7,11 +7,23 @@ package com.purplelight.redstar.web.parameter;
 public class EstimateItemParameter extends Parameter {
     private int type;
 
+    private int estimateType;
+
     private int systemId;
 
     private int reportId;
 
     private int itemId;
+
+    private boolean onlyMyself;
+
+    private String projectId;
+
+    private String partition;
+
+    private String inChargeName;
+
+    private String description;
 
     private int pageNo;
 
@@ -23,6 +35,14 @@ public class EstimateItemParameter extends Parameter {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getEstimateType() {
+        return estimateType;
+    }
+
+    public void setEstimateType(int estimateType) {
+        this.estimateType = estimateType;
     }
 
     public int getSystemId() {
@@ -47,6 +67,46 @@ public class EstimateItemParameter extends Parameter {
 
     public void setItemId(int itemId) {
         this.itemId = itemId;
+    }
+
+    public boolean isOnlyMyself() {
+        return onlyMyself;
+    }
+
+    public void setOnlyMyself(boolean onlyMyself) {
+        this.onlyMyself = onlyMyself;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getPartition() {
+        return partition;
+    }
+
+    public void setPartition(String partition) {
+        this.partition = partition;
+    }
+
+    public String getInChargeName() {
+        return inChargeName;
+    }
+
+    public void setInChargeName(String inChargeName) {
+        this.inChargeName = inChargeName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getPageNo() {

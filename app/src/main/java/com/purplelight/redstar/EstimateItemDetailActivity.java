@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.task.BitmapDownloadedListener;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
@@ -33,6 +34,7 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
     private Point mScreenSize = new Point();
 
     private EstimateItem mItem;
+    private int estimateType;
 
     @InjectView(R.id.txtCategory) TextView mCategory;
     @InjectView(R.id.txtCharacter) TextView mCharacter;
@@ -62,6 +64,19 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
         wm.getDefaultDisplay().getSize(mScreenSize);
 
         mItem = getIntent().getParcelableExtra("item");
+        estimateType = getIntent().getIntExtra("checkType", 0);
+        switch (estimateType){
+            case Configuration.EstimateType.THIRD:
+                setTitle(getString(R.string.title_activity_third_estimate_detail));
+                break;
+            case Configuration.EstimateType.QUYU:
+                setTitle(getString(R.string.title_activity_quyu_detail));
+                break;
+            case Configuration.EstimateType.ANQUAN:
+                setTitle(getString(R.string.title_activity_anquan_detail));
+                break;
+        }
+
         initViews();
     }
 
@@ -69,6 +84,17 @@ public class EstimateItemDetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_third_estimate_detail, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_create);
+        if (mItem.getStatus() == Configuration.EditStatus.EDITABLE){
+            item.setVisible(true);
+        } else {
+            item.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

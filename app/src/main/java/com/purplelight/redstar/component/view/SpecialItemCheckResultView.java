@@ -83,6 +83,16 @@ public class SpecialItemCheckResultView extends LinearLayout {
         return radCheck.isChecked() && !radNoCheck.isChecked();
     }
 
+    public int value(){
+        if (radCheck.isChecked()){
+            return 1;
+        } else if (radNoCheck.isChecked()) {
+            return 0;
+        } else {
+            return 2;
+        }
+    }
+
     public String getName(){
         return txtCheckItem.getText().toString();
     }

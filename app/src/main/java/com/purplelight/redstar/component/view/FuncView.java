@@ -14,17 +14,18 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
+import com.purplelight.redstar.application.RedStartApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
+import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.Validation;
+import com.purplelight.redstar.web.parameter.NotificationCntParameter;
 import com.purplelight.redstar.web.result.NotificationCntResult;
 import com.purplelight.redstar.web.result.Result;
-
-import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -123,27 +124,33 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
 
             // 统计数据的取得使用线程池来取得
             if (!Validation.IsNullOrEmpty(mBanner.getStatUrl()) && Validation.IsActivityNetWork(getContext())){
-                NotificationCountTask task = new NotificationCountTask(mBanner.getStatUrl());
+                NotificationCountTask task = new NotificationCountTask(mBanner.getId());
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
     }
 
     private class NotificationCountTask extends AsyncTask<String, Void, NotificationCntResult>{
-        private String mFetchUrl;
+        private String mAppId;
 
-        public NotificationCountTask(String fetchUrl){
-            mFetchUrl = fetchUrl;
+        public NotificationCountTask(String appId){
+            mAppId = appId;
         }
 
         @Override
         protected NotificationCntResult doInBackground(String... params) {
             NotificationCntResult result = new NotificationCntResult();
+            Gson gson = new Gson();
             try{
-                String repJson = HttpUtil.PostJosn(mFetchUrl, "");
-                result = new Gson().fromJson(repJson, NotificationCntResult.class);
+                NotificationCntParameter parameter = new NotificationCntParameter();
+                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setAppId(ConvertUtil.ToInt(mAppId));
+                String requestJson = gson.toJson(parameter);
+
+                String repJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.NOTIFICATION), requestJson);
+                result = gson.fromJson(repJson, NotificationCntResult.class);
             } catch (Exception ex){
-                Log.e(TAG, ex.getMessage());
+                ex.printStackTrace();
                 result.setSuccess(Result.ERROR);
                 result.setMessage(ex.getMessage());
             }
@@ -153,8 +160,12 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
         @Override
         protected void onPostExecute(NotificationCntResult notificationCntResult) {
             if (Result.SUCCESS.equals(notificationCntResult.getSuccess())){
-                txtNotification.setText(String.valueOf(notificationCntResult.getCount()));
-                txtNotification.setVisibility(VISIBLE);
+                if (notificationCntResult.getCount() > 0){
+                    txtNotification.setText(String.valueOf(notificationCntResult.getCount()));
+                    txtNotification.setVisibility(VISIBLE);
+                } else {
+                    txtNotification.setVisibility(GONE);
+                }
             } else {
                 txtNotification.setVisibility(GONE);
             }

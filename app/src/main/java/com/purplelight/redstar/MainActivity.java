@@ -1,10 +1,16 @@
 package com.purplelight.redstar;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -42,13 +48,13 @@ import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.dao.IEstimateReportDao;
 import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
-import com.purplelight.redstar.provider.dao.impl.AppFunctionDaoImpl;
-import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
-import com.purplelight.redstar.provider.dao.impl.EstimateReportDaoImpl;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
+import com.purplelight.redstar.service.DownLoadTaskInfo;
+import com.purplelight.redstar.service.UpgradeService;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
 import com.purplelight.redstar.task.DownloadedDrawable;
+import com.purplelight.redstar.task.UpgradeTask;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.Validation;
@@ -56,6 +62,7 @@ import com.purplelight.redstar.web.parameter.AppFuncParameter;
 import com.purplelight.redstar.web.result.AppFuncResult;
 import com.purplelight.redstar.web.result.Result;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +92,47 @@ public class MainActivity extends AppCompatActivity
     private ImageView mImgUserHead;
     private TextView mTxtUserName;
     private TextView mTxtUserEmail;
+
+    private UpgradeService mService;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(UpgradeService.ACTION_UPDATE)){
+                int progress = intent.getIntExtra("progress", 0);
+                Log.i(TAG, "progress=" + progress);
+            }
+            if (intent.getAction().equals(UpgradeService.ACTION_FINISHED)){
+                boolean isSuccess = intent.getBooleanExtra("success", false);
+                String apkName = intent.getStringExtra("apkName");
+                Log.i(TAG, "success = " + isSuccess);
+
+                // 下载成功的时候，自动启动安装。
+                Intent installInt = new Intent(Intent.ACTION_VIEW);
+                installInt.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                File file = new File(ImageHelper.CACHE_PATH, apkName);
+                installInt.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                startActivity(installInt);
+            }
+        }
+    };
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mService = ((UpgradeService.UpgradeServiceBinder)service).getService();
+            Log.d(TAG, "Service connected = " + mConnection);
+
+            if (mService != null){
+                mService.notifyToActivity(false, true);
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+        }
+    };
 
     @InjectView(R.id.toolbar) Toolbar mToolBar;
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawer;
@@ -145,7 +193,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        Intent intent = new Intent(this, UpgradeService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(UpgradeService.ACTION_UPDATE);
+        filter.addAction(UpgradeService.ACTION_FINISHED);
+        registerReceiver(mReceiver, filter);
+
         initUserViews();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unbindService(mConnection);
+        unregisterReceiver(mReceiver);
     }
 
     @Override
@@ -202,7 +267,14 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, OfflineTaskCategoryActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_sync) {
-
+            UpgradeTask task = new UpgradeTask(this);
+            task.setDownloadListener(new UpgradeTask.OnDownloadListener() {
+                @Override
+                public void onDownload(DownLoadTaskInfo taskInfo) {
+                    mService.addDownloadTask(taskInfo);
+                }
+            });
+            task.execute();
         }
 //        else if (id == R.id.nav_password) {
 //            Intent intent = new Intent(this, ModifyPasswordActivity.class);
@@ -395,6 +467,15 @@ public class MainActivity extends AppCompatActivity
                                     Class nxtView = Class.forName(banner.getContentUrl());
                                     Intent nxtInt = new Intent(MainActivity.this, nxtView);
                                     nxtInt.putExtra("outtersystem", banner.getOutterSystemId());
+                                    if (!Validation.IsNullOrEmpty(banner.getCallMethod())){
+                                        String[] callArr = banner.getCallMethod().split("\\&");
+                                        for (String call : callArr){
+                                            if (!Validation.IsNullOrEmpty(call)){
+                                                String[] callParam = call.split("\\=");
+                                                nxtInt.putExtra(callParam[0], callParam[1]);
+                                            }
+                                        }
+                                    }
                                     startActivity(nxtInt);
                                 } catch (ClassNotFoundException ex){
                                     Log.e(TAG, ex.getMessage());

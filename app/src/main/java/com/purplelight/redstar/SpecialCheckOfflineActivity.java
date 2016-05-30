@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.purplelight.redstar.adapter.SpecialCheckItemAdapter;
 import com.purplelight.redstar.component.view.ConfirmDialog;
@@ -22,6 +23,7 @@ import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.entity.SpecialItem;
+import com.purplelight.redstar.provider.entity.SpecialItemCheckResult;
 import com.purplelight.redstar.service.SpecialItemDownloadService;
 import com.purplelight.redstar.service.SpecialItemUploadService;
 import com.purplelight.redstar.util.ImageHelper;
@@ -130,11 +132,19 @@ public class SpecialCheckOfflineActivity extends AppCompatActivity {
         });
         mAdapter.setUploadListener(new SpecialCheckItemAdapter.OnUploadListener() {
             @Override
-            public void OnUpload(SpecialItem item) {
-                item.setUploadStatus(Configuration.UploadStatus.UPLOADING);
-                mUploadService.addSpecialItem(item);
+            public boolean OnUpload(SpecialItem item) {
+                if (checkInput(item)){
+                    item.setUploadStatus(Configuration.UploadStatus.UPLOADING);
+                    mUploadService.addSpecialItem(item);
+                    mAdapter.notifyDataSetChanged();
 
-                mAdapter.notifyDataSetChanged();
+                    return true;
+                } else {
+                    Toast.makeText(SpecialCheckOfflineActivity.this
+                            , getString(R.string.special_check_submit_input_msg)
+                            , Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
         });
         mAdapter.setDeleteClickListener(new SpecialCheckItemAdapter.OnDeleteListener() {
@@ -205,6 +215,13 @@ public class SpecialCheckOfflineActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_upload_all:
+                for (SpecialItem specialItem : mItems){
+                    if (checkInput(specialItem)){
+                        specialItem.setUploadStatus(Configuration.UploadStatus.UPLOADING);
+                        mUploadService.addSpecialItem(specialItem);
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
                 break;
             case R.id.action_clear_all:
                 confirmDeleteAll();
@@ -256,5 +273,22 @@ public class SpecialCheckOfflineActivity extends AppCompatActivity {
         itemDao.deleteById(item.getId());
         ImageHelper.DeleteFiles(item.getImages());
         ImageHelper.DeleteFiles(item.getThumbnail());
+    }
+
+    private boolean checkInput(SpecialItem item){
+        boolean success = true;
+
+        if (item.getResultItems() != null && item.getResultItems().size() > 0){
+            for (SpecialItemCheckResult result : item.getResultItems()){
+                if (result.getResult() == 2){
+                    success = false;
+                    break;
+                }
+            }
+        } else {
+            success = false;
+        }
+
+        return success;
     }
 }

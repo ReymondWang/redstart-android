@@ -33,6 +33,12 @@ public class EstimateItem implements Parcelable {
     // 问题性质
     private String character;
 
+    // 是否重大
+    private String level;
+
+    // 所属工程
+    private String partition;
+
     // 问题描述
     private String description;
 
@@ -320,6 +326,22 @@ public class EstimateItem implements Parcelable {
         this.updateDate = updateDate;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getPartition() {
+        return partition;
+    }
+
+    public void setPartition(String partition) {
+        this.partition = partition;
+    }
+
     public EstimateItem(){}
 
     public EstimateItem(Parcel src){
@@ -351,6 +373,8 @@ public class EstimateItem implements Parcelable {
         outterSystemId = src.readInt();
         createDate = src.readLong();
         updateDate = src.readLong();
+        level = src.readString();
+        partition = src.readString();
     }
 
     @Override
@@ -388,6 +412,8 @@ public class EstimateItem implements Parcelable {
         dest.writeInt(outterSystemId);
         dest.writeLong(createDate);
         dest.writeLong(updateDate);
+        dest.writeString(level);
+        dest.writeString(partition);
     }
 
     public static final Parcelable.Creator<EstimateItem> CREATOR = new Parcelable.Creator<EstimateItem>(){

@@ -14,4 +14,9 @@
         <attr name="progress_height" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="SystemBarTintManager">
+        <attr name="status_bar_available" format="boolean" />
+        <attr name="nav_bar_available" format="boolean" />
+    </declare-styleable>
+
 </resources>

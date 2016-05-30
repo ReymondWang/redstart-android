@@ -1,5 +1,6 @@
 package com.purplelight.redstar;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.fragment.EstimateReportFragment;
 import com.purplelight.redstar.fragment.EstimateReportItemFragment;
 import com.purplelight.redstar.provider.entity.EstimateReport;
@@ -23,6 +25,7 @@ public class EstimateReportDetailActivity extends AppCompatActivity {
 
     private EstimateReport mReport;
     private int outterSystemId;
+    private int estimateType;
 
     @InjectView(R.id.toolbar) Toolbar mToolbar;
     @InjectView(R.id.container) ViewPager mViewPager;
@@ -36,6 +39,19 @@ public class EstimateReportDetailActivity extends AppCompatActivity {
 
         mReport = getIntent().getParcelableExtra("report");
         outterSystemId = getIntent().getIntExtra("outtersystem", 0);
+        estimateType = getIntent().getIntExtra("checkType", 0);
+
+        switch (estimateType){
+            case Configuration.EstimateType.THIRD:
+                setTitle(getString(R.string.title_activity_estimate_report_detail));
+                break;
+            case Configuration.EstimateType.QUYU:
+                setTitle(getString(R.string.title_activity_quyu_report_detail));
+                break;
+            case Configuration.EstimateType.ANQUAN:
+                setTitle(getString(R.string.title_activity_anquan_report_detail));
+                break;
+        }
 
         initViews();
     }
@@ -53,7 +69,9 @@ public class EstimateReportDetailActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.action_settings:
+            case R.id.action_task:
+                Intent intent = new Intent(this, OfflineTaskCategoryActivity.class);
+                startActivity(intent);
                 break;
         }
 
@@ -82,7 +100,7 @@ public class EstimateReportDetailActivity extends AppCompatActivity {
             if (position == 0){
                 return EstimateReportFragment.newInstance(mReport);
             } else {
-                return EstimateReportItemFragment.newInstance(outterSystemId, mReport.getId());
+                return EstimateReportItemFragment.newInstance(outterSystemId, mReport.getId(), estimateType);
             }
         }
 

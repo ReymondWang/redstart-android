@@ -1,116 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/common_spacing_big"
-    android:background="@color/colorBackground">
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="35dip"
-        android:layout_marginTop="20dip"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/common_spacing_xbig"
-        android:paddingRight="@dimen/common_spacing_xbig"
-        android:textColor="@color/colorLightBlack"
-        android:textSize="@dimen/common_font_big"
-        android:text="@string/search_title"/>
-    
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
+        android:layout_marginStart="@dimen/nav_header_vertical_spacing"
+        android:text="@string/search_title"
+        android:textSize="@dimen/common_font_big"/>
+
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:layout_marginBottom="@dimen/common_spacing_big"
         android:layout_height="@dimen/common_spacing_xsmall"
-        android:background="@color/colorGray">
-    </LinearLayout>
+        android:background="@color/colorGray" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ui_table_row_height"
-        android:layout_marginLeft="@dimen/common_spacing_xbig"
-        android:layout_marginRight="@dimen/common_spacing_xbig"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1.0"
-            android:textSize="@dimen/common_font_big"
-            android:gravity="center_vertical"
-            android:text="@string/estimate_item_category"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:layout_marginLeft="@dimen/common_spacing_big"
-            android:layout_marginStart="@dimen/common_spacing_big"
-            android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkGeneral"
+                android:id="@+id/chkOnlyMyself"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/estimate_item_category_general"/>
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginStart="@dimen/common_spacing_big"
+                android:checked="true"
+                android:text="@string/estimate_only_myself"/>
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/chkImportant"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/estimate_item_category_important"/>
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginStart="@dimen/common_spacing_big"
+                android:paddingLeft="@dimen/common_spacing_middle"
+                android:paddingRight="@dimen/common_spacing_middle"
+                android:textColor="@color/colorBlack"
+                android:text="@string/search_project"/>
+            <Spinner
+                android:id="@+id/spnProject"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginStart="@dimen/common_spacing_big"
+                android:paddingLeft="@dimen/common_spacing_middle"
+                android:paddingRight="@dimen/common_spacing_middle"
+                android:textColor="@color/colorBlack"
+                android:text="@string/estimate_item_partition"/>
+            <EditText
+                android:id="@+id/txtPartition"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:background="@null"
+                android:inputType="text"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginStart="@dimen/common_spacing_big"
+                android:paddingLeft="@dimen/common_spacing_middle"
+                android:paddingRight="@dimen/common_spacing_middle"
+                android:textColor="@color/colorBlack"
+                android:text="@string/estimate_item_incharger"/>
+            <EditText
+                android:id="@+id/txtInCharger"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:background="@null"
+                android:inputType="text"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/common_spacing_big"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginStart="@dimen/common_spacing_big"
+                android:paddingLeft="@dimen/common_spacing_middle"
+                android:paddingRight="@dimen/common_spacing_middle"
+                android:textColor="@color/colorBlack"
+                android:text="@string/estimate_item_description"/>
+            <EditText
+                android:id="@+id/txtDescription"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:background="@null"
+                android:inputType="text"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/common_spacing_middle"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:layout_height="@dimen/common_spacing_xsmall"
+                android:background="@color/colorGray" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnSearch"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/common_spacing_large"
+                android:layout_marginLeft="@dimen/common_spacing_big"
+                android:layout_marginRight="@dimen/common_spacing_big"
+                android:background="@drawable/bg_button_corner"
+                android:textColor="@color/colorWhite"
+                android:text="@string/search_button"/>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <AutoCompleteTextView
-        android:id="@+id/txtArea"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ui_table_row_height"
-        android:layout_marginLeft="@dimen/common_spacing_xbig"
-        android:layout_marginRight="@dimen/common_spacing_xbig"
-        android:textSize="@dimen/common_font_big"
-        android:hint="@string/estimate_item_area"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true" />
-
-    <AutoCompleteTextView
-        android:id="@+id/txtProject"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ui_table_row_height"
-        android:layout_marginLeft="@dimen/common_spacing_xbig"
-        android:layout_marginRight="@dimen/common_spacing_xbig"
-        android:textSize="@dimen/common_font_big"
-        android:hint="@string/estimate_item_project"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true" />
-
-    <AutoCompleteTextView
-        android:id="@+id/txtDescription"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ui_table_row_height"
-        android:layout_marginLeft="@dimen/common_spacing_xbig"
-        android:layout_marginRight="@dimen/common_spacing_xbig"
-        android:textSize="@dimen/common_font_big"
-        android:hint="@string/estimate_item_description"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true" />
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btnSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/common_spacing_xbig"
-        android:layout_marginStart="@dimen/common_spacing_xbig"
-        android:layout_marginRight="@dimen/common_spacing_xbig"
-        android:layout_marginEnd="@dimen/common_spacing_xbig"
-        android:layout_marginTop="@dimen/common_spacing_xlarge"
-        android:background="@drawable/bg_button_corner"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/common_font_big"
-        android:text="@string/action_search"/>
+    </ScrollView>
 
 </LinearLayout>

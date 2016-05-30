@@ -46,6 +46,8 @@ public class WebAPI {
 
     public static final String UPGRADE = "api/upgrade/info";
 
+    public static final String NOTIFICATION = "api/notification/info";
+
     /**
      * 取得WebAPI的全路径
      * @param method  方法参数

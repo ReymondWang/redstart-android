@@ -19,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.purplelight.redstar.adapter.EstimateItemAdapter;
 import com.purplelight.redstar.component.view.ConfirmDialog;
@@ -30,6 +31,7 @@ import com.purplelight.redstar.service.EstimateDownloadService;
 import com.purplelight.redstar.service.EstimateUploadService;
 import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.LoadHelper;
+import com.purplelight.redstar.util.Validation;
 
 import java.util.List;
 
@@ -138,11 +140,20 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
             });
             mAdapter.setUploadListener(new EstimateItemAdapter.OnUploadListener() {
                 @Override
-                public void OnUpload(EstimateItem item) {
-                    item.setUploadStatus(Configuration.UploadStatus.UPLOADING);
-                    mAdapter.notifyDataSetChanged();
+                public boolean OnUpload(EstimateItem item) {
+                    if (checkInput(item)){
+                        item.setUploadStatus(Configuration.UploadStatus.UPLOADING);
+                        mAdapter.notifyDataSetChanged();
+                        mUploadService.addEstimateItem(item);
 
-                    mUploadService.addEstimateItem(item);
+                        return true;
+                    } else {
+                        Toast.makeText(EstimateDetailOfflineActivity.this
+                                , getString(R.string.estimate_submit_input_msg)
+                                , Toast.LENGTH_SHORT).show();
+
+                        return false;
+                    }
                 }
             });
             mAdapter.setDownloadListener(new EstimateItemAdapter.OnDownLoadListener() {
@@ -233,8 +244,10 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
                 break;
             case R.id.action_upload_all:
                 for(EstimateItem estimateItem : mDataSource){
-                    estimateItem.setUploadStatus(Configuration.UploadStatus.UPLOADING);
-                    mUploadService.addEstimateItem(estimateItem);
+                    if (checkInput(estimateItem)){
+                        estimateItem.setUploadStatus(Configuration.UploadStatus.UPLOADING);
+                        mUploadService.addEstimateItem(estimateItem);
+                    }
                 }
                 mAdapter.notifyDataSetChanged();
                 break;
@@ -287,6 +300,27 @@ public class EstimateDetailOfflineActivity extends AppCompatActivity {
         itemDao.deleteById(item.getId());
         ImageHelper.DeleteFiles(item.getFixedThumbs());
         ImageHelper.DeleteFiles(item.getFixedImages());
+    }
+
+    private boolean checkInput(EstimateItem item){
+        boolean success = true;
+
+        if (!Validation.IsNullOrEmpty(item.getImprovmentAction())
+                && item.getFixedImages() != null
+                && item.getFixedImages().size() > 0){
+
+            for (String image : item.getFixedImages()){
+                if (Validation.IsNullOrEmpty(image)){
+                    success = false;
+                    break;
+                }
+            }
+
+        } else {
+            success = false;
+        }
+
+        return success;
     }
 
 }

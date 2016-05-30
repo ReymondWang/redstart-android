@@ -175,9 +175,13 @@ public class EstimateItemAdapter extends BaseAdapter {
         }
 
         final EstimateItem item = mDataSource.get(position);
-        holder.txtCategory.setText(item.getCategory());
-        holder.txtCharacter.setText(item.getCharacter());
-        holder.txtAreaAndProject.setText(item.getProjectName() + "  " + item.getAreaName());
+        holder.txtCategory.setText(item.getCharacter());
+        holder.txtCharacter.setText(item.getLevel());
+        String area = item.getProjectName() + "  " + item.getAreaName();
+        if (!Validation.IsNullOrEmpty(item.getPartition()) && !"null".equals(item.getPartition())){
+            area += "  " + item.getPartition();
+        }
+        holder.txtAreaAndProject.setText(area);
         holder.txtDescription.setText(item.getDescription());
 
         List<String> imageUrlList = item.getImages();
@@ -328,7 +332,7 @@ public class EstimateItemAdapter extends BaseAdapter {
             }
         });
 
-        if (mShowUpload){
+        if (mShowUpload && item.getStatus() == Configuration.EditStatus.EDITABLE){
             if (Configuration.UploadStatus.NOT_UPLOADED == item.getUploadStatus() ||
                     Configuration.UploadStatus.UPLOAD_FAILURE == item.getUploadStatus()){
                 holder.btnUpload.setVisibility(View.VISIBLE);
@@ -336,9 +340,8 @@ public class EstimateItemAdapter extends BaseAdapter {
                 holder.btnUpload.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        iconUpload.setVisibility(View.GONE);
-                        if (mUploadListener != null){
-                            mUploadListener.OnUpload(item);
+                        if (mUploadListener != null && mUploadListener.OnUpload(item)){
+                            iconUpload.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -349,7 +352,7 @@ public class EstimateItemAdapter extends BaseAdapter {
             holder.btnUpload.setVisibility(View.GONE);
         }
 
-        if (mShowDownload){
+        if (mShowDownload && item.getStatus() == Configuration.EditStatus.EDITABLE){
             if (Configuration.DownloadStatus.NOT_DOWNLOADED == item.getDownloadStatus() ||
                     Configuration.DownloadStatus.DOWNLOAD_FAILURE == item.getDownloadStatus()){
                 holder.btnDownload.setVisibility(View.VISIBLE);
@@ -370,16 +373,21 @@ public class EstimateItemAdapter extends BaseAdapter {
             holder.btnDownload.setVisibility(View.GONE);
         }
 
-        holder.btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSubmitListener != null){
-                    mSubmitListener.OnSubmit(item);
+        if (item.getStatus() == Configuration.EditStatus.EDITABLE){
+            holder.btnCreate.setVisibility(View.VISIBLE);
+            holder.btnCreate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mSubmitListener != null){
+                        mSubmitListener.OnSubmit(item);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            holder.btnCreate.setVisibility(View.GONE);
+        }
 
-        if (mShowCheckBox){
+        if (mShowCheckBox && item.getStatus() == Configuration.EditStatus.EDITABLE){
             holder.chkSelect.setVisibility(View.VISIBLE);
             holder.chkSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -393,7 +401,7 @@ public class EstimateItemAdapter extends BaseAdapter {
             holder.chkSelect.setVisibility(View.GONE);
         }
 
-        if (mShowDelete){
+        if (mShowDelete && item.getStatus() == Configuration.EditStatus.EDITABLE){
             holder.btnDelete.setVisibility(View.VISIBLE);
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -447,7 +455,7 @@ public class EstimateItemAdapter extends BaseAdapter {
     }
 
     public interface OnUploadListener{
-        void OnUpload(EstimateItem item);
+        boolean OnUpload(EstimateItem item);
     }
 
     public interface OnDownLoadListener{
