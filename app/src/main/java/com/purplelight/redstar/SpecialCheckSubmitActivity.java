@@ -77,6 +77,17 @@ public class SpecialCheckSubmitActivity extends AppCompatActivity {
         if (mItem != null){
             mImageNames = mItem.getImages();
             mThumbNames = mItem.getThumbnail();
+
+            switch (mItem.getCheckType()){
+                case 1:
+                    setTitle(R.string.title_activity_special_check);
+                    break;
+                case 2:
+                    setTitle(R.string.title_activity_room_check);
+                    break;
+                default:
+                    setTitle(R.string.title_activity_special_check);
+            }
         }
 
         ActionBar actionBar = getSupportActionBar();

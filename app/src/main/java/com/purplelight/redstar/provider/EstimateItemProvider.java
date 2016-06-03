@@ -14,7 +14,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateItemMetaData;
 
 /**
  * 第三方评估明细Provider
@@ -28,6 +28,7 @@ public class EstimateItemProvider extends ContentProvider {
         sItemMap = new HashMap<>();
         sItemMap.put(EstimateItemMetaData._ID, EstimateItemMetaData._ID);
         sItemMap.put(EstimateItemMetaData.ESTIMATE_ITEM_ID, EstimateItemMetaData.ESTIMATE_ITEM_ID);
+        sItemMap.put(EstimateItemMetaData.ESTIMATE_TYPE, EstimateItemMetaData.ESTIMATE_TYPE);
         sItemMap.put(EstimateItemMetaData.REPORT_ID, EstimateItemMetaData.REPORT_ID);
         sItemMap.put(EstimateItemMetaData.PROJECT_ID, EstimateItemMetaData.PROJECT_ID);
         sItemMap.put(EstimateItemMetaData.PROJECT_NAME, EstimateItemMetaData.PROJECT_NAME);

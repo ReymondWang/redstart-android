@@ -15,6 +15,9 @@ public class EstimateItem implements Parcelable {
     // 主键
     private int id;
 
+    // 评估类型
+    private int estimateType;
+
     // 所属报告编号
     private int reportId;
 
@@ -108,6 +111,14 @@ public class EstimateItem implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getEstimateType() {
+        return estimateType;
+    }
+
+    public void setEstimateType(int estimateType) {
+        this.estimateType = estimateType;
     }
 
     public int getReportId() {
@@ -346,6 +357,7 @@ public class EstimateItem implements Parcelable {
 
     public EstimateItem(Parcel src){
         id = src.readInt();
+        estimateType = src.readInt();
         reportId = src.readInt();
         projectId = src.readString();
         projectName = src.readString();
@@ -385,6 +397,7 @@ public class EstimateItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(estimateType);
         dest.writeInt(reportId);
         dest.writeString(projectId);
         dest.writeString(projectName);

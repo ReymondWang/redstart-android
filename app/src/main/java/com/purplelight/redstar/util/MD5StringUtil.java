@@ -25,7 +25,11 @@ public class MD5StringUtil
         final StringBuilder builder = new StringBuilder();
         for (byte b : hash)
         {
-            builder.append(Integer.toString(b & 0xFF, 16));
+            String encodeB = Integer.toString(b & 0xFF, 16);
+            if (encodeB.length() == 1){
+                encodeB = "0" + encodeB;
+            }
+            builder.append(encodeB);
         }
         return builder.toString();
     }

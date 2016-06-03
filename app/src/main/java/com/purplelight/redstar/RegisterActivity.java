@@ -18,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
@@ -177,7 +177,7 @@ public class RegisterActivity extends AppCompatActivity {
                 SystemUser user = registerResult.getUser();
                 ISystemUserDao userDao = DomainFactory.createSystemUserDao(RegisterActivity.this);
                 userDao.save(user);
-                RedStartApplication.setUser(user);
+                RedStarApplication.setUser(user);
 
                 Intent intent = new Intent(RegisterActivity.this, OutterSystemActivity.class);
                 startActivity(intent);

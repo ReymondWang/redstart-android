@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
@@ -210,7 +210,7 @@ public class PassportActivity extends AppCompatActivity implements NavigationVie
             PassportResult result = new PassportResult();
 
             PassportParameter parameter = new PassportParameter();
-            parameter.setLoginId(RedStartApplication.getUser().getId());
+            parameter.setLoginId(RedStarApplication.getUser().getId());
             parameter.setProjectId(params[0]);
             parameter.setCategory(params[1]);
             parameter.setSystemId(outterSystemId);

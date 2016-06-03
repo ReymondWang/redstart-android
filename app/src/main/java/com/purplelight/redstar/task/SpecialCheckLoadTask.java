@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
@@ -28,6 +28,7 @@ import java.util.List;
 public class SpecialCheckLoadTask extends AsyncTask<String, Void, SpecialItemResult> {
     private Context mContext;
     private int mSystemId;
+    private int mCheckType;
     private int mReportId;
     private int mPageNo;
     private int mPageSize = Configuration.Page.COMMON_PAGE_SIZE;
@@ -41,6 +42,14 @@ public class SpecialCheckLoadTask extends AsyncTask<String, Void, SpecialItemRes
 
     public void setSystemId(int systemId) {
         mSystemId = systemId;
+    }
+
+    public int getCheckType() {
+        return mCheckType;
+    }
+
+    public void setCheckType(int checkType) {
+        mCheckType = checkType;
     }
 
     public int getReportId() {
@@ -79,9 +88,10 @@ public class SpecialCheckLoadTask extends AsyncTask<String, Void, SpecialItemRes
         mContext = context;
     }
 
-    public SpecialCheckLoadTask(Context context, int systemId) {
+    public SpecialCheckLoadTask(Context context, int systemId, int checkType) {
         mContext = context;
         mSystemId = systemId;
+        mCheckType = checkType;
     }
 
     public void setLoadedListener(OnLoadedListener listener){
@@ -94,8 +104,9 @@ public class SpecialCheckLoadTask extends AsyncTask<String, Void, SpecialItemRes
         Gson gson = new Gson();
 
         SpecialItemParameter parameter = new SpecialItemParameter();
-        parameter.setLoginId(RedStartApplication.getUser().getId());
+        parameter.setLoginId(RedStarApplication.getUser().getId());
         parameter.setSystemId(mSystemId);
+        parameter.setCheckType(mCheckType);
         parameter.setOnlyUnChecked(mOnlyUnChecked);
         parameter.setReportId(mReportId);
         parameter.setPageNo(mPageNo);

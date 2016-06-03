@@ -22,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
@@ -72,7 +72,7 @@ public class ProfileModifyActivity extends AppCompatActivity {
 
         mModifyUserType = getIntent().getIntExtra("type", USER_NAME);
         mToolBar = getSupportActionBar();
-        user.setId(RedStartApplication.getUser().getId());
+        user.setId(RedStarApplication.getUser().getId());
 
         initViews();
         initEvents();
@@ -235,7 +235,7 @@ public class ProfileModifyActivity extends AppCompatActivity {
     }
 
     private void saveUserInfo(SystemUser user){
-        RedStartApplication.setUser(user);
+        RedStarApplication.setUser(user);
         ISystemUserDao userDao = DomainFactory.createSystemUserDao(this);
         userDao.save(user);
     }
@@ -267,7 +267,7 @@ public class ProfileModifyActivity extends AppCompatActivity {
         protected void onPostExecute(Result result) {
             showProgress(false);
             if (Result.SUCCESS.equals(result.getSuccess())){
-                SystemUser cachedUser = RedStartApplication.getUser();
+                SystemUser cachedUser = RedStarApplication.getUser();
                 switch (mModifyUserType){
                     case USER_NAME:
                         cachedUser.setUserName(user.getUserName());

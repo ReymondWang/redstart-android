@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.purplelight.redstar.provider.RedStartProviderMeta.SpecialCheckItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SpecialCheckItemMetaData;
 
 import java.util.HashMap;
 
@@ -28,6 +28,7 @@ public class SpecialCheckItemProvider extends ContentProvider {
         sItemMap = new HashMap<>();
         sItemMap.put(SpecialCheckItemMetaData._ID, SpecialCheckItemMetaData._ID);
         sItemMap.put(SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID, SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID);
+        sItemMap.put(SpecialCheckItemMetaData.CHECK_TYPE, SpecialCheckItemMetaData.CHECK_TYPE);
         sItemMap.put(SpecialCheckItemMetaData.SYSTEM_ID, SpecialCheckItemMetaData.SYSTEM_ID);
         sItemMap.put(SpecialCheckItemMetaData.CATEGORY, SpecialCheckItemMetaData.CATEGORY);
         sItemMap.put(SpecialCheckItemMetaData.PROJECT_NAME, SpecialCheckItemMetaData.PROJECT_NAME);

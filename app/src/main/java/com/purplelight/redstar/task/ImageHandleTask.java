@@ -8,16 +8,14 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 import com.purplelight.redstar.R;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.ImageHelper;
 
-import java.io.File;
 import java.util.Calendar;
 
 /**
@@ -52,7 +50,7 @@ public class ImageHandleTask extends AsyncTask<String, Void, String[]> {
     protected String[] doInBackground(String... params) {
         Bitmap orgBmp = decodeUriAsCopyBitmap(mImageUri);
         // 生成用户名和系统时间的水印
-        String curUserName = RedStartApplication.getUser().getUserName();
+        String curUserName = RedStarApplication.getUser().getUserName();
         String curTime = ConvertUtil.ToDateTimeStr(Calendar.getInstance());
         String singStr = curUserName + " " + curTime;
 

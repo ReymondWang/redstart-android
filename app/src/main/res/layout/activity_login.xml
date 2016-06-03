@@ -70,18 +70,36 @@
             android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/txtRegister"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/common_spacing_xbig"
+            android:layout_marginLeft="@dimen/common_spacing_big"
             android:layout_marginRight="@dimen/common_spacing_big"
-            android:layout_marginEnd="@dimen/common_spacing_big"
-            android:layout_gravity="end"
-            android:visibility="gone"
-            android:text="@string/txt_register"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/common_font_middle"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtServerSetting"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:visibility="visible"
+                android:text="@string/txt_server_setting"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/common_font_middle"/>
+
+            <TextView
+                android:id="@+id/txtRegister"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="end"
+                android:visibility="visible"
+                android:text="@string/txt_register"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/common_font_middle"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

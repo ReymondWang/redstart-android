@@ -10,7 +10,7 @@ import android.util.Log;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.entity.EstimateItem;
-import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateItemMetaData;
 import com.purplelight.redstar.util.ConvertUtil;
 
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
 
         ContentValues cv = new ContentValues();
         cv.put(EstimateItemMetaData.ESTIMATE_ITEM_ID, item.getId());
+        cv.put(EstimateItemMetaData.ESTIMATE_TYPE, item.getEstimateType());
         cv.put(EstimateItemMetaData.REPORT_ID, item.getReportId());
         cv.put(EstimateItemMetaData.PROJECT_ID, item.getProjectId());
         cv.put(EstimateItemMetaData.PROJECT_NAME, item.getProjectName());
@@ -96,6 +97,7 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
         Cursor c = getContext().getContentResolver().query(uri, null, selection.toString(), selectArgs, null);
         if (c != null){
             int iItemId = c.getColumnIndex(EstimateItemMetaData.ESTIMATE_ITEM_ID);
+            int iEstimateType = c.getColumnIndex(EstimateItemMetaData.ESTIMATE_TYPE);
             int iReportId = c.getColumnIndex(EstimateItemMetaData.REPORT_ID);
             int iProjectId = c.getColumnIndex(EstimateItemMetaData.PROJECT_ID);
             int iProjectName = c.getColumnIndex(EstimateItemMetaData.PROJECT_NAME);
@@ -129,6 +131,7 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
             while (!c.isAfterLast()){
                 EstimateItem item = new EstimateItem();
                 item.setId(c.getInt(iItemId));
+                item.setEstimateType(c.getInt(iEstimateType));
                 item.setReportId(c.getInt(iReportId));
                 item.setProjectId(c.getString(iProjectId));
                 item.setProjectName(c.getString(iProjectName));
@@ -210,6 +213,7 @@ public class EstimateItemDaoImpl extends BaseDaoImpl implements IEstimateItemDao
 
         ContentValues cv = new ContentValues();
         cv.put(EstimateItemMetaData.REPORT_ID, item.getReportId());
+        cv.put(EstimateItemMetaData.ESTIMATE_TYPE, item.getEstimateType());
         cv.put(EstimateItemMetaData.PROJECT_ID, item.getProjectId());
         cv.put(EstimateItemMetaData.PROJECT_NAME, item.getProjectName());
         cv.put(EstimateItemMetaData.AREA_NAME, item.getAreaName());

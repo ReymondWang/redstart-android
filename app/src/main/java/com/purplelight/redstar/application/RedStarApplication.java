@@ -2,6 +2,7 @@ package com.purplelight.redstar.application;
 
 import android.app.Application;
 
+import com.purplelight.redstar.provider.dao.IConfigurationDao;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * 全局变量
  * Created by wangyn on 16/5/3.
  */
-public class RedStartApplication extends Application {
+public class RedStarApplication extends Application {
     private static boolean mQuickRegister;
 
     private static SystemUser mUser;
@@ -52,4 +53,8 @@ public class RedStartApplication extends Application {
     public static boolean isQuickRegister(){
         return mQuickRegister;
     }
+
+    public static String WEB = "http://49.239.2.21:8080/mcm/";
+
+    public static String IMAGE = "http://192.168.255.143:8888/";
 }

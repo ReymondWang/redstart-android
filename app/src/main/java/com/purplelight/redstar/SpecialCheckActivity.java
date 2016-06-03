@@ -22,6 +22,7 @@ import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.service.SpecialItemDownloadService;
 import com.purplelight.redstar.task.SpecialCheckLoadTask;
+import com.purplelight.redstar.util.ConvertUtil;
 import com.purplelight.redstar.util.LoadHelper;
 import com.purplelight.redstar.web.result.Result;
 import com.purplelight.redstar.web.result.SpecialItemResult;
@@ -43,6 +44,7 @@ public class SpecialCheckActivity extends AppCompatActivity
     @InjectView(R.id.listView) ListView mList;
 
     private int mSystemId;
+    private int mCheckType;
     private int mCurrentPageNo;
     private SpecialCheckItemAdapter mAdapter;
     private List<SpecialItem> mDataSource = new ArrayList<>();
@@ -89,9 +91,21 @@ public class SpecialCheckActivity extends AppCompatActivity
         mRefreshForm.setColor(R.color.colorDanger, R.color.colorSuccess, R.color.colorInfo, R.color.colorOrange);
 
         mSystemId = getIntent().getIntExtra("outtersystem", 0);
+        mCheckType = ConvertUtil.ToInt(getIntent().getStringExtra("checkType"));
         mCurrentPageNo = 0;
         mRefreshForm.setOnLoadListener(this);
         mRefreshForm.setOnRefreshListener(this);
+
+        switch (mCheckType){
+            case 1:
+                setTitle(R.string.title_activity_special_check);
+                break;
+            case 2:
+                setTitle(R.string.title_activity_room_check);
+                break;
+            default:
+                setTitle(R.string.title_activity_special_check);
+        }
 
         mAdapter = new SpecialCheckItemAdapter(this, mDataSource);
         mAdapter.setShowDownload(true);
@@ -191,7 +205,7 @@ public class SpecialCheckActivity extends AppCompatActivity
     }
 
     private void initViews(){
-        SpecialCheckLoadTask task = new SpecialCheckLoadTask(this, mSystemId);
+        SpecialCheckLoadTask task = new SpecialCheckLoadTask(this, mSystemId, mCheckType);
         task.setPageNo(mCurrentPageNo);
         task.setLoadedListener(new SpecialCheckLoadTask.OnLoadedListener() {
             @Override
@@ -222,7 +236,7 @@ public class SpecialCheckActivity extends AppCompatActivity
 
     private void downLoadAll(){
         LoadHelper.showProgress(SpecialCheckActivity.this, mRefreshForm, mProgress, true);
-        SpecialCheckLoadTask task = new SpecialCheckLoadTask(this, mSystemId);
+        SpecialCheckLoadTask task = new SpecialCheckLoadTask(this, mSystemId, mCheckType);
         task.setPageNo(mCurrentPageNo);
         task.setPageSize(1000);
         task.setLoadedListener(new SpecialCheckLoadTask.OnLoadedListener() {

@@ -32,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.CircleImageView;
 import com.purplelight.redstar.component.view.FuncView;
 import com.purplelight.redstar.component.view.HomeSwipeLayout;
@@ -172,8 +172,8 @@ public class MainActivity extends AppCompatActivity
 
         initEvent();
 
-        mBanners = RedStartApplication.getTopList();
-        mFunctions = RedStartApplication.getBodyList();
+        mBanners = RedStarApplication.getTopList();
+        mFunctions = RedStarApplication.getBodyList();
         if (mBanners != null && mBanners.size() > 0){
             initTopAdvView();
         }
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initUserViews(){
-        SystemUser user = RedStartApplication.getUser();
+        SystemUser user = RedStarApplication.getUser();
         if (user != null){
             if (!Validation.IsNullOrEmpty(user.getHeadImgPath())){
                 BitmapDownloaderTask task = new BitmapDownloaderTask(mImgUserHead);
@@ -345,7 +345,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void logout(){
-        RedStartApplication.setUser(null);
+        RedStarApplication.setUser(null);
         ISystemUserDao userDao = DomainFactory.createSystemUserDao(this);
         userDao.clear();
 
@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity
         if (Validation.IsActivityNetWork(this)){
 
             AppFuncParameter parameter = new AppFuncParameter();
-            parameter.setLoginId(RedStartApplication.getUser().getId());
+            parameter.setLoginId(RedStarApplication.getUser().getId());
             parameter.setFragment(Configuration.Fragment.HOME);
 
             String reqJson = mGson.toJson(parameter);
@@ -379,7 +379,8 @@ public class MainActivity extends AppCompatActivity
      */
     private void initTopAdvView(){
         mBannerViews = new ArrayList<>();
-        for(final AppFunction item : AutoScrollViewPager.GetCircleModePagerSource(mBanners)){
+        List<AppFunction> mDataSource = AutoScrollViewPager.GetCircleModePagerSource(mBanners);
+        for(final AppFunction item : mDataSource){
             WebBannerView bannerView = new WebBannerView(this);
             bannerView.setBanner(item);
             bannerView.setOnClickListener(new View.OnClickListener() {
@@ -400,17 +401,17 @@ public class MainActivity extends AppCompatActivity
         if (mBannerViews.size() > 1) {
             mTopIndicator.setSnap(true);
             mTopIndicator.setViewPager(mHomeTop);
+
+            // 设定手动切换的速度
+            mHomeTop.setSwipeScrollDurationFactor(TOP_ADV_SWIPE_SPEED);
+            // 设定自动切换的速度
+            mHomeTop.setAutoScrollDurationFactor(TOP_ADV_SWIPE_SPEED);
+            // 设定自动切换的模式为轮转模式
+            mHomeTop.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_CYCLE);
+
+            mHomeTop.startAutoScroll();
         }
         mHomeTop.setCurrentItem(1);
-
-        // 设定手动切换的速度
-        mHomeTop.setSwipeScrollDurationFactor(TOP_ADV_SWIPE_SPEED);
-        // 设定自动切换的速度
-        mHomeTop.setAutoScrollDurationFactor(TOP_ADV_SWIPE_SPEED);
-        // 设定自动切换的模式为轮转模式
-        mHomeTop.setSlideBorderMode(AutoScrollViewPager.SLIDE_BORDER_MODE_CYCLE);
-
-        mHomeTop.startAutoScroll();
     }
 
     /**
@@ -460,6 +461,7 @@ public class MainActivity extends AppCompatActivity
                                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
                                 intent.putExtra("title", banner.getTitle());
                                 intent.putExtra("url", banner.getContentUrl());
+                                intent.putExtra("outtersystem", banner.getOutterSystemId());
                                 startActivity(intent);
                                 break;
                             case Configuration.FunctionType.INNER_NATIVE_FUNCTION:
@@ -519,8 +521,8 @@ public class MainActivity extends AppCompatActivity
                 functionDao.save(mBanners);
                 functionDao.save(mFunctions);
 
-                RedStartApplication.setTopList(mBanners);
-                RedStartApplication.setBodyList(mFunctions);
+                RedStarApplication.setTopList(mBanners);
+                RedStarApplication.setBodyList(mFunctions);
 
                 if (mBanners != null && mBanners.size() > 0){
                     initTopAdvView();

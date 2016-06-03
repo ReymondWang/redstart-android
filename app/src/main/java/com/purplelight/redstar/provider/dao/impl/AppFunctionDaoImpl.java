@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.purplelight.redstar.provider.dao.IAppFunctionDao;
 import com.purplelight.redstar.provider.entity.AppFunction;
-import com.purplelight.redstar.provider.RedStartProviderMeta.AppFuncMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.AppFuncMetaData;
 
 import java.util.ArrayList;
 import java.util.List;

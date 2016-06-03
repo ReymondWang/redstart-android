@@ -9,9 +9,19 @@ import java.util.List;
  * Created by wangyn on 16/5/23.
  */
 public class SpecialItemSubmitParameter extends Parameter {
+    private int checkType;
+
     private int systemId;
 
     private int itemId;
+
+    public int getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(int checkType) {
+        this.checkType = checkType;
+    }
 
     private List<SpecialItemCheckResult> results;
 

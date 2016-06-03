@@ -21,6 +21,8 @@
     <string name="title_activity_third_estimate_submit">填报消项</string>
     <string name="title_activity_special_check">专项检查</string>
     <string name="title_activity_special_check_submit">专项检查填报</string>
+    <string name="title_activity_room_check">一房一验</string>
+    <string name="title_activity_room_check_submit">一房一验填报</string>
     <string name="title_activity_passport_upload">证照查看</string>
     <string name="title_activity_passport_detail">证照详细</string>
     <string name="title_activity_passport_upload_modify">编辑证照信息</string>
@@ -33,6 +35,7 @@
     <string name="title_activity_login">登录</string>
     <string name="title_activity_register">用户注册</string>
     <string name="title_activity_outter_system">外部系统</string>
+    <string name="title_activity_server_setting">服务器设置</string>
 
     <!-- 菜单 -->
     <string name="action_bar_notification">消息</string>
@@ -70,7 +73,14 @@
     <string name="btn_login">登    录</string>
     <string name="txt_login_id">编号/邮箱/手机</string>
     <string name="txt_password">密码</string>
+    <string name="txt_server_setting"><u>服务器设置</u></string>
     <string name="txt_register"><u>用户注册</u></string>
+
+    <!-- 服务地址设定 -->
+    <string name="server_address">服务器地址</string>
+    <string name="image_server_address">图片服务器地址</string>
+    <string name="server_address_hint">请输入服务器地址</string>
+    <string name="image_server_address_hint">请输入图片服务器地址</string>
 
     <!-- 用户注册 -->
     <string name="register_login_id">登录名</string>
@@ -225,6 +235,7 @@
     <string name="ic_system_not_binded">未绑定</string>
     <string name="dialog_bind_system">绑定用户</string>
     <string name="dialog_confirm_unbind">是否确认解决绑定，这会影响到部分功能？</string>
+    <string name="ic_server_setting">服务器绑定</string>
 
     <!-- 通用字符 -->
 
@@ -251,6 +262,7 @@
     <string name="start_downloading">开始下载......</string>
     <string name="download_finished">下载完成</string>
     <string name="download_failed">下载失败</string>
+    <string name="save_success">保存成功</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

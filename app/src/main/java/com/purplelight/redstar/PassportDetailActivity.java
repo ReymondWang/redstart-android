@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.LoadHelper;
@@ -31,7 +31,6 @@ import com.purplelight.redstar.web.result.Result;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -104,7 +103,7 @@ public class PassportDetailActivity extends AppCompatActivity {
             Gson gson = new Gson();
 
             PassportFileParameter parameter = new PassportFileParameter();
-            parameter.setLoginId(RedStartApplication.getUser().getId());
+            parameter.setLoginId(RedStarApplication.getUser().getId());
             parameter.setSystemId(systemId);
             parameter.setItemId(mPassport.getId());
 

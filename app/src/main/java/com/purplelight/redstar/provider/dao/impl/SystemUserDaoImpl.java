@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.SystemUser;
-import com.purplelight.redstar.provider.RedStartProviderMeta.SystemUserMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SystemUserMetaData;
 
 /**
  * 用户信息操作类

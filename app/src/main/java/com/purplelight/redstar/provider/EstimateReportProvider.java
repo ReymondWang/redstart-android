@@ -14,7 +14,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateReportMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateReportMetaData;
 
 /**
  * 整改报告的Provider

@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.purplelight.redstar.provider.RedStartProviderMeta.SystemUserMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SystemUserMetaData;
 
 import java.util.HashMap;
 

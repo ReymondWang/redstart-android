@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
@@ -107,7 +107,8 @@ public class SpecialItemUploadService extends Service {
                         Gson gson = new Gson();
 
                         SpecialItemSubmitParameter parameter = new SpecialItemSubmitParameter();
-                        parameter.setLoginId(RedStartApplication.getUser().getId());
+                        parameter.setLoginId(RedStarApplication.getUser().getId());
+                        parameter.setCheckType(item.getCheckType());
                         parameter.setSystemId(item.getSystemId());
                         parameter.setItemId(item.getId());
                         parameter.setResults(item.getResultItems());

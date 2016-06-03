@@ -30,7 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.SwipeRefreshLayout;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
@@ -198,7 +198,7 @@ public class EstimateReportActivity extends AppCompatActivity
                 Gson gson = new Gson();
 
                 EstimateReportParameter parameter = new EstimateReportParameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setLoginId(RedStarApplication.getUser().getId());
                 parameter.setSystemId(outterSystemId);
                 parameter.setEstimateType(estimateType);
                 parameter.setPageNo(currentPageNo);

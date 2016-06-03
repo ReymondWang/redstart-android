@@ -7,12 +7,12 @@ import android.provider.BaseColumns;
  * 数据库元数据信息
  * Created by wangyn on 16/5/3.
  */
-public class RedStartProviderMeta {
+public class RedStarProviderMeta {
 
     public static final String DATABASE_NAME = "redstar.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 1;
 
-    public RedStartProviderMeta(){}
+    public RedStarProviderMeta(){}
 
     public static final class SystemUserMetaData implements BaseColumns {
         private SystemUserMetaData() {}
@@ -191,6 +191,8 @@ public class RedStartProviderMeta {
 
         public static final String ESTIMATE_ITEM_ID = "estimateitemid";
 
+        public static final String ESTIMATE_TYPE = "estimatetype";
+
         public static final String REPORT_ID =  "reportid";
 
         public static final String PROJECT_ID = "projectid";
@@ -265,6 +267,8 @@ public class RedStartProviderMeta {
 
         public static final String SPECIAL_CHECK_ITEM_ID = "specialcheckitemid";
 
+        public static final String CHECK_TYPE = "checktype";
+
         public static final String SYSTEM_ID = "systemid";
 
         public static final String CATEGORY = "category";
@@ -302,6 +306,32 @@ public class RedStartProviderMeta {
         public static final String DOWNLOAD_STATUS = "download_status";
 
         public static final String UPLOAD_STATUS = "upload_status";
+
+        public static final String CREATED_DATE = "created";
+
+        public static final String MODIFIED_DATE = "modified";
+    }
+
+    public static final class ConfigurationMetaData implements BaseColumns{
+        private ConfigurationMetaData(){}
+
+        public static final String AUTHORITY = "com.purplelight.redstar.provider.RedStartProvider.Configuration";
+        public static final String TABLE_NAME = "Configuration";
+
+        public static final Uri CONTENT_URI =
+                Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/vnd.purplelight.redstar.serverinfo";
+
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/vnd.purplelight.redstar.serverinfo";
+
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+
+        public static final String SERVER = "server";
+
+        public static final String IMAGE_SERVER = "imageserver";
 
         public static final String CREATED_DATE = "created";
 

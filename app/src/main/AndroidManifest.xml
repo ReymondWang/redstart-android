@@ -120,7 +120,8 @@
             android:label="@string/title_activity_passport_upload"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PassportDetailActivity"
+        <activity
+            android:name=".PassportDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_passport_detail"
             android:screenOrientation="portrait" />
@@ -160,6 +161,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_offline"
             android:screenOrientation="portrait" />
+        <activity android:name=".ServerSettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_server_setting"
+            android:screenOrientation="portrait" />
 
         <!-- 数据库Provider -->
         <provider
@@ -181,6 +186,10 @@
         <provider
             android:name=".provider.SpecialCheckItemProvider"
             android:authorities="com.purplelight.redstar.provider.RedStartProvider.SpecialCheckItem"
+            android:exported="false" />
+        <provider
+            android:name=".provider.ConfigurationProvider"
+            android:authorities="com.purplelight.redstar.provider.RedStartProvider.Configuration"
             android:exported="false" />
 
         <!-- 后台任务 -->

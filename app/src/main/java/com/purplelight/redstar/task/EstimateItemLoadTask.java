@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
@@ -151,14 +151,14 @@ public class EstimateItemLoadTask extends AsyncTask<String, Void, EstimateItemRe
         IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(mContext);
         // 获取当前的用户的数据
         Map<String, String> map = new HashMap<>();
-        // map.put(RedStartProviderMeta.EstimateItemMetaData.IN_CHARGE_PERSON_ID, RedStartApplication.getUser().getId());
+        // map.put(RedStarProviderMeta.EstimateItemMetaData.IN_CHARGE_PERSON_ID, RedStarApplication.getUser().getId());
         List<EstimateItem> localList = itemDao.query(map);
 
         if (Validation.IsActivityNetWork(mContext)){
             Gson gson = new Gson();
 
             EstimateItemParameter parameter = new EstimateItemParameter();
-            parameter.setLoginId(RedStartApplication.getUser().getId());
+            parameter.setLoginId(RedStarApplication.getUser().getId());
             parameter.setType(Configuration.EstimateItemSearchType.INCHARGER);
             parameter.setEstimateType(mEstimateType);
             parameter.setReportId(mReportId);

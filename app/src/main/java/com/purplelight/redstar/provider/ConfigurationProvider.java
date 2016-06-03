@@ -12,46 +12,38 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.purplelight.redstar.provider.RedStarProviderMeta.AppFuncMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.ConfigurationMetaData;
 
 import java.util.HashMap;
 
 /**
- * 用户首页功能Provider
- * Created by wangyn on 16/5/7.
+ * 配置信息的Provider
+ * Created by wangyn on 16/6/2.
  */
-public class AppFuncProvider extends ContentProvider {
-    private static final String TAG = "AppFuncProvider";
+public class ConfigurationProvider extends ContentProvider {
+    private static final String TAG = "ConfigurationProvider";
 
-    private static HashMap<String, String> sFuncMap;
+    private static HashMap<String, String> sConfigMap;
     static {
-        sFuncMap = new HashMap<>();
-        sFuncMap.put(AppFuncMetaData._ID, AppFuncMetaData._ID);
-        sFuncMap.put(AppFuncMetaData.FUNC_ID, AppFuncMetaData.FUNC_ID);
-        sFuncMap.put(AppFuncMetaData.FRAGMENT, AppFuncMetaData.FRAGMENT);
-        sFuncMap.put(AppFuncMetaData.PART, AppFuncMetaData.PART);
-        sFuncMap.put(AppFuncMetaData.FUNC_IMAGE, AppFuncMetaData.FUNC_IMAGE);
-        sFuncMap.put(AppFuncMetaData.FUNC_TITLE, AppFuncMetaData.FUNC_TITLE);
-        sFuncMap.put(AppFuncMetaData.FUNC_TYPE, AppFuncMetaData.FUNC_TYPE);
-        sFuncMap.put(AppFuncMetaData.OUTTER_SYSTEM, AppFuncMetaData.OUTTER_SYSTEM);
-        sFuncMap.put(AppFuncMetaData.CONTENT_URL, AppFuncMetaData.CONTENT_URL);
-        sFuncMap.put(AppFuncMetaData.STAT_URL, AppFuncMetaData.STAT_URL);
-        sFuncMap.put(AppFuncMetaData.CALL_METHOD, AppFuncMetaData.CALL_METHOD);
-        sFuncMap.put(AppFuncMetaData.CREATED_DATE, AppFuncMetaData.CREATED_DATE);
-        sFuncMap.put(AppFuncMetaData.MODIFIED_DATE, AppFuncMetaData.MODIFIED_DATE);
+        sConfigMap = new HashMap<>();
+        sConfigMap.put(ConfigurationMetaData._ID, ConfigurationMetaData._ID);
+        sConfigMap.put(ConfigurationMetaData.SERVER, ConfigurationMetaData.SERVER);
+        sConfigMap.put(ConfigurationMetaData.IMAGE_SERVER, ConfigurationMetaData.IMAGE_SERVER);
+        sConfigMap.put(ConfigurationMetaData.CREATED_DATE, ConfigurationMetaData.CREATED_DATE);
+        sConfigMap.put(ConfigurationMetaData.MODIFIED_DATE, ConfigurationMetaData.MODIFIED_DATE);
     }
 
     private static final UriMatcher sUriMatcher;
-    private static final int INCOMING_FUNC_COLLECTION_URI_INDICATOR = 1;
-    private static final int INCOMING_SINGLE_FUNC_URI_INDICATOR = 2;
+    private static final int INCOMING_CONFIG_COLLECTION_URI_INDICATOR = 1;
+    private static final int INCOMING_SINGLE_CONFIG_URI_INDICATOR = 2;
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(AppFuncMetaData.AUTHORITY
-                , "AppFunc"
-                , INCOMING_FUNC_COLLECTION_URI_INDICATOR);
-        sUriMatcher.addURI(AppFuncMetaData.AUTHORITY
-                , "AppFunc/#"
-                , INCOMING_SINGLE_FUNC_URI_INDICATOR);
+        sUriMatcher.addURI(ConfigurationMetaData.AUTHORITY
+                , "Configuration"
+                , INCOMING_CONFIG_COLLECTION_URI_INDICATOR);
+        sUriMatcher.addURI(ConfigurationMetaData.AUTHORITY
+                , "Configuration/#"
+                , INCOMING_SINGLE_CONFIG_URI_INDICATOR);
     }
 
     private DatabaseHelper mOpenHelper;
@@ -68,14 +60,14 @@ public class AppFuncProvider extends ContentProvider {
                         String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         switch (sUriMatcher.match(uri)){
-            case INCOMING_FUNC_COLLECTION_URI_INDICATOR:
-                qb.setTables(AppFuncMetaData.TABLE_NAME);
-                qb.setProjectionMap(sFuncMap);
+            case INCOMING_CONFIG_COLLECTION_URI_INDICATOR:
+                qb.setTables(ConfigurationMetaData.TABLE_NAME);
+                qb.setProjectionMap(sConfigMap);
                 break;
-            case INCOMING_SINGLE_FUNC_URI_INDICATOR:
-                qb.setTables(AppFuncMetaData.TABLE_NAME);
-                qb.setProjectionMap(sFuncMap);
-                qb.appendWhere(AppFuncMetaData._ID
+            case INCOMING_SINGLE_CONFIG_URI_INDICATOR:
+                qb.setTables(ConfigurationMetaData.TABLE_NAME);
+                qb.setProjectionMap(sConfigMap);
+                qb.appendWhere(ConfigurationMetaData._ID
                         + "="
                         + uri.getPathSegments().get(1));
                 break;
@@ -85,7 +77,7 @@ public class AppFuncProvider extends ContentProvider {
 
         String orderBy;
         if (TextUtils.isEmpty(sortOrder)){
-            orderBy = AppFuncMetaData.DEFAULT_SORT_ORDER;
+            orderBy = ConfigurationMetaData.DEFAULT_SORT_ORDER;
         } else {
             orderBy = sortOrder;
         }
@@ -102,10 +94,10 @@ public class AppFuncProvider extends ContentProvider {
     @Override
     public String getType(@NonNull Uri uri ) {
         switch (sUriMatcher.match(uri)){
-            case INCOMING_FUNC_COLLECTION_URI_INDICATOR:
-                return AppFuncMetaData.CONTENT_TYPE;
-            case INCOMING_SINGLE_FUNC_URI_INDICATOR:
-                return AppFuncMetaData.CONTENT_ITEM_TYPE;
+            case INCOMING_CONFIG_COLLECTION_URI_INDICATOR:
+                return ConfigurationMetaData.CONTENT_TYPE;
+            case INCOMING_SINGLE_CONFIG_URI_INDICATOR:
+                return ConfigurationMetaData.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -113,22 +105,22 @@ public class AppFuncProvider extends ContentProvider {
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        if (sUriMatcher.match(uri) != INCOMING_FUNC_COLLECTION_URI_INDICATOR){
+        if (sUriMatcher.match(uri) != INCOMING_CONFIG_COLLECTION_URI_INDICATOR){
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
         Long now = System.currentTimeMillis();
-        if (values.containsKey(AppFuncMetaData.CREATED_DATE)){
-            values.put(AppFuncMetaData.CREATED_DATE, now);
+        if (values.containsKey(ConfigurationMetaData.CREATED_DATE)){
+            values.put(ConfigurationMetaData.CREATED_DATE, now);
         }
-        if (values.containsKey(AppFuncMetaData.MODIFIED_DATE)){
-            values.put(AppFuncMetaData.MODIFIED_DATE, now);
+        if (values.containsKey(ConfigurationMetaData.MODIFIED_DATE)){
+            values.put(ConfigurationMetaData.MODIFIED_DATE, now);
         }
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        long rowId = db.insert(AppFuncMetaData.TABLE_NAME, null, values);
+        long rowId = db.insert(ConfigurationMetaData.TABLE_NAME, null, values);
         if (rowId > 0){
-            Uri insertedUri = ContentUris.withAppendedId(AppFuncMetaData.CONTENT_URI, rowId);
+            Uri insertedUri = ContentUris.withAppendedId(ConfigurationMetaData.CONTENT_URI, rowId);
             if (getContext() != null) {
                 getContext().getContentResolver().notifyChange(insertedUri, null);
             }
@@ -143,13 +135,13 @@ public class AppFuncProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         switch (sUriMatcher.match(uri)){
-            case INCOMING_FUNC_COLLECTION_URI_INDICATOR:
-                count = db.delete(AppFuncMetaData.TABLE_NAME, selection, selectionArgs);
+            case INCOMING_CONFIG_COLLECTION_URI_INDICATOR:
+                count = db.delete(ConfigurationMetaData.TABLE_NAME, selection, selectionArgs);
                 break;
-            case INCOMING_SINGLE_FUNC_URI_INDICATOR:
+            case INCOMING_SINGLE_CONFIG_URI_INDICATOR:
                 String rowId = uri.getPathSegments().get(1);
-                count = db.delete(AppFuncMetaData.TABLE_NAME
-                        , AppFuncMetaData._ID + "=" + rowId + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "")
+                count = db.delete(ConfigurationMetaData.TABLE_NAME
+                        , ConfigurationMetaData._ID + "=" + rowId + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "")
                         , selectionArgs);
                 break;
             default:
@@ -165,14 +157,14 @@ public class AppFuncProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         switch (sUriMatcher.match(uri)){
-            case INCOMING_FUNC_COLLECTION_URI_INDICATOR:
-                count = db.update(AppFuncMetaData.TABLE_NAME, values, selection, selectionArgs);
+            case INCOMING_CONFIG_COLLECTION_URI_INDICATOR:
+                count = db.update(ConfigurationMetaData.TABLE_NAME, values, selection, selectionArgs);
                 break;
-            case INCOMING_SINGLE_FUNC_URI_INDICATOR:
+            case INCOMING_SINGLE_CONFIG_URI_INDICATOR:
                 String rowId = uri.getPathSegments().get(1);
-                count = db.update(AppFuncMetaData.TABLE_NAME
+                count = db.update(ConfigurationMetaData.TABLE_NAME
                         , values
-                        , AppFuncMetaData._ID + "=" + rowId + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "")
+                        , ConfigurationMetaData._ID + "=" + rowId + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "")
                         , selectionArgs);
                 break;
             default:

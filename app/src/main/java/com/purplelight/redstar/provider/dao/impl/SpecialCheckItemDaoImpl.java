@@ -7,12 +7,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.purplelight.redstar.provider.RedStartProviderMeta;
 import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.provider.entity.SpecialItemCheckResult;
 import com.purplelight.redstar.util.ConvertUtil;
-import com.purplelight.redstar.provider.RedStartProviderMeta.SpecialCheckItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SpecialCheckItemMetaData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +39,7 @@ public class SpecialCheckItemDaoImpl extends BaseDaoImpl implements ISpecialChec
 
         ContentValues cv = new ContentValues();
         cv.put(SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID, item.getId());
+        cv.put(SpecialCheckItemMetaData.CHECK_TYPE, item.getCheckType());
         cv.put(SpecialCheckItemMetaData.SYSTEM_ID, item.getSystemId());
         cv.put(SpecialCheckItemMetaData.CATEGORY, item.getCategory());
         cv.put(SpecialCheckItemMetaData.PROJECT_NAME, item.getProjectName());
@@ -78,6 +78,7 @@ public class SpecialCheckItemDaoImpl extends BaseDaoImpl implements ISpecialChec
 
         ContentValues cv = new ContentValues();
         cv.put(SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID, item.getId());
+        cv.put(SpecialCheckItemMetaData.CHECK_TYPE, item.getCheckType());
         cv.put(SpecialCheckItemMetaData.SYSTEM_ID, item.getSystemId());
         cv.put(SpecialCheckItemMetaData.CATEGORY, item.getCategory());
         cv.put(SpecialCheckItemMetaData.PROJECT_NAME, item.getProjectName());
@@ -176,6 +177,7 @@ public class SpecialCheckItemDaoImpl extends BaseDaoImpl implements ISpecialChec
         Cursor c = getContext().getContentResolver().query(uri, null, selection.toString(), selectArgs, null);
         if (c != null){
             int iItemId = c.getColumnIndex(SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID);
+            int iCheckType = c.getColumnIndex(SpecialCheckItemMetaData.CHECK_TYPE);
             int iSystemId = c.getColumnIndex(SpecialCheckItemMetaData.SYSTEM_ID);
             int iCategory = c.getColumnIndex(SpecialCheckItemMetaData.CATEGORY);
             int iProjectName = c.getColumnIndex(SpecialCheckItemMetaData.PROJECT_NAME);
@@ -203,6 +205,7 @@ public class SpecialCheckItemDaoImpl extends BaseDaoImpl implements ISpecialChec
             while (!c.isAfterLast()){
                 SpecialItem item = new SpecialItem();
                 item.setId(c.getInt(iItemId));
+                item.setCheckType(c.getInt(iCheckType));
                 item.setSystemId(c.getInt(iSystemId));
                 item.setCategory(c.getString(iCategory));
                 item.setProjectName(c.getString(iProjectName));

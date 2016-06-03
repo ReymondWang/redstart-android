@@ -183,7 +183,7 @@ public class SpecialCheckItemAdapter extends BaseAdapter {
         final SpecialItem item = mDataSource.get(position);
         holder.txtProject.setText(item.getProjectName());
         holder.txtCategory.setText(item.getCategory());
-        holder.txtNames.setText(ConvertUtil.fromListToString(item.getNames(), SEPARATOR));
+        holder.txtNames.setText(ConvertUtil.fromListToString(item.getPlaces(), SEPARATOR));
         holder.txtBuilding.setText(item.getBuilding());
         holder.txtCode.setText(item.getCode());
         holder.txtCheckDate.setText(item.getCheckDate());

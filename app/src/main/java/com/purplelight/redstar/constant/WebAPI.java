@@ -1,5 +1,7 @@
 package com.purplelight.redstar.constant;
 
+import com.purplelight.redstar.application.RedStarApplication;
+
 /**
  * 定义WebAPI需要的各种参数名称
  * Created by wangyn on 15/12/27.
@@ -48,13 +50,15 @@ public class WebAPI {
 
     public static final String NOTIFICATION = "api/notification/info";
 
+    public static final String TOKEN = "api/common/token";
+
     /**
      * 取得WebAPI的全路径
      * @param method  方法参数
      * @return        全路径
      */
     public static String getWebAPI(String method){
-        return Configuration.Server.WEB + method;
+        return RedStarApplication.WEB + method;
     }
 
     /**
@@ -63,7 +67,7 @@ public class WebAPI {
      * @return
      */
     public static String getFullImagePath(String path){
-        return Configuration.Server.IMAGE + path;
+        return RedStarApplication.IMAGE + path;
     }
 
 

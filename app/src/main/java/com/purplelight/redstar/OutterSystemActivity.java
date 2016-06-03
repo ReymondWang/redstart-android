@@ -1,10 +1,7 @@
 package com.purplelight.redstar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.os.AsyncTask;
-import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,11 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.ConfirmDialog;
 import com.purplelight.redstar.component.view.UserBindDialog;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.util.HttpUtil;
+import com.purplelight.redstar.util.LoadHelper;
 import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.entity.OutterSystemBindInfo;
 import com.purplelight.redstar.web.parameter.BindUserParameter;
@@ -76,7 +74,7 @@ public class OutterSystemActivity extends AppCompatActivity {
     private void initViews(){
         mToolbar.setDisplayHomeAsUpEnabled(true);
 
-        showProgress(true);
+        LoadHelper.showProgress(this, mList, mProgress, true);
 
         LoadTask task = new LoadTask();
         task.execute();
@@ -105,7 +103,7 @@ public class OutterSystemActivity extends AppCompatActivity {
                 if (Validation.IsNullOrEmpty(loginId)){
                     Toast.makeText(OutterSystemActivity.this, getString(R.string.login_id_must_input), Toast.LENGTH_SHORT).show();
                 } else {
-                    showProgress(true);
+                    LoadHelper.showProgress(OutterSystemActivity.this, mList, mProgress, true);
 
                     BindUserTask bindUserTask = new BindUserTask();
                     bindUserTask.execute(loginId, password, String.valueOf(mCurrentBindInfo.getSystemId()));
@@ -123,41 +121,13 @@ public class OutterSystemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
 
-                showProgress(true);
+                LoadHelper.showProgress(OutterSystemActivity.this, mList, mProgress, true);
 
                 UnBindTask task = new UnBindTask();
                 task.execute(mCurrentBindInfo.getSystemId());
             }
         });
         dialog.show();
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mList.setVisibility(show ? View.GONE : View.VISIBLE);
-            mList.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mList.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mList.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
     }
 
     /**
@@ -171,7 +141,7 @@ public class OutterSystemActivity extends AppCompatActivity {
 
             if (Validation.IsActivityNetWork(OutterSystemActivity.this)){
                 Parameter parameter = new Parameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setLoginId(RedStarApplication.getUser().getId());
                 try{
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.OUTTER_SYSTEM), gson.toJson(parameter));
                     result = gson.fromJson(responseJson, OutterSystemResult.class);
@@ -189,7 +159,7 @@ public class OutterSystemActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(OutterSystemResult outterSystemResult) {
-            showProgress(false);
+            LoadHelper.showProgress(OutterSystemActivity.this, mList, mProgress, false);
             if (Result.SUCCESS.equals(outterSystemResult.getSuccess())){
                 mDataSource = outterSystemResult.getSystemList();
                 ListAdapter adapter = new ListAdapter();
@@ -210,11 +180,15 @@ public class OutterSystemActivity extends AppCompatActivity {
             Result result = new Result();
             Gson gson = new Gson();
             if (Validation.IsActivityNetWork(OutterSystemActivity.this)){
+                String meachineCode = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
                 BindUserParameter parameter = new BindUserParameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setLoginId(RedStarApplication.getUser().getId());
                 parameter.setUserCode(params[0]);
                 parameter.setPassword(params[1]);
                 parameter.setSystemId(Integer.parseInt(params[2]));
+                parameter.setMeachineCode(meachineCode);
+
                 try{
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.BIND_FUNCTION), gson.toJson(parameter));
                     if (!Validation.IsNullOrEmpty(responseJson)){
@@ -237,7 +211,7 @@ public class OutterSystemActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Result bindUserResult) {
-            showProgress(false);
+            LoadHelper.showProgress(OutterSystemActivity.this, mList, mProgress, false);
             Toast.makeText(OutterSystemActivity.this, bindUserResult.getMessage(), Toast.LENGTH_SHORT).show();
 
             if (Result.SUCCESS.equals(bindUserResult.getSuccess())){
@@ -259,8 +233,9 @@ public class OutterSystemActivity extends AppCompatActivity {
             Gson gson = new Gson();
             if (Validation.IsActivityNetWork(OutterSystemActivity.this)){
                 BindUserParameter parameter = new BindUserParameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setLoginId(RedStarApplication.getUser().getId());
                 parameter.setSystemId(params[0]);
+
                 try{
                     String responseJson = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.UNBIND_FUNCTION), gson.toJson(parameter));
                     if (!Validation.IsNullOrEmpty(responseJson)){
@@ -283,7 +258,7 @@ public class OutterSystemActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Result result) {
-            showProgress(false);
+            LoadHelper.showProgress(OutterSystemActivity.this, mList, mProgress, false);
             Toast.makeText(OutterSystemActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
             if (Result.SUCCESS.equals(result.getSuccess())){
                 mCurrentBindInfo.setBinded(false);

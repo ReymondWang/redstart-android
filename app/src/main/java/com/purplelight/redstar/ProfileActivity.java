@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.CircleImageView;
 import com.purplelight.redstar.component.view.ImageModeDialog;
 import com.purplelight.redstar.constant.Configuration;
@@ -125,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void initViews(){
-        SystemUser user = RedStartApplication.getUser();
+        SystemUser user = RedStarApplication.getUser();
         if (user != null){
             BitmapDownloaderTask task = new BitmapDownloaderTask(imgHeadImage);
             DownloadedDrawable drawable = new DownloadedDrawable(task, getResources(), R.drawable.default_head_image);
@@ -280,9 +280,9 @@ public class ProfileActivity extends AppCompatActivity {
             if (Validation.IsActivityNetWork(ProfileActivity.this)){
                 try {
                     String fileName = ImageHelper.upload(params[0], Configuration.Image.JPEG);
-                    SystemUser user = RedStartApplication.getUser();
+                    SystemUser user = RedStarApplication.getUser();
                     user.setHeadImgPath(fileName);
-                    RedStartApplication.setUser(user);
+                    RedStarApplication.setUser(user);
 
                     ISystemUserDao userDao = DomainFactory.createSystemUserDao(ProfileActivity.this);
                     userDao.save(user);
@@ -315,7 +315,7 @@ public class ProfileActivity extends AppCompatActivity {
     private class UpdateUserInfoTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            SystemUser user = RedStartApplication.getUser();
+            SystemUser user = RedStarApplication.getUser();
             UpdateParameter parameter = new UpdateParameter();
             SystemUser updateInfo = new SystemUser();
             updateInfo.setId(user.getId());

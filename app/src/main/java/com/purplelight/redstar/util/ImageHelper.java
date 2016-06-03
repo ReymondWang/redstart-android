@@ -9,6 +9,7 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.fastdfs.ClientGlobal;
 import com.purplelight.redstar.fastdfs.StorageClient;
@@ -189,7 +190,7 @@ public class ImageHelper {
 
 		if (keyList != null && keyList.size() > 0){
 			for(String key : keyList){
-				fileNameList.add(Configuration.Server.IMAGE + upload(getBitmapFromCache(key), getFormat(key)));
+				fileNameList.add(RedStarApplication.IMAGE + upload(getBitmapFromCache(key), getFormat(key)));
 			}
 		}
 

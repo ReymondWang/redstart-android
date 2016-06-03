@@ -1,11 +1,7 @@
 package com.purplelight.redstar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +19,13 @@ import android.widget.TextView;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
-import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.entity.EstimateItem;
 import com.purplelight.redstar.provider.entity.SpecialItem;
 import com.purplelight.redstar.util.ConvertUtil;
+import com.purplelight.redstar.util.LoadHelper;
 import com.purplelight.redstar.util.Validation;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SpecialCheckItemMetaData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,7 +77,7 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        showProgress(true);
+        LoadHelper.showProgress(this, mList, mProgress, true);
         LoadTask task = new LoadTask();
         task.execute();
     }
@@ -95,47 +93,22 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mList.setVisibility(show ? View.GONE : View.VISIBLE);
-            mList.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mList.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            mList.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-
     private class LoadTask extends AsyncTask<String, Void, List<Entity>>{
         @Override
         protected List<Entity> doInBackground(String... params) {
             List<Entity> list = new ArrayList<>();
-            list.addAll(getOffLineEstimate());
-            list.addAll(getOffLineSpecialItem());
+            list.addAll(getOffLineEstimate(0));
+            list.addAll(getOffLineEstimate(1));
+            list.addAll(getOffLineEstimate(2));
+            list.addAll(getOffLineSpecialItem(1));
+            list.addAll(getOffLineSpecialItem(2));
 
             return list;
         }
 
         @Override
         protected void onPostExecute(List<Entity> entities) {
-            showProgress(false);
+            LoadHelper.showProgress(OfflineTaskCategoryActivity.this, mList, mProgress, false);
             mDataSource = entities;
             ListAdapter adapter = new ListAdapter();
             mList.setAdapter(adapter);
@@ -189,17 +162,19 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
         }
     }
 
-    private List<Entity> getOffLineEstimate(){
+    private List<Entity> getOffLineEstimate(int estimateType){
         List<Entity> list = new ArrayList<>();
 
         IEstimateItemDao itemDao = DomainFactory.createEstimateItemDao(OfflineTaskCategoryActivity.this);
-        List<EstimateItem> items = itemDao.query(new HashMap<String, String>());
+        HashMap<String, String> map = new HashMap<>();
+        map.put(EstimateItemMetaData.ESTIMATE_TYPE, String.valueOf(estimateType));
+        List<EstimateItem> items = itemDao.query(map);
 
         String date = "";
         ArrayList<EstimateItem> subList = new ArrayList<>();
         Entity entity = new Entity();
         entity.type = ESTIMATE;
-        entity.name = getString(R.string.title_activity_third_estimate);
+        entity.name = getEstimateTypeName(estimateType);
         for(EstimateItem item : items){
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(item.getUpdateDate());
@@ -210,7 +185,7 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
                     list.add(entity);
                     entity = new Entity();
                     entity.type = ESTIMATE;
-                    entity.name = getString(R.string.title_activity_third_estimate);
+                    entity.name = getEstimateTypeName(estimateType);
                     subList = new ArrayList<>();
                 }
                 date = cmpDate;
@@ -224,17 +199,38 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
         return list;
     }
 
-    private List<Entity> getOffLineSpecialItem(){
+    private String getEstimateTypeName(int estimateType){
+        String name = "";
+        switch (estimateType){
+            case 0:
+                name = getString(R.string.title_activity_third_estimate);
+                break;
+            case 1:
+                name = getString(R.string.title_activity_quyu);
+                break;
+            case 2:
+                name = getString(R.string.title_activity_anquan);
+                break;
+            default:
+                name = getString(R.string.title_activity_third_estimate);
+        }
+
+        return name;
+    }
+
+    private List<Entity> getOffLineSpecialItem(int specialType){
         List<Entity> list = new ArrayList<>();
 
         ISpecialCheckItemDao itemDao = DomainFactory.createSpecialItemDao(OfflineTaskCategoryActivity.this);
-        List<SpecialItem> items = itemDao.query(new HashMap<String, String>());
+        HashMap<String, String> map = new HashMap<>();
+        map.put(SpecialCheckItemMetaData.CHECK_TYPE, String.valueOf(specialType));
+        List<SpecialItem> items = itemDao.query(map);
 
         String date = "";
         ArrayList<SpecialItem> subList = new ArrayList<>();
         Entity entity = new Entity();
         entity.type = SPECIAL_CHECK;
-        entity.name = getString(R.string.title_activity_special_check);
+        entity.name = getSpecialCheckTypeName(specialType);
         for(SpecialItem item : items){
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(item.getUpdateTime());
@@ -245,7 +241,7 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
                     list.add(entity);
                     entity = new Entity();
                     entity.type = SPECIAL_CHECK;
-                    entity.name = getString(R.string.title_activity_special_check);
+                    entity.name = getSpecialCheckTypeName(specialType);
                     subList = new ArrayList<>();
                 }
                 date = cmpDate;
@@ -257,6 +253,22 @@ public class OfflineTaskCategoryActivity extends AppCompatActivity {
         list.add(entity);
 
         return list;
+    }
+
+    private String getSpecialCheckTypeName(int specialType){
+        String name = "";
+        switch (specialType){
+            case 1:
+                name = getString(R.string.title_activity_special_check);
+                break;
+            case 2:
+                name = getString(R.string.title_activity_room_check);
+                break;
+            default:
+                name = getString(R.string.title_activity_special_check);
+        }
+
+        return name;
     }
 
     private class Entity{

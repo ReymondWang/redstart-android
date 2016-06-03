@@ -175,8 +175,8 @@ public class EstimateItemAdapter extends BaseAdapter {
         }
 
         final EstimateItem item = mDataSource.get(position);
-        holder.txtCategory.setText(item.getCharacter());
-        holder.txtCharacter.setText(item.getLevel());
+        holder.txtCategory.setText(item.getCategory());
+        holder.txtCharacter.setText(item.getCharacter());
         String area = item.getProjectName() + "  " + item.getAreaName();
         if (!Validation.IsNullOrEmpty(item.getPartition()) && !"null".equals(item.getPartition())){
             area += "  " + item.getPartition();

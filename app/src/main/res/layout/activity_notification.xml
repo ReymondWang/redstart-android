@@ -14,6 +14,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_spacing_xsmall"
+        android:layout_marginTop="@dimen/common_spacing_big"
+        android:background="@color/colorGray" />
+
+    <LinearLayout
+        android:id="@+id/lytServer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ui_table_row_height"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_clickable_row">
+
+        <ImageView
+            android:layout_width="@dimen/ui_row_icon_size"
+            android:layout_height="@dimen/ui_row_icon_size"
+            android:src="@drawable/ic_server_settings"
+            android:contentDescription="@string/ic_system_setting"/>
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:layout_marginLeft="@dimen/common_spacing_middle"
+            android:layout_marginStart="@dimen/common_spacing_middle"
+            android:text="@string/ic_server_setting"
+            android:textSize="@dimen/common_font_big"/>
+
+        <ImageView
+            android:layout_width="@dimen/ui_row_arrow_size"
+            android:layout_height="@dimen/ui_row_arrow_size"
+            android:src="@drawable/ic_arrow_right"
+            android:contentDescription="@string/common_image_description"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_spacing_xsmall"
+        android:background="@color/colorGray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_spacing_xsmall"
         android:visibility="gone"
         android:background="@color/colorGray" />
 

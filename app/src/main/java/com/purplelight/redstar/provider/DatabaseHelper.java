@@ -5,17 +5,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.purplelight.redstar.provider.RedStartProviderMeta.SystemUserMetaData;
-import com.purplelight.redstar.provider.RedStartProviderMeta.AppFuncMetaData;
-import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateReportMetaData;
-import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateItemMetaData;
-import com.purplelight.redstar.provider.RedStartProviderMeta.SpecialCheckItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SystemUserMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.AppFuncMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateReportMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.SpecialCheckItemMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.ConfigurationMetaData;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private final static String TAG = "DatabaseHelper";
 
     public DatabaseHelper(Context context) {
-        super(context, RedStartProviderMeta.DATABASE_NAME, null, RedStartProviderMeta.DATABASE_VERSION);
+        super(context, RedStarProviderMeta.DATABASE_NAME, null, RedStarProviderMeta.DATABASE_VERSION);
     }
 
     @Override
@@ -90,6 +91,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + EstimateItemMetaData.TABLE_NAME + " ("
                 + EstimateItemMetaData._ID + " INTEGER PRIMARY KEY,"
                 + EstimateItemMetaData.ESTIMATE_ITEM_ID + " INTEGER,"
+                + EstimateItemMetaData.ESTIMATE_TYPE + " INTEGER,"
                 + EstimateItemMetaData.REPORT_ID + " INTEGER,"
                 + EstimateItemMetaData.PROJECT_ID + " TEXT,"
                 + EstimateItemMetaData.PROJECT_NAME + " TEXT,"
@@ -122,6 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + SpecialCheckItemMetaData.TABLE_NAME + " ("
                 + SpecialCheckItemMetaData._ID + " INTEGER PRIMARY KEY,"
                 + SpecialCheckItemMetaData.SPECIAL_CHECK_ITEM_ID + " INTEGER,"
+                + SpecialCheckItemMetaData.CHECK_TYPE + " INTEGER,"
                 + SpecialCheckItemMetaData.SYSTEM_ID + " INTEGER,"
                 + SpecialCheckItemMetaData.CATEGORY + " TEXT,"
                 + SpecialCheckItemMetaData.PROJECT_NAME + " TEXT,"
@@ -144,6 +147,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + SpecialCheckItemMetaData.CREATED_DATE + " INTEGER,"
                 + SpecialCheckItemMetaData.MODIFIED_DATE + " INTEGER"
                 + ");");
+
+        db.execSQL("CREATE TABLE " + ConfigurationMetaData.TABLE_NAME + " ("
+                + ConfigurationMetaData._ID + " INTEGER PRIMARY KEY,"
+                + ConfigurationMetaData.SERVER + " TEXT,"
+                + ConfigurationMetaData.IMAGE_SERVER + " TEXT,"
+                + ConfigurationMetaData.CREATED_DATE + " INTEGER,"
+                + ConfigurationMetaData.MODIFIED_DATE + " INTEGER"
+                + ");");
     }
 
     @Override
@@ -156,6 +167,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + EstimateReportMetaData.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EstimateItemMetaData.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SpecialCheckItemMetaData.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ConfigurationMetaData.TABLE_NAME);
         onCreate(db);
     }
 }

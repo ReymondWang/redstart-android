@@ -154,7 +154,7 @@ public class AutoScrollViewPager extends ViewPager {
      * @return           循环的数据源
      */
     public static<T> List<T> GetCircleModePagerSource(List<T> orgSource){
-        if (orgSource == null && orgSource.size() <= 1){
+        if (orgSource == null || orgSource.size() <= 1){
             return orgSource;
         } else {
             List<T> retSource = new ArrayList<>();

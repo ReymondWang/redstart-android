@@ -5,23 +5,17 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
-import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.IAppFunctionDao;
+import com.purplelight.redstar.provider.dao.IConfigurationDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
-import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
-import com.purplelight.redstar.web.result.QuickRegisterResult;
-import com.purplelight.redstar.web.result.Result;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +29,21 @@ public class WelcomeActivity extends AppCompatActivity {
     private final Runnable mCheckLoginRunnable = new Runnable() {
         @Override
         public void run() {
-//            QuickRegisterTask task = new QuickRegisterTask();
-//            task.execute();
-            LoadingTask task = new LoadingTask();
-            task.execute();
+            IConfigurationDao configurationDao = DomainFactory.createConfigurationDao(WelcomeActivity.this);
+            com.purplelight.redstar.provider.entity.Configuration configuration = configurationDao.load();
+            if (configuration != null){
+                RedStarApplication.WEB = configuration.getServer();
+                RedStarApplication.IMAGE = configuration.getImageServer();
+            }
+
+            if (Validation.IsNullOrEmpty(RedStarApplication.WEB)
+                    || Validation.IsNullOrEmpty(RedStarApplication.IMAGE)){
+                Intent intent = new Intent(WelcomeActivity.this, ServerSettingActivity.class);
+                startActivity(intent);
+            } else {
+                LoadingTask task = new LoadingTask();
+                task.execute();
+            }
         }
     };
 
@@ -47,6 +52,11 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_welcome);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
     }
@@ -57,7 +67,7 @@ public class WelcomeActivity extends AppCompatActivity {
             ISystemUserDao userDao = DomainFactory.createSystemUserDao(WelcomeActivity.this);
             SystemUser user = userDao.load();
             if (user != null){
-                RedStartApplication.setUser(user);
+                RedStarApplication.setUser(user);
 
                 // 加载缓存的首页数据
                 loadHomePage();
@@ -98,8 +108,8 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }
 
-            RedStartApplication.setTopList(topList);
-            RedStartApplication.setBodyList(bodyList);
+            RedStarApplication.setTopList(topList);
+            RedStarApplication.setBodyList(bodyList);
         }
     }
 

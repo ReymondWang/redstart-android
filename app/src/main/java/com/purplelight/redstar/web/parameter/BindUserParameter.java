@@ -13,6 +13,8 @@ public class BindUserParameter extends Parameter {
 
     private int systemId;
 
+    private String meachineCode;
+
     public String getUserCode() {
         return userCode;
     }
@@ -35,5 +37,13 @@ public class BindUserParameter extends Parameter {
 
     public void setSystemId(int systemId) {
         this.systemId = systemId;
+    }
+
+    public String getMeachineCode() {
+        return meachineCode;
+    }
+
+    public void setMeachineCode(String meachineCode) {
+        this.meachineCode = meachineCode;
     }
 }

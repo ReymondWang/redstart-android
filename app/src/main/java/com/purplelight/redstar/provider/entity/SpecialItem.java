@@ -14,6 +14,8 @@ public class SpecialItem implements Parcelable {
 
     private int id;
 
+    private int checkType;
+
     private int systemId;
 
     private String category;
@@ -62,6 +64,14 @@ public class SpecialItem implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getCheckType() {
+        return checkType;
+    }
+
+    public void setCheckType(int checkType) {
+        this.checkType = checkType;
     }
 
     public int getSystemId() {
@@ -236,6 +246,7 @@ public class SpecialItem implements Parcelable {
 
     public SpecialItem(Parcel src){
         id = src.readInt();
+        checkType = src.readInt();
         systemId = src.readInt();
         category = src.readString();
         projectName = src.readString();
@@ -267,6 +278,7 @@ public class SpecialItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(checkType);
         dest.writeInt(systemId);
         dest.writeString(category);
         dest.writeString(projectName);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.task.BitmapDownloaderTask;
@@ -143,7 +142,7 @@ public class FuncView extends LinearLayout implements View.OnClickListener {
             Gson gson = new Gson();
             try{
                 NotificationCntParameter parameter = new NotificationCntParameter();
-                parameter.setLoginId(RedStartApplication.getUser().getId());
+                parameter.setLoginId(RedStarApplication.getUser().getId());
                 parameter.setAppId(ConvertUtil.ToInt(mAppId));
                 String requestJson = gson.toJson(parameter);
 

@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
@@ -106,7 +106,7 @@ public class EstimateUploadService extends Service {
                     }
                     if (!hasUploadError){
                         EstimateUploadParameter parameter = new EstimateUploadParameter();
-                        parameter.setLoginId(RedStartApplication.getUser().getId());
+                        parameter.setLoginId(RedStarApplication.getUser().getId());
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(item.getUpdateDate());
                         parameter.setDate(ConvertUtil.ToDateStr(calendar));

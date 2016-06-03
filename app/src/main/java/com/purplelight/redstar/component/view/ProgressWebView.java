@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.purplelight.redstar.R;
@@ -28,6 +29,13 @@ public class ProgressWebView extends WebView {
 
         addView(mProgressBar);
         setWebChromeClient(new WebClient());
+        setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
     }
 
     private class WebClient extends WebChromeClient{

@@ -25,7 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.RemovableImage;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
@@ -232,7 +232,7 @@ public class FeedbackActivity extends AppCompatActivity {
                 Feedback feedback = new Feedback();
                 feedback.setContent(params[0]);
                 feedback.setImagePath(params[1]);
-                feedback.setInputUser(Integer.parseInt(RedStartApplication.getUser().getId()));
+                feedback.setInputUser(Integer.parseInt(RedStarApplication.getUser().getId()));
                 feedback.setInputTime(new Timestamp(System.currentTimeMillis()));
 
                 FeedbackParameter parameter = new FeedbackParameter();

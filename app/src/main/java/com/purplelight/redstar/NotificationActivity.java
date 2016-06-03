@@ -15,6 +15,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private ActionBar mToolbar;
 
+    @InjectView(R.id.lytServer) LinearLayout mServer;
     @InjectView(R.id.lytMessage) LinearLayout mMessage;
     @InjectView(R.id.lytSystem) LinearLayout mSystem;
 
@@ -59,6 +60,14 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NotificationActivity.this, OutterSystemActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NotificationActivity.this, ServerSettingActivity.class);
                 startActivity(intent);
             }
         });

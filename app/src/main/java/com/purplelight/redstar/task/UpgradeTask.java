@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.component.view.ConfirmDialog;
 import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.constant.WebAPI;
@@ -101,7 +102,7 @@ public class UpgradeTask extends AsyncTask<String, Void, UpgradeResult> {
                 DownLoadTaskInfo taskInfo = new DownLoadTaskInfo();
                 taskInfo.setTaskId(1);
                 taskInfo.setTaskName(mContext.getString(R.string.upgrade_message));
-                taskInfo.setDownloadUrl(Configuration.Server.WEB + upgradeInfo.getDownLoadUrl());
+                taskInfo.setDownloadUrl(RedStarApplication.WEB + upgradeInfo.getDownLoadUrl());
 
                 int index = upgradeInfo.getDownLoadUrl().indexOf("/");
                 String fileName = upgradeInfo.getDownLoadUrl().substring(index + 1);

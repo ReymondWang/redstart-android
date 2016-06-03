@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.purplelight.redstar.provider.dao.IEstimateReportDao;
 import com.purplelight.redstar.provider.entity.EstimateReport;
-import com.purplelight.redstar.provider.RedStartProviderMeta.EstimateReportMetaData;
+import com.purplelight.redstar.provider.RedStarProviderMeta.EstimateReportMetaData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

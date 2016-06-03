@@ -3,11 +3,13 @@ package com.purplelight.redstar.provider;
 import android.content.Context;
 
 import com.purplelight.redstar.provider.dao.IAppFunctionDao;
+import com.purplelight.redstar.provider.dao.IConfigurationDao;
 import com.purplelight.redstar.provider.dao.IEstimateItemDao;
 import com.purplelight.redstar.provider.dao.IEstimateReportDao;
 import com.purplelight.redstar.provider.dao.ISpecialCheckItemDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.dao.impl.AppFunctionDaoImpl;
+import com.purplelight.redstar.provider.dao.impl.ConfigurationDaoImpl;
 import com.purplelight.redstar.provider.dao.impl.EstimateItemDaoImpl;
 import com.purplelight.redstar.provider.dao.impl.EstimateReportDaoImpl;
 import com.purplelight.redstar.provider.dao.impl.SpecialCheckItemDaoImpl;
@@ -37,5 +39,9 @@ public class DomainFactory {
 
     public static ISpecialCheckItemDao createSpecialItemDao(Context context){
         return new SpecialCheckItemDaoImpl(context);
+    }
+
+    public static IConfigurationDao createConfigurationDao(Context context){
+        return new ConfigurationDaoImpl(context);
     }
 }

@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.purplelight.redstar.R;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.util.HttpUtil;
 import com.purplelight.redstar.util.Validation;
@@ -40,7 +40,7 @@ public class ProjectLoadTask extends AsyncTask<String, Void, ProjectResult> {
         Gson gson = new Gson();
 
         ProjectParameter parameter = new ProjectParameter();
-        parameter.setLoginId(RedStartApplication.getUser().getId());
+        parameter.setLoginId(RedStarApplication.getUser().getId());
         parameter.setSystemId(mOutterSystemId);
 
         String requestJson = gson.toJson(parameter);

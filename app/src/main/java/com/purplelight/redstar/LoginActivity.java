@@ -1,17 +1,13 @@
 package com.purplelight.redstar;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,12 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.purplelight.redstar.application.RedStartApplication;
+import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.WebAPI;
 import com.purplelight.redstar.provider.DomainFactory;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.SystemUser;
 import com.purplelight.redstar.util.HttpUtil;
+import com.purplelight.redstar.util.LoadHelper;
 import com.purplelight.redstar.util.Validation;
 import com.purplelight.redstar.web.parameter.LoginParameter;
 import com.purplelight.redstar.web.result.LoginResult;
@@ -54,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     @InjectView(R.id.email_login_form) View mLoginFormView;
     @InjectView(R.id.email_sign_in_button) Button mEmailSignInButton;
     @InjectView(R.id.txtRegister) TextView mRegister;
+    @InjectView(R.id.txtServerSetting) TextView mServerSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +106,13 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        mServerSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ServerSettingActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -128,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String loginId = mLoginIdView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String meachineCode = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         boolean cancel = false;
         View focusView = null;
@@ -141,40 +147,9 @@ public class LoginActivity extends AppCompatActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            showProgress(true);
-            mAuthTask = new UserLoginTask(loginId, password);
+            LoadHelper.showProgress(this, mLoginFormView, mProgressView, true);
+            mAuthTask = new UserLoginTask(loginId, password, meachineCode);
             mAuthTask.execute((Void) null);
-        }
-    }
-
-    /**
-     * 显示登录进度
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -205,8 +180,8 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(QuickRegisterResult result) {
             if (Result.SUCCESS.equals(result.getSuccess())){
-                RedStartApplication.setQuickRegister(result.isQuickRegister());
-                if (RedStartApplication.isQuickRegister()){
+                RedStarApplication.setQuickRegister(result.isQuickRegister());
+                if (RedStarApplication.isQuickRegister()){
                     mRegister.setVisibility(View.GONE);
                 } else {
                     mRegister.setVisibility(View.VISIBLE);
@@ -224,10 +199,12 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mLoginId;
         private final String mPassword;
+        private final String mMeachineCode;
 
-        public UserLoginTask(String loginId, String password) {
+        public UserLoginTask(String loginId, String password, String meachineCode) {
             mLoginId = loginId;
             mPassword = password;
+            mMeachineCode = meachineCode;
         }
 
         @Override
@@ -238,6 +215,7 @@ public class LoginActivity extends AppCompatActivity {
             LoginParameter parameter = new LoginParameter();
             parameter.setLoginId(mLoginId);
             parameter.setPassword(mPassword);
+            parameter.setMeachineCode(mMeachineCode);
             try{
                 String repStr = HttpUtil.PostJosn(WebAPI.getWebAPI(WebAPI.LOGIN), gson.toJson(parameter));
                 if (!Validation.IsNullOrEmpty(repStr)){
@@ -257,12 +235,12 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(LoginResult result) {
             mAuthTask = null;
-            showProgress(false);
+            LoadHelper.showProgress(LoginActivity.this, mLoginFormView, mProgressView, false);
             if (Result.SUCCESS.equals(result.getSuccess())) {
                 SystemUser user = result.getUser();
                 ISystemUserDao userDao = DomainFactory.createSystemUserDao(LoginActivity.this);
                 userDao.save(user);
-                RedStartApplication.setUser(user);
+                RedStarApplication.setUser(user);
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -276,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
+            LoadHelper.showProgress(LoginActivity.this, mLoginFormView, mProgressView, false);
         }
     }
 }
