@@ -1,5 +1,6 @@
 package com.purplelight.redstar.fastdfs;
 
+import com.purplelight.redstar.constant.Configuration;
 import com.purplelight.redstar.util.ConvertUtil;
 
 import java.io.IOException;
@@ -135,6 +136,11 @@ public class TrackerClient {
 
 			ip_addr = new String(pkgInfo.body, ProtoCommon.FDFS_GROUP_NAME_MAX_LEN, ProtoCommon.FDFS_IPADDR_SIZE - 1)
 					.trim();
+
+			// 由于可能不能将Storage服务器的IP指向公网，因此获取IP地址后，使用一次代理进行匹配
+			if (Configuration.NetProxy.containsKey(ip_addr)){
+				ip_addr = Configuration.NetProxy.get(ip_addr);
+			}
 
 			port = (int) ProtoCommon.buff2long(pkgInfo.body,
 					ProtoCommon.FDFS_GROUP_NAME_MAX_LEN + ProtoCommon.FDFS_IPADDR_SIZE - 1);

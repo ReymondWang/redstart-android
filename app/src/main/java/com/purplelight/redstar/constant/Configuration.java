@@ -1,10 +1,18 @@
 package com.purplelight.redstar.constant;
 
+import java.util.HashMap;
+
 /**
  * 参数配置类
  * Created by wangyn on 16/4/10.
  */
 public class Configuration {
+
+    public static final HashMap<String, String> NetProxy;
+    static {
+        NetProxy = new HashMap<>();
+        NetProxy.put("192.168.255.143", "49.239.2.21");
+    }
 
     public class Fastdfs{
         public static final int CONNECT_TIMEOUT = 2;
@@ -13,7 +21,7 @@ public class Configuration {
         public static final int TRACKER_HTTP_PORT = 8888;
         public static final boolean ANTI_STEAL_TOKEN = false;
         public static final String SECRET_KEY = "FastDFS1234567890";
-        public static final String TRACKER_SERVER = "139.196.186.85:22122";
+        public static final String TRACKER_SERVER = "49.239.2.21:22122";
     }
 
     public class Page{

@@ -56,5 +56,5 @@ public class RedStarApplication extends Application {
 
     public static String WEB = "http://49.239.2.21:8080/mcm/";
 
-    public static String IMAGE = "http://192.168.255.143:8888/";
+    public static String IMAGE = "http://49.239.2.21:8888/";
 }

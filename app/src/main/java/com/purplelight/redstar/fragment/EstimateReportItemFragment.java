@@ -214,8 +214,10 @@ public class EstimateReportItemFragment extends Fragment
                 if (Result.ERROR.equals(result.getSuccess())){
                     Toast.makeText(getActivity(), result.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                mDataSource = result.getItems();
-                mAdapter.setDataSource(mDataSource);
+                if (currentPageNo == 0){
+                    mDataSource.clear();
+                }
+                mDataSource.addAll(result.getItems());
                 mAdapter.notifyDataSetChanged();
             }
         });
