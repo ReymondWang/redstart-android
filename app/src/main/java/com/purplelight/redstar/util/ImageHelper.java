@@ -39,10 +39,10 @@ import java.util.UUID;
 public class ImageHelper {
 	private static final String TAG = "ImageHelper";
 	private static final int DISK_MAX_SIZE = 512 * 1024 * 1024;// SD 512MB
-	public static final String CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/mcommunity/";
+	public static final String CACHE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mcommunity/";
 
 	private final static LruCache<String, Bitmap> mMemoryCache;
-	private final static SimpleDiskLruCache mDiskCache;
+	private static SimpleDiskLruCache mDiskCache;
 	static{
 		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 		final int cacheSize = maxMemory / 8;
@@ -52,7 +52,9 @@ public class ImageHelper {
 				return bitmap.getByteCount() / 1024;
 			}
 		};
+	}
 
+	public static void initDiskCache(){
 		File cacheDir = new File(CACHE_PATH);
 		mDiskCache = SimpleDiskLruCache.openCache(cacheDir, DISK_MAX_SIZE);
 	}

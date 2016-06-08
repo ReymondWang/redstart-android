@@ -4,6 +4,14 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a'
+            universalApk true
+        }
+    }
     defaultConfig {
         applicationId "com.purplelight.redstar"
         minSdkVersion 15

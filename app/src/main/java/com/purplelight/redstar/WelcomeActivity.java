@@ -1,10 +1,16 @@
 package com.purplelight.redstar;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.purplelight.redstar.application.RedStarApplication;
 import com.purplelight.redstar.constant.Configuration;
@@ -14,6 +20,7 @@ import com.purplelight.redstar.provider.dao.IConfigurationDao;
 import com.purplelight.redstar.provider.dao.ISystemUserDao;
 import com.purplelight.redstar.provider.entity.AppFunction;
 import com.purplelight.redstar.provider.entity.SystemUser;
+import com.purplelight.redstar.util.ImageHelper;
 import com.purplelight.redstar.util.Validation;
 
 import java.util.ArrayList;
@@ -24,6 +31,7 @@ import java.util.List;
  */
 public class WelcomeActivity extends AppCompatActivity {
     private static final int CHECK_USER_DELAY = 1000;
+    private static final int STORAGE_PERMISSION = 1;
 
     private final Handler mCheckLoginHandler = new Handler();
     private final Runnable mCheckLoginRunnable = new Runnable() {
@@ -52,13 +60,46 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_welcome);
+
+        openCache();
+    }
+
+    private void openCache(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        STORAGE_PERMISSION);
+            } else {
+                ImageHelper.initDiskCache();
+                mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
+            }
+        } else {
+            ImageHelper.initDiskCache();
+            mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
+        }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case STORAGE_PERMISSION:
+                if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, getString(R.string.need_storage_permission), Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 3000);
+                } else {
+                    ImageHelper.initDiskCache();
+                    mCheckLoginHandler.postDelayed(mCheckLoginRunnable, CHECK_USER_DELAY);
+                }
+                break;
+        }
     }
 
     private class LoadingTask extends AsyncTask<String, Void, SystemUser>{

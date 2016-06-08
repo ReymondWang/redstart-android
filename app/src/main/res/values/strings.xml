@@ -263,6 +263,7 @@
     <string name="download_finished">下载完成</string>
     <string name="download_failed">下载失败</string>
     <string name="save_success">保存成功</string>
+    <string name="need_storage_permission">需要外部存储的读写权限才能够正常运行</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
